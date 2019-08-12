@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"b2t":false,"scrollpercent":true},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    search: {
+      root: '/',
+      path: 'search.xml'
+    },
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"bounceRightIn","post_header":"bounceRightIn","post_body":"swoopIn","coll_header":"swoopIn","sidebar":"flipBounceXIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="我们都知道，数据结构和算法解决的是“快”和“省”的问题，即如何让代码运行的更快，如何让代码更省存储空间。所以，执行效率是算法的一个非常重要的考量指标。那如何来衡量编写的算法代码的执行效率呢？这里就要用到时间、空间复杂度分析。">
+<meta name="keywords" content="数据结构与算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="03 | 复杂度分析（上）：如何分析、统计算法的执行效率和消耗资源？">
+<meta property="og:url" content="http://yoursite.com/2018/10/11/2018-10-11.complexity analysis(first)/index.html">
+<meta property="og:site_name" content="快乐的小锦鲤">
+<meta property="og:description" content="我们都知道，数据结构和算法解决的是“快”和“省”的问题，即如何让代码运行的更快，如何让代码更省存储空间。所以，执行效率是算法的一个非常重要的考量指标。那如何来衡量编写的算法代码的执行效率呢？这里就要用到时间、空间复杂度分析。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-12T12:16:43.516Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="03 | 复杂度分析（上）：如何分析、统计算法的执行效率和消耗资源？">
+<meta name="twitter:description" content="我们都知道，数据结构和算法解决的是“快”和“省”的问题，即如何让代码运行的更快，如何让代码更省存储空间。所以，执行效率是算法的一个非常重要的考量指标。那如何来衡量编写的算法代码的执行效率呢？这里就要用到时间、空间复杂度分析。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="快乐的小锦鲤" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2018/10/11/2018-10-11.complexity analysis(first)/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>03 | 复杂度分析（上）：如何分析、统计算法的执行效率和消耗资源？ | 快乐的小锦鲤</title>
+  
+
+
+
+
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?780f48b16f1acab067863e8a03265153";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">快乐的小锦鲤</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">嗨，欢迎来到我的世界！</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          <a href="javascript:;" class="popup-trigger">
+          
+            <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/11/2018-10-11.complexity analysis(first)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小锦鲤">
+      <meta itemprop="description" content="一个初出茅庐的游戏人~">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="快乐的小锦鲤">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">03 | 复杂度分析（上）：如何分析、统计算法的执行效率和消耗资源？
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-10-11 23:23:49" itemprop="dateCreated datePublished" datetime="2018-10-11T23:23:49+08:00">2018-10-11</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-12 20:16:43" itemprop="dateModified" datetime="2019-08-12T20:16:43+08:00">2019-08-12</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/内功修炼/" itemprop="url" rel="index"><span itemprop="name">内功修炼</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+            <div class="post-description">我们都知道，数据结构和算法解决的是“快”和“省”的问题，即如何让代码运行的更快，如何让代码更省存储空间。所以，执行效率是算法的一个非常重要的考量指标。那如何来衡量编写的算法代码的执行效率呢？这里就要用到时间、空间复杂度分析。</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <contents>
+
+<h3 id="为什么需要复杂度分析呢？"><a href="#为什么需要复杂度分析呢？" class="headerlink" title="为什么需要复杂度分析呢？"></a>为什么需要复杂度分析呢？</h3><p>你可能会有些疑惑，把代码跑一遍，通过统计、监控就能得到算法执行的时间和占用的内存大小。为什么还要做时间、空间复杂度分析呢？</p>
+<p>首先，这种评估算法执行效率的方法是正确的。很多数据结构和算法书籍还给这种方法起了个名字，叫事后统计法。但是，这种统计方法有非常大的局限性。</p>
+<ol>
+<li>测试结果非常依赖测试环境</li>
+<li>测试结果受数据规模的影响很大</li>
+</ol>
+<p>所以就需要一个不用具体的测试数据，就可以粗略的估计算法执行效率的方法。这就是时间、空间复杂度分析方法。</p>
+<h3 id="大O复杂度表示法"><a href="#大O复杂度表示法" class="headerlink" title="大O复杂度表示法"></a>大O复杂度表示法</h3><p>算法的执行效率，粗略地讲，就是算法代码的执行时间。</p>
+<p>直接上代码，求1,2,3…n的累加和。估算一下这段代码的执行时间。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">int cal(int n)&#123;</span><br><span class="line">	int sum = 0;</span><br><span class="line">	int i = 1;</span><br><span class="line">	<span class="keyword">for</span> (; i&lt;=n; i++)&#123;</span><br><span class="line">		sum = sum + i;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从CPU的角度来看，这段代码的每一行都执行着类似的操作：读数据-运算-写数据。尽管每行代码对应的CPU执行的个数、时间都不一样，但是，我们这里只是粗略的估计，所以可以假设每行代码执行的时间都一样，为unit_time(以下简称为ut)。在这个假设的基础上，这段代码的总执行时间是多少呢？</p>
+<p>第2、3行代码分别需要1个$ut$的执行时间，第4、5行都运行了$n$遍，所以需要$2n*ut$的执行时间，所以这段代码总的执行时间就是$(2n+2)*ut$。可以看出来，所有代码的执行时间$T(n)$与每行代码的执行次数成正比。</p>
+<p>按照这个分析思路，再来看这段代码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">int cal(int n)&#123;</span><br><span class="line">	int sum = 0;</span><br><span class="line">	int i = 1;</span><br><span class="line">	int j = 1;</span><br><span class="line">	<span class="keyword">for</span> (; i&lt;=n; i++)&#123;</span><br><span class="line">		j = 1;</span><br><span class="line">		<span class="keyword">for</span>(; j&lt;=n; j++)&#123;</span><br><span class="line">			sum = sum + i * j;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>依旧假设每个语句的执行时间是$ut$。那这段代码的总执行时间$T(n)$是多少呢？</p>
+<p>第 2、3、4 行代码，每行都需要1个$ut$的执行时间，第 5、6 行代码循环执行了$n$遍，需要 $2n*ut$的执行时间，第 7、8 行代码循环执行了$n^2$遍，所以需要 $2n^2 * ut$ 的执行时间。所以，整段代码总的执行时间$T(n) = (2n^2+2n+3)*ut$。</p>
+<p>尽管我们不知道$ut$的具体值，但是通过这两段代码执行时间的推导过程，我们可以得到一个非常重要的规律，那就是，<span style="color:#FF5A05">所有代码的执行时间$T(n)$与每行代码的执行次数$n$成正比</span>。</p>
+<p>我们可以把这个规律总结成一个公式。注意，大$O$就要登场了！<br><img alt="01" data-src="/images/2018-10-11/01.png"></p>
+<p>其中，$T(n)$表示代码执行的时间; $n$表示数据规模的大小; $f(n)$表示每行代码执行的次数总和,因为这是一个公式，所以用$f(n)$来表示。公式中的 $O$，表示代码的执行时间$T(n)$与$f(n)$表达式成正比。</p>
+<p>所以，第一个例子中的$T(n) = O(2n+2)$，第二个例子中的$T(n) = O(2n^2+2n+3)$。这就是大$O$时间复杂度表示法。<span style="color:#FF5A05">大$O$时间复杂度实际上并不具体表示代码真正的执行时间，而是表示代码执行时间随数据规模增长的变化趋势，也叫作渐进时间复杂度，简称时间复杂度</span>。</p>
+<p>当$n$很大时，可以把它想象成10000、100000。而公式中的低阶、常量、系数三部分并不左右增长趋势，所以都可以忽略。只需要记录一个最大量级就可以了，如果用大$O$表示法表示刚讲的那两段代码的时间复杂度，就可以记为：$T(n) = O(n)$； $T(n) = O(n^2)$。</p>
+<h3 id="时间复杂度分析"><a href="#时间复杂度分析" class="headerlink" title="时间复杂度分析"></a>时间复杂度分析</h3><h4 id="1-只关注循环执行次数最多的一段代码"><a href="#1-只关注循环执行次数最多的一段代码" class="headerlink" title="1. 只关注循环执行次数最多的一段代码"></a>1. 只关注循环执行次数最多的一段代码</h4><p>大$O$复杂度表示法只是表示一种变化趋势。通常会忽略掉公式中的常量、低阶、系数，只需要记录一个最大阶的量级就可以了。所以，在分析一个算法、一段代码的时间复杂度的时候，只关注循环执行次数最多的那一段代码就可以了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">int cal(int n) &#123;</span><br><span class="line">	int sum = 0;</span><br><span class="line">	int i = 1;</span><br><span class="line">	<span class="keyword">for</span> (; i &lt;= n; ++i) &#123;</span><br><span class="line">		sum = sum + i;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">return</span> sum;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中，第2、3行代码都是常量级的执行时间，与$n$的大小无关，所以对于复杂度并没有影响。循环执行次数最多的是第4、5行代码，所以这块代码要重点分析。这两行代码被执行了$n$次，所以总的时间复杂度就是$O(n)$。</p>
+<h4 id="2-加法法则，总复杂度-量级最大的那段代码的复杂度"><a href="#2-加法法则，总复杂度-量级最大的那段代码的复杂度" class="headerlink" title="2. 加法法则，总复杂度=量级最大的那段代码的复杂度"></a>2. 加法法则，总复杂度=量级最大的那段代码的复杂度</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">int cal(int n) &#123;</span><br><span class="line">	int sum_1 = 0;</span><br><span class="line">	int p = 1;</span><br><span class="line">	<span class="keyword">for</span> (; p &lt; 100; ++p) &#123;</span><br><span class="line">		sum_1 = sum_1 + p;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	int sum_2 = 0;</span><br><span class="line">	int q = 1;</span><br><span class="line">	<span class="keyword">for</span> (; q &lt; n; ++q) &#123;</span><br><span class="line">		sum_2 = sum_2 + q;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	int sum_3 = 0;</span><br><span class="line">	int i = 1;</span><br><span class="line">	int j = 1;</span><br><span class="line">	<span class="keyword">for</span> (; i &lt;= n; ++i) &#123;</span><br><span class="line">		j = 1; </span><br><span class="line">		<span class="keyword">for</span> (; j &lt;= n; ++j) &#123;</span><br><span class="line">			sum_3 = sum_3 +  i * j;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	<span class="built_in">return</span> sum_1 + sum_2 + sum_3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一段代码循环执行了100次，所以时间复杂度是一个常量，与$n$的规模无关。</p>
+<p>这里要再强调一下，即便这段代码循环10000次、100000次，只要是一个已知的数，跟$n$无关，照样也是常量级的执行时间。当$n$无限大的时候，就可以忽略。尽管对代码的执行时间会有很大影响，但是回到时间复杂度的概念来说，它表示的是一个算法执行效率与数据规模增长的变化趋势，所以不管常量的执行时间多大，我们都可以忽略掉。因为它本身对增长趋势并没有影响。</p>
+<p>第二段和第三段代码的时间复杂度分别是$O(n)$和$O(n^2)$。</p>
+<p>综合这三段代码的时间复杂度，我们取其中最大的量级。所以，整段代码的时间复杂度就为$O(n^2)$。也就是说：总的时间复杂度就等于量级最大的那段代码的时间复杂度。将这个规律抽象成公式就是：<br>如果$T1(n)=O(f(n))$，$T2(n)=O(g(n))$<br>那么 $T(n)=T1(n)+T2(n)=max(O(f(n))$,$O(g(n))) =O(max(f(n), g(n)))$</p>
+<h4 id="3-乘法法则：嵌套代码的复杂度-嵌套内外代码复杂度的乘积"><a href="#3-乘法法则：嵌套代码的复杂度-嵌套内外代码复杂度的乘积" class="headerlink" title="3. 乘法法则：嵌套代码的复杂度=嵌套内外代码复杂度的乘积"></a>3. 乘法法则：嵌套代码的复杂度=嵌套内外代码复杂度的乘积</h4><p>公式：<br>如果$T1(n)=O(f(n))$，$T2(n)=O(g(n))$<br>那么$T(n)=T1(n)*T2(n)=O(f(n))*O(g(n))=O(f(n)*g(n))$</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">int cal(int n) &#123;</span><br><span class="line">	int ret = 0; </span><br><span class="line">	int i = 1;</span><br><span class="line">	<span class="keyword">for</span> (; i &lt; n; ++i) &#123;</span><br><span class="line">		ret = ret + f(i);</span><br><span class="line">	&#125; </span><br><span class="line">&#125; </span><br><span class="line"> </span><br><span class="line">int f(int n) &#123;</span><br><span class="line">	int sum = 0;</span><br><span class="line">	int i = 1;</span><br><span class="line">	<span class="keyword">for</span> (; i &lt; n; ++i) &#123;</span><br><span class="line">		sum = sum + i;</span><br><span class="line">	&#125; </span><br><span class="line">	<span class="built_in">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>单看cal()这个函数，假设f()只是一个普通的操作，那第 4～6 行的时间复杂度就是：$T1(n) = O(n)$。但f() 函数本身不是一个简单的操作，它的时间复杂度是$T2(n) = O(n)$，所以，整个 cal() 函数的时间复杂度就是：$T(n) = T1(n) * T2(n) = O(n*n) = O(n^2)$。</p>
+<h3 id="几种常见时间复杂度实例分析"><a href="#几种常见时间复杂度实例分析" class="headerlink" title="几种常见时间复杂度实例分析"></a>几种常见时间复杂度实例分析</h3><p>虽然代码千差万别，但是常见的复杂度量级并不多。<br>复杂度量级（按数量级递增）：常量阶$O(1)$、对数阶$O(logn)$、线性阶$O(n)$、线性对数阶$O(nlogn)$、平方阶$O(n^2)$、立方阶$O(n^3)$、…、k次方阶$O(n^k)$</p>
+<p>还有两种非多项式量级：指数阶$O(2^n)$和阶乘阶$O(n!)$，当数据规模$n$越来越大时，非多项式量级算法的执行时间会急剧增加，求解问题的执行时间会无线增长。所以，非多项式时间复杂度的算法是非常低效的。</p>
+<h4 id="O-1"><a href="#O-1" class="headerlink" title="$O(1)$"></a>$O(1)$</h4><p>$O(1)$只是常量级时间复杂度的一种表示方法，并不是指执行了一行代码。比如这段代码，即便有 3 行，它的时间复杂度也是$O(1）$，而不是$O(3)$。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int i = 8;</span><br><span class="line">int j = 6;</span><br><span class="line">int sum = i + j;</span><br></pre></td></tr></table></figure>
+
+<p>只要代码的执行时间不随$n$的增大而增长，这样代码的时间复杂度我们都记作$O(1)$。或者说，一般情况下，只要算法中不存在循环语句、递归语句，即使有成千上万行的代码，其时间复杂度也是$Ο(1)$。</p>
+<h4 id="O-logn-和-O-nlogn"><a href="#O-logn-和-O-nlogn" class="headerlink" title="$O(logn)$和$O(nlogn)$"></a>$O(logn)$和$O(nlogn)$</h4><p>对数阶时间复杂度非常常见，同时也是最难分析的一种时间复杂度。我通过一个例子来说明一下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">i=1;</span><br><span class="line"><span class="keyword">while</span> (i &lt;= n)  &#123;</span><br><span class="line">	i = i * 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第三行代码是循环执行次数最多的。所以，我们只要能计算出这行代码被执行了多少次，就能知道整段代码的时间复杂度。</p>
+<p>从代码中可以看出，变量 i 的值从 1 开始取，每循环一次就乘以 2。当大于 n 时，循环结束。实际上，变量 i 的取值就是一个等比数列。如果把它一个一个列出来，就应该是这个样子的：<br><img alt="01" data-src="/images/2018-10-11/02.jpg"></p>
+<p>所以，我们只要知道$x$值是多少，就知道这行代码执行的次数了。通过$2^x=n$求解$x={log_2}n$，所以，这段代码的时间复杂度就是$O({log_2}n)$。</p>
+<p>现在，把代码稍微改下，你再看看，这段代码的时间复杂度是多少？</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">i=1;</span><br><span class="line"><span class="keyword">while</span> (i &lt;= n)  &#123;</span><br><span class="line">	i = i * 3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据刚刚的思路，很简单就能看出来，这段代码的时间复杂度为$O({log_3}n)$。</p>
+<p>实际上，不管是以 2 为底、以 3 为底，还是以 10 为底，我们可以把所有对数阶的时间复杂度都记为 $O(logn)$。为什么呢？</p>
+<p>我们知道，对数之间是可以互相转换的，${log_3}n$ 就等于 ${log_3}2 * {log_2}n$，所以 $O({log_3}n) = O(C * {log_2}n)$，其中 $C={log_3}2$是一个常量。基于我们前面的一个理论：在采用大$O$ 标记复杂度的时候，可以忽略系数，即 $O(Cf(n)) = O(f(n))$。所以，$O({log_2}n) $就等于 $O({log_3}n)$。因此，在对数阶时间复杂度的表示方法里，忽略对数的“底”，统一表示为 $O(logn)$。</p>
+<p>基于以上的$O(logn)$，那 $O(nlogn)$ 就很容易理解了。还记得乘法法则吗？如果一段代码的时间复杂度是 O(logn)，循环执行 $n$ 遍，时间复杂度就是 $O(nlogn)$ 了。而且，$O(nlogn)$也是一种非常常见的算法时间复杂度。比如，归并排序、快速排序的时间复杂度都是 $O(nlogn)$。</p>
+<h4 id="O-m-n-和-O-m-n"><a href="#O-m-n-和-O-m-n" class="headerlink" title="$O(m+n)$和$O(m*n)$"></a>$O(m+n)$和$O(m*n)$</h4><p>再来讲一种跟前面都不一样的时间复杂度，代码的复杂度由两个数据的规模来决定。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">int cal(int m, int n) &#123;</span><br><span class="line">	int sum_1 = 0;</span><br><span class="line">	int i = 1;</span><br><span class="line">	<span class="keyword">for</span> (; i &lt; m; ++i) &#123;</span><br><span class="line">		sum_1 = sum_1 + i;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	int sum_2 = 0;</span><br><span class="line">	int j = 1;</span><br><span class="line">	<span class="keyword">for</span> (; j &lt; n; ++j) &#123;</span><br><span class="line">		sum_2 = sum_2 + j;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> sum_1 + sum_2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从代码中可以看出，m 和 n 是表示两个数据规模。我们无法事先评估 m 和 n 谁的量级大，所以我们在表示复杂度的时候，就不能简单地利用加法法则，省略掉其中一个。所以，上面代码的时间复杂度就是 $O(m+n)$。</p>
+<p>针对这种情况，原来的加法法则就不正确了，需要将加法规则改为：$T1(m) + T2(n) = O(f(m) + g(n))$。但是乘法法则继续有效：$T1(m)*T2(n) = O(f(m) * f(n))$。</p>
+<h3 id="空间复杂度分析"><a href="#空间复杂度分析" class="headerlink" title="空间复杂度分析"></a>空间复杂度分析</h3><p>理解了前面的大$O$表示法和时间复杂度分析，空间复杂度分析方法学起来就非常简单了。</p>
+<p>时间复杂度的全称是渐进时间复杂度，表示算法的执行时间与数据规模之间的增长关系。类比一下，<span style="color:#FF5A05">空间复杂度全称就是渐进空间复杂度，表示算法的存储空间与数据规模之间的增长关系。</span></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">void <span class="built_in">print</span>(int n) &#123;</span><br><span class="line">	int i = 0;</span><br><span class="line">	int[] a = new int[n];</span><br><span class="line">	<span class="keyword">for</span> (i; i &lt;n; ++i) &#123;</span><br><span class="line">		a[i] = i * i;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (i = n-1; i &gt;= 0; --i) &#123;</span><br><span class="line">		<span class="built_in">print</span> out a[i]</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>跟时间复杂度分析一样，我们可以看到，第 2 行代码中，我们申请了一个空间存储变量 i，但是它是常量阶的，跟数据规模$n$没有关系，所以我们可以忽略。第 3 行申请了一个大小为$n$的 int 类型数组，除此之外，剩下的代码都没有占用更多的空间，所以整段代码的空间复杂度就是$O(n)$。</p>
+<p>常见的空间复杂度就是 $O(1)$、$O(n)$、$O(n^2)$，像 $O(logn)$、$O(nlogn)$ 这样的对数阶复杂度平时都用不到。而且，空间复杂度分析比时间复杂度分析要简单很多。所以，对于空间复杂度，掌握这些内容已经足够了。</p>
+</contents>
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构与算法/" rel="tag"># 数据结构与算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/10/2018-10-10.How to learn data structures and algorithms/" rel="next" title="02 | 如何抓住重点，系统高效地学习数据结构与算法？">
+                <i class="fa fa-chevron-left"></i> 02 | 如何抓住重点，系统高效地学习数据结构与算法？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/14/2018-10-14.complexity analysis(fsecond)/" rel="prev" title="04 | 复杂度分析（下）：浅析最好、最坏、平均、均摊时间复杂度">
+                04 | 复杂度分析（下）：浅析最好、最坏、平均、均摊时间复杂度 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="小锦鲤">
+  
+  <p class="site-author-name" itemprop="name">小锦鲤</p>
+  <div class="site-description motion-element" itemprop="description">一个初出茅庐的游戏人~</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+
+
+  <div class="links-of-author motion-element">
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/JinLiGame" title="GitHub &rarr; https://github.com/JinLiGame" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="mailto:553555614@123.com" title="E-Mail &rarr; mailto:553555614@123.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" title="QQ &rarr; http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" title="Wechat &rarr; https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" rel="noopener" target="_blank"><i class="fa fa-fw fa-wechat"></i></a>
+      </span>
+    
+  </div>
+
+
+
+
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/zh-cn/" title="https://hexo.io/zh-cn/" rel="noopener" target="_blank">Hexo</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://www.markdown.cn/" title="http://www.markdown.cn/" rel="noopener" target="_blank">教程-MarkDown</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://theme-next.iissnan.com/theme-settings.html#author-sites" title="http://theme-next.iissnan.com/theme-settings.html#author-sites" rel="noopener" target="_blank">主题配置 - NexT 使用文档</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么需要复杂度分析呢？"><span class="nav-number">1.</span> <span class="nav-text">为什么需要复杂度分析呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#大O复杂度表示法"><span class="nav-number">2.</span> <span class="nav-text">大O复杂度表示法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时间复杂度分析"><span class="nav-number">3.</span> <span class="nav-text">时间复杂度分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-只关注循环执行次数最多的一段代码"><span class="nav-number">3.1.</span> <span class="nav-text">1. 只关注循环执行次数最多的一段代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-加法法则，总复杂度-量级最大的那段代码的复杂度"><span class="nav-number">3.2.</span> <span class="nav-text">2. 加法法则，总复杂度=量级最大的那段代码的复杂度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-乘法法则：嵌套代码的复杂度-嵌套内外代码复杂度的乘积"><span class="nav-number">3.3.</span> <span class="nav-text">3. 乘法法则：嵌套代码的复杂度=嵌套内外代码复杂度的乘积</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#几种常见时间复杂度实例分析"><span class="nav-number">4.</span> <span class="nav-text">几种常见时间复杂度实例分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#O-1"><span class="nav-number">4.1.</span> <span class="nav-text">$O(1)$</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#O-logn-和-O-nlogn"><span class="nav-number">4.2.</span> <span class="nav-text">$O(logn)$和$O(nlogn)$</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#O-m-n-和-O-m-n"><span class="nav-number">4.3.</span> <span class="nav-text">$O(m+n)$和$O(m*n)$</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#空间复杂度分析"><span class="nav-number">5.</span> <span class="nav-text">空间复杂度分析</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小锦鲤</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+  
+  <script src="/lib/lazyload/lozad.min.js?v=1.10.0"></script>
+
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=4.0.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+
+
+
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.2.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+
+</body>
+</html>

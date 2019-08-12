@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"b2t":false,"scrollpercent":true},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    search: {
+      root: '/',
+      path: 'search.xml'
+    },
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"bounceRightIn","post_header":"bounceRightIn","post_body":"swoopIn","coll_header":"swoopIn","sidebar":"flipBounceXIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="我们都知道，在C++中，两个类是无法直接相加的，但是，如果你重载了“+”符号，就可以进行类的加法运算。在Lua中也有这个道理，两个table类型的变量，你是无法直接进行“+”操作的，如果你定义了一个指定的函数，就可以进行了。那这篇文章就是主要讲的如何定义这个指定的函数，这个指定的函数是什么？希望对学习Lua的朋友有帮助。">
+<meta name="keywords" content="Lua">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lua之元表与元方法">
+<meta property="og:url" content="http://yoursite.com/2018/09/08/2018-09-08.Lua Metatable and Metamethod/index.html">
+<meta property="og:site_name" content="快乐的小锦鲤">
+<meta property="og:description" content="我们都知道，在C++中，两个类是无法直接相加的，但是，如果你重载了“+”符号，就可以进行类的加法运算。在Lua中也有这个道理，两个table类型的变量，你是无法直接进行“+”操作的，如果你定义了一个指定的函数，就可以进行了。那这篇文章就是主要讲的如何定义这个指定的函数，这个指定的函数是什么？希望对学习Lua的朋友有帮助。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-12T12:16:43.508Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lua之元表与元方法">
+<meta name="twitter:description" content="我们都知道，在C++中，两个类是无法直接相加的，但是，如果你重载了“+”符号，就可以进行类的加法运算。在Lua中也有这个道理，两个table类型的变量，你是无法直接进行“+”操作的，如果你定义了一个指定的函数，就可以进行了。那这篇文章就是主要讲的如何定义这个指定的函数，这个指定的函数是什么？希望对学习Lua的朋友有帮助。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="快乐的小锦鲤" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2018/09/08/2018-09-08.Lua Metatable and Metamethod/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>Lua之元表与元方法 | 快乐的小锦鲤</title>
+  
+
+
+
+
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?780f48b16f1acab067863e8a03265153";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">快乐的小锦鲤</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">嗨，欢迎来到我的世界！</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          <a href="javascript:;" class="popup-trigger">
+          
+            <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/08/2018-09-08.Lua Metatable and Metamethod/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小锦鲤">
+      <meta itemprop="description" content="一个初出茅庐的游戏人~">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="快乐的小锦鲤">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Lua之元表与元方法
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-08 22:43:01" itemprop="dateCreated datePublished" datetime="2018-09-08T22:43:01+08:00">2018-09-08</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-12 20:16:43" itemprop="dateModified" datetime="2019-08-12T20:16:43+08:00">2019-08-12</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/个人笔记/" itemprop="url" rel="index"><span itemprop="name">个人笔记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+            <div class="post-description">我们都知道，在C++中，两个类是无法直接相加的，但是，如果你重载了“+”符号，就可以进行类的加法运算。在Lua中也有这个道理，两个table类型的变量，你是无法直接进行“+”操作的，如果你定义了一个指定的函数，就可以进行了。那这篇文章就是主要讲的如何定义这个指定的函数，这个指定的函数是什么？希望对学习Lua的朋友有帮助。</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <contents>
+
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>元表对应的英文是metatable，元方法是metamethod。我们都知道，在C++中，两个类是无法直接相加的，但是，如果你重载了“+”符号，就可以进行类的加法运算。在Lua中也有这个道理，两个table类型的变量，你是无法直接进行“+”操作的，如果你定义了一个指定的函数，就可以进行了。那这篇文章就是主要讲的如何定义这个指定的函数，这个指定的函数是什么？希望对学习Lua的朋友有帮助。</p>
+<h3 id="Lua是怎么做的"><a href="#Lua是怎么做的" class="headerlink" title="Lua是怎么做的"></a>Lua是怎么做的</h3><p>通常，Lua中的每个值都有一套预定义的操作集合，比如数字是可以相加的，字符串是可以连接的，但是对于两个table类型，则不能直接进行“+”操作。这需要我们进行一些操作。在Lua中有一个元表，也就是上面说的metatable，我们可以通过元表来修改一个值的行为，使其在面对一个非预定义的操作时执行一个指定的操作。比如，现在有两个table类型的变量a和b，我们可以通过metatable定义如何计算表达式a+b，具体的在Lua中是按照以下步骤进行的：</p>
+<ol>
+<li>先判断a和b两者之一是否有元表；</li>
+<li>检查该元表中是否有一个叫__add的字段；</li>
+<li>如果找到了该字段，就调用该字段对应的值，这个值对应的是一个metamethod；</li>
+<li>调用__add对应的metamethod计算a和b的值。</li>
+</ol>
+<p>上述四个步骤就是计算table类型变量a+b的过程。在Lua中，每个值都有一个元表，table和userdata类型的每个变量都可以有各自独立的元表，而其他类型的值则共享其类型所属的单一元表。</p>
+<h3 id="元表和值"><a href="#元表和值" class="headerlink" title="元表和值"></a>元表和值</h3><p>每个值都可以拥有一个元表。对 userdata 和 table 类型而言，其每个值都可以拥有独立的元表，也可以几个值共享一个元表。对于其他类型，一个类型的值共享一个元表。例如所有数值类型的值会共享一个元表。除了字符串类型，其他类型的值默认是没有元表的。</p>
+<ul>
+<li>使用 getmetatable 函数可以获取任意值的元表。</li>
+<li>使用 setmetatable 函数可以设置表类型值的元表。</li>
+</ul>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><p>我们使用getmetatable来获取一个值的元表，会发现只有字符串类型的值默认拥有元表，其他类型的值，使用getmetatable去获得元表，将返回nil。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">local num = 10</span><br><span class="line">local str = &quot;10&quot;</span><br><span class="line">local bool = true</span><br><span class="line">local tab = &#123;10&#125;</span><br><span class="line"></span><br><span class="line">print(getmetatable(num))      --&gt; nil</span><br><span class="line">print(getmetatable(str))      --&gt; table: 00717820</span><br><span class="line">print(getmetatable(bool))     --&gt; nil</span><br><span class="line">print(getmetatable(tab))      --&gt; nil</span><br></pre></td></tr></table></figure>
+
+<p>任何一个table都可以作为任何类型值的元表，而一组相关的table有可以共享一个通用的元表，此元表描述了它们共同的行为。一个table甚至可以作为它自己的元表，用于描述其特有的行为。总之，任何搭配形式都是合法的。<br>在Lua代码中，我们也可以使用setmetatable去设置一个table或userdata类型变量的元表。若要设置其它类型值的元表，则必须通过C代码来完成。还存在一个特例，对于字符串，标准的字符串程序库为所有的字符串都设置了一个元表，而其它类型在默认情况下都没有元表。</p>
+<h4 id="可重新定义的元方法"><a href="#可重新定义的元方法" class="headerlink" title="可重新定义的元方法"></a>可重新定义的元方法</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">__add(a, b)     --对应的运算符 &apos;+&apos;</span><br><span class="line">__sub(a, b)     --对应的运算符 &apos;-&apos;</span><br><span class="line">__mul(a, b)     --对应的运算符 &apos;*&apos;</span><br><span class="line">__div(a, b)     --对应的运算符 &apos;/&apos;</span><br><span class="line">__mod(a, b)     --对应的运算符 &apos;%&apos;</span><br><span class="line">__unm(a)        --对应的运算符 &apos;-&apos;</span><br><span class="line">__concat(a, b)  --对应的运算符 &apos;..&apos;</span><br><span class="line">__eq(a, b)      --对应的运算符 &apos;==&apos;</span><br><span class="line">__lt(a, b)      --对应的运算符 &apos;&lt;&apos;</span><br><span class="line">__le(a, b)      --对应的运算符 &apos;&lt;=&apos;</span><br><span class="line">__pow(a, b)     --乘幂</span><br><span class="line">__len(a)        --长度</span><br><span class="line">__tostring(a)   --字符串输出</span><br><span class="line">__call(a, ...)  --执行方法调用</span><br><span class="line">__metatable     --保护元表</span><br><span class="line">__index(a, b)   --索引查询</span><br><span class="line">__newindex(a, b, c)     --索引更新</span><br></pre></td></tr></table></figure>
+
+<h3 id="运算操作符元方法"><a href="#运算操作符元方法" class="headerlink" title="运算操作符元方法"></a>运算操作符元方法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">--元表</span><br><span class="line">local metatable = &#123;&#125;</span><br><span class="line">metatable.__add = function(a, b)</span><br><span class="line">    local temp = &#123;&#125;</span><br><span class="line">    for k,v in pairs(a) do</span><br><span class="line">        table.insert(temp, v)</span><br><span class="line">    end</span><br><span class="line">    for k,v in pairs(b) do</span><br><span class="line">        table.insert(temp, v)</span><br><span class="line">    end</span><br><span class="line">    return temp</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">--测试</span><br><span class="line">local t1 = &#123;1, 2, 3&#125;</span><br><span class="line">local t2 = &#123;4, 5&#125;</span><br><span class="line">setmetatable(t1, metatable)</span><br><span class="line">setmetatable(t2, metatable)</span><br><span class="line"></span><br><span class="line">local result = t1 + t2  --&gt; &#123;1, 2, 3, 4, 5&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上面列举的那些可以重定义的元方法都可以使用上面的方法进行重定义。现在就出现了一个新的问题，t1和t2都有元表，那我们要用谁的元表？虽然我们这里的示例代码使用的都是一个元表，但是实际coding中，会遇到我这里说的问题，对于这种问题，Lua是按照以下步骤进行解决的：</p>
+<ol>
+<li>对于二元操作符，如果第一个操作数有元表，并且元表中有所需要的字段定义，比如我们这里的__add元方法定义，那么Lua就以这个字段为元方法，而与第二个值无关；</li>
+<li>对于二元操作符，如果第一个操作数有元表，但是元表中没有所需要的字段定义，比如我们这里的__add元方法定义，那么Lua就去查找第二个操作数的元表；</li>
+<li>如果两个操作数都没有元表，或者都没有对应的元方法定义，Lua就引发一个错误。</li>
+</ol>
+<h3 id="tostring元方法"><a href="#tostring元方法" class="headerlink" title="__tostring元方法"></a>__tostring元方法</h3><p>写过Java或者C#的人都知道，Object类中都有一个tostring的方法，程序员可以重写该方法，以实现自己的需求。在Lua中，也是这样的，当我们直接print(a)（a是一个table）时，是不可以的。那怎么办，这个时候，我们就需要自己重新定义__tostring元方法，让print可以格式化打印出table类型的数据。<br>函数print总是调用tostring来进行格式化输出，当格式化任意值时，tostring会检查该值是否有一个__tostring的元方法，如果有这个元方法，tostring就用该值作为参数来调用这个元方法，剩下实际的格式化操作就由__tostring元方法引用的函数去完成，该函数最终返回一个格式化完成的字符串。例如以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">--元表</span><br><span class="line">local metatable = &#123;&#125;</span><br><span class="line">metatable.__tostring = function(t)</span><br><span class="line">    return &quot;a table&quot;</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">--测试</span><br><span class="line">local t = &#123;&#125;</span><br><span class="line">setmetatable(t, metatable)</span><br><span class="line">print(t)   --&gt; a table</span><br></pre></td></tr></table></figure>
+
+<h3 id="比较类元方法"><a href="#比较类元方法" class="headerlink" title="比较类元方法"></a>比较类元方法</h3><p>对于三种比较类操作，需要满足两个操作数为同类型，且关联同一个元表时才能使用元方法。</p>
+<ol>
+<li>对于eq（等于）比较操作，如果操作数所属类型没有原生的等于比较，则调用元方法。</li>
+<li>对于lt（小于）与le（小于等于）两种比较操作，如果两个操作数同为数值或者同为字符串，则直接进行比较，否则使用元方法。</li>
+<li>对于le操作，如果元方法 “le” 没有提供，Lua就尝试”lt”，它假定 a&lt;=b 等价于 not(b&lt;a) 。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">local t1 = &#123;name = &quot;number&quot;, 1, 2, 3&#125;</span><br><span class="line">local t2 = &#123;name = &quot;number&quot;, 4, 5, 6&#125;</span><br><span class="line">local mt = &#123;__eq = function (a,b)</span><br><span class="line">    return a.name == b.name</span><br><span class="line">end&#125;</span><br><span class="line">setmetatable(t1,mt)              -- 必须要关联同一个元表才能比较</span><br><span class="line">setmetatable(t2,mt)</span><br><span class="line"> </span><br><span class="line">print(t1==t2)   --&gt; true</span><br></pre></td></tr></table></figure>
+
+<h3 id="index元方法"><a href="#index元方法" class="headerlink" title="__index元方法"></a>__index元方法</h3><p>__index元方法是metatable中最常用的metamethod，用来对表访问 – <code style="font-family:'Source Code Pro', Consolas, Menlo, Monaco, 'Courier New', monospace;font-size:.93em;color:rgb(199,37,78);background-color:rgb(249,242,244);">table[key]</code>。</p>
+<p>Lua查找一个表元素时的规则，其实就是如下3个步骤:</p>
+<ol>
+<li>当访问一个table的键时，如果这个键有值，则返回这个值；没有值则继续</li>
+<li>判断这个表是否有元表，如果没有元表，返回nil；有元表则继续</li>
+<li>判断这个元表是否有__index方法,如果__index方法是nil，则返回nil；如果__index方法是一个表，则重复1、2、3；如果__index方法是一个函数，则返回该函数的返回值。</li>
+</ol>
+<p>如果__index是一个函数的话，Lua就会调用这个函数，table和键会作为参数传递给函数。代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">--__index为function</span><br><span class="line">local metatable = &#123;&#125;</span><br><span class="line">metatable.__index = function(t, key)</span><br><span class="line">    return tostring(t)..&quot;, key:&quot;..tostring(key)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">local t = &#123;a=&quot;a&quot;&#125;</span><br><span class="line">setmetatable(t, metatable)</span><br><span class="line">print(t[&quot;a&quot;])   --&gt; a</span><br><span class="line">print(t[&quot;b&quot;])   --&gt; table: 004EC1D0, key:b</span><br></pre></td></tr></table></figure>
+
+<p>如果__index是一个表的话，Lua就以相同的方式来重新访问这个table，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">--__idnex为table</span><br><span class="line">local metatable = &#123;&#125;</span><br><span class="line">metatable.__index = &#123;b=&quot;b&quot;&#125;</span><br><span class="line"></span><br><span class="line">local t = &#123;a=&quot;a&quot;&#125;</span><br><span class="line">print(t[&quot;b&quot;])   --&gt; nil</span><br><span class="line">setmetatable(t, metatable)</span><br><span class="line">print(t[&quot;b&quot;])   --&gt; b</span><br></pre></td></tr></table></figure>
+
+<h3 id="newindex元方法"><a href="#newindex元方法" class="headerlink" title="__newindex元方法"></a>__newindex元方法</h3><p>__newindex元方法用来对表更新，用于赋值操作 – <code style="font-family:'Source Code Pro', Consolas, Menlo, Monaco, 'Courier New', monospace;font-size:.93em;color:rgb(199,37,78);background-color:rgb(249,242,244);">talbe[key] = value</code>。</p>
+<p>当对一个table中存在的索引赋值时，则会进行赋值，而不调用元方法 __newindex。<br>当对一个table中不存在的索引赋值时，在Lua中是按照以下步骤进行的：</p>
+<ol>
+<li>Lua解释器先判断这个table是否有元表；如果没有元表，就直接添加这个索引，然后对应的赋值</li>
+<li>如果有元表，则判断元表中是否有__newindex元方法，如果没有__newindex元方法，就直接添加这个索引，然后对应的赋值</li>
+<li>如果有__newindex元方法，Lua解释器就执行它，而不是执行赋值</li>
+<li>如果__newindex元方法对应的不是一个函数，而是一个table时，Lua解释器就在这个table中执行赋值，而不是对原来的table进行操作。</li>
+</ol>
+<p>以下实例演示了__newindex元方法的应用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">local mymetatable = &#123;&#125;</span><br><span class="line">local t = &#123;key1 = &quot;value1&quot;&#125;</span><br><span class="line">setmetatable(t, &#123; __newindex = mymetatable &#125;)</span><br><span class="line"></span><br><span class="line">print(t.key1)     --&gt; value1</span><br><span class="line"></span><br><span class="line">t.newkey = &quot;新值2&quot;</span><br><span class="line">print(t.newkey,mymetatable.newkey)      --&gt; nil 新值2</span><br><span class="line"></span><br><span class="line">t.key1 = &quot;新值1&quot;</span><br><span class="line">print(t.key1,mymetatable.key1)      --&gt; 新值1 nil</span><br></pre></td></tr></table></figure>
+
+<p>以上实例中表设置了元方法__newindex，在对新索引键（newkey）赋值时（mytable.newkey = “新值2”），会调用元方法，而不进行赋值。而如果对已存在的索引键（key1），则会进行赋值，而不调用元方法 __newindex。<br><br>以下实例使用了 rawset 函数来更新表：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">local metatable = &#123;&#125;</span><br><span class="line">metatable.__newindex = function(t, key, value)</span><br><span class="line">    rawset(t, key, &quot;\&quot;&quot;..value..&quot;\&quot;&quot;)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">local t = &#123;key1=&quot;value1&quot;&#125;</span><br><span class="line">setmetatable(t, metatable)</span><br><span class="line"></span><br><span class="line">print(t.key1)   --&gt; value1</span><br><span class="line"></span><br><span class="line">t.key1 = &quot;new value&quot;</span><br><span class="line">t.key2 = 4</span><br><span class="line"></span><br><span class="line">print(t.key1, t.key2)    --&gt; new value   4</span><br></pre></td></tr></table></figure>
+
+<h3 id="call元方法"><a href="#call元方法" class="headerlink" title="__call元方法"></a>__call元方法</h3><p>__call元方法用于函数调用 – <code style="font-family:'Source Code Pro', Consolas, Menlo, Monaco, 'Courier New', monospace;font-size:.93em;color:rgb(199,37,78);background-color:rgb(249,242,244);">function(args)</code><br>__call是一个很有意思的元方法，当把一个table当成function使用时，Lua解释器就会在table的元表中找一个叫__call的元方法，并且执行它。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">local metatable = &#123;&#125;</span><br><span class="line">metatable.__call = function(t, ...)</span><br><span class="line">    local str</span><br><span class="line">    local list = &#123; ... &#125;</span><br><span class="line">    for i=1, #list do</span><br><span class="line">        str = i==1 and list[i] or str..&quot;, &quot;..list[i]</span><br><span class="line">    end</span><br><span class="line">    return str</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">local t = &#123;&#125;</span><br><span class="line">setmetatable(t, metatable)</span><br><span class="line">print(t(1,2,&quot;a&quot;))      --&gt; 1, 2, a</span><br></pre></td></tr></table></figure>
+
+<h3 id="metatable元方法"><a href="#metatable元方法" class="headerlink" title="__metatable元方法"></a>__metatable元方法</h3><p>我们会发现，使用getmetatable就可以很轻易的得到元表，使用setmetatable就可以很容易的修改元表，那这样做的风险是不是太大了，那么如何保护我们的元表不被篡改呢？<br>在Lua中，函数setmetatable和getmetatable函数会用到元表中的一个字段，用于保护元表，该字段是__metatable。当我们想要保护元表，使用户既不能看也不能修改元表，那么就需要使用__metatable字段了；当设置了该字段时，getmetatable就会返回这个字段的值，而setmetatable则会引发一个错误；如以下演示代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">local metatable = &#123;&#125;</span><br><span class="line">metatable.__metatable = &quot;You can&apos;t get the metatable!&quot;</span><br><span class="line"></span><br><span class="line">local t = &#123;&#125;</span><br><span class="line">setmetatable(t, metatable)</span><br><span class="line"></span><br><span class="line">print(getmetatable(t))  --&gt; You can&apos;t get the metatable!</span><br><span class="line">setmetatable(t, &#123;&#125;)     --&gt; lua: test.lua:8: cannot change a protected metatable</span><br></pre></td></tr></table></figure>
+
+<h3 id="rawget和rawset"><a href="#rawget和rawset" class="headerlink" title="rawget和rawset"></a>rawget和rawset</h3><p>有的时候，我们不想从__index对应的元方法中查询值，也不想更新table时执行__newindex对应的方法，或者__newindex对应的table。那怎么办？<br>在Lua中，当我们查询table中的值，或者更新table中的值时，不想理那该死的元表，我们可以使用rawget函数，调用<code style="font-family:'Source Code Pro', Consolas, Menlo, Monaco, 'Courier New', monospace;font-size:.93em;color:rgb(199,37,78);background-color:rgb(249,242,244);">rawget(table, key)</code>就是对表table进行了一次“原始的（raw）”访问，也就是一次不考虑元表的简单访问；你可能会想，一次原始的访问，没有访问__index对应的元方法，可能有性能的提升，其实一次原始访问并不会加速代码执行的速度。对于__newindex元方法，可以调用<code style="font-family:'Source Code Pro', Consolas, Menlo, Monaco, 'Courier New', monospace;font-size:.93em;color:rgb(199,37,78);background-color:rgb(249,242,244);">rawset(table, key, value)</code>函数，它可以不涉及任何元方法而直接设置表table中与键key相关联的值value。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">local metatable = &#123;&#125;</span><br><span class="line">metatable.__index = &#123;c=3&#125;</span><br><span class="line">metatable.__newindex = function(t, key, value)</span><br><span class="line">    metatable.__index[key] = value</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">local t = &#123;a=1, b=2&#125;</span><br><span class="line">setmetatable(t, metatable)</span><br><span class="line"></span><br><span class="line">print(t[&quot;c&quot;])   --&gt; 3</span><br><span class="line">print(rawget(t, &quot;c&quot;))   --&gt; nil</span><br><span class="line"></span><br><span class="line">t[&quot;c&quot;] = 4</span><br><span class="line">print(t[&quot;c&quot;])   --&gt; 4</span><br><span class="line">print(rawget(t, &quot;c&quot;))   --nil</span><br><span class="line"></span><br><span class="line">rawset(t, &quot;c&quot;, 3)</span><br><span class="line">print(t[&quot;c&quot;])   --&gt; 3</span><br></pre></td></tr></table></figure></contents>
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/Lua/" rel="tag"># Lua</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/01/2018-09-01.Lua Install/" rel="next" title="Lua之安装编译环境">
+                <i class="fa fa-chevron-left"></i> Lua之安装编译环境
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/10/2018-09-10.Lua middleclass/" rel="prev" title="Lua之middleclass详解">
+                Lua之middleclass详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="小锦鲤">
+  
+  <p class="site-author-name" itemprop="name">小锦鲤</p>
+  <div class="site-description motion-element" itemprop="description">一个初出茅庐的游戏人~</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+
+
+  <div class="links-of-author motion-element">
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/JinLiGame" title="GitHub &rarr; https://github.com/JinLiGame" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="mailto:553555614@123.com" title="E-Mail &rarr; mailto:553555614@123.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" title="QQ &rarr; http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" title="Wechat &rarr; https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" rel="noopener" target="_blank"><i class="fa fa-fw fa-wechat"></i></a>
+      </span>
+    
+  </div>
+
+
+
+
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/zh-cn/" title="https://hexo.io/zh-cn/" rel="noopener" target="_blank">Hexo</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://www.markdown.cn/" title="http://www.markdown.cn/" rel="noopener" target="_blank">教程-MarkDown</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://theme-next.iissnan.com/theme-settings.html#author-sites" title="http://theme-next.iissnan.com/theme-settings.html#author-sites" rel="noopener" target="_blank">主题配置 - NexT 使用文档</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lua是怎么做的"><span class="nav-number">2.</span> <span class="nav-text">Lua是怎么做的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元表和值"><span class="nav-number">3.</span> <span class="nav-text">元表和值</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#例子"><span class="nav-number">3.1.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#可重新定义的元方法"><span class="nav-number">3.2.</span> <span class="nav-text">可重新定义的元方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运算操作符元方法"><span class="nav-number">4.</span> <span class="nav-text">运算操作符元方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tostring元方法"><span class="nav-number">5.</span> <span class="nav-text">__tostring元方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#比较类元方法"><span class="nav-number">6.</span> <span class="nav-text">比较类元方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#index元方法"><span class="nav-number">7.</span> <span class="nav-text">__index元方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#newindex元方法"><span class="nav-number">8.</span> <span class="nav-text">__newindex元方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#call元方法"><span class="nav-number">9.</span> <span class="nav-text">__call元方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#metatable元方法"><span class="nav-number">10.</span> <span class="nav-text">__metatable元方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rawget和rawset"><span class="nav-number">11.</span> <span class="nav-text">rawget和rawset</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小锦鲤</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+  
+  <script src="/lib/lazyload/lozad.min.js?v=1.10.0"></script>
+
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=4.0.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+
+  
+  
+
+  
+  
+
+  
+
+
+
+
+
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.2.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+
+</body>
+</html>

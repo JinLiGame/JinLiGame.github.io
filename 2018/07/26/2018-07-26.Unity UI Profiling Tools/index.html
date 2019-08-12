@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"b2t":false,"scrollpercent":true},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    search: {
+      root: '/',
+      path: 'search.xml'
+    },
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"bounceRightIn","post_header":"bounceRightIn","post_body":"swoopIn","coll_header":"swoopIn","sidebar":"flipBounceXIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="Unity UI性能分析工具">
+<meta name="keywords" content="Unity,UGUI,UGUI优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unity UI Profiling Tools">
+<meta property="og:url" content="http://yoursite.com/2018/07/26/2018-07-26.Unity UI Profiling Tools/index.html">
+<meta property="og:site_name" content="快乐的小锦鲤">
+<meta property="og:description" content="Unity UI性能分析工具">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-12T12:16:43.496Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Unity UI Profiling Tools">
+<meta name="twitter:description" content="Unity UI性能分析工具">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="快乐的小锦鲤" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2018/07/26/2018-07-26.Unity UI Profiling Tools/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>Unity UI Profiling Tools | 快乐的小锦鲤</title>
+  
+
+
+
+
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?780f48b16f1acab067863e8a03265153";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">快乐的小锦鲤</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">嗨，欢迎来到我的世界！</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          <a href="javascript:;" class="popup-trigger">
+          
+            <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/26/2018-07-26.Unity UI Profiling Tools/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小锦鲤">
+      <meta itemprop="description" content="一个初出茅庐的游戏人~">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="快乐的小锦鲤">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Unity UI Profiling Tools
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-26 21:03:11" itemprop="dateCreated datePublished" datetime="2018-07-26T21:03:11+08:00">2018-07-26</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-12 20:16:43" itemprop="dateModified" datetime="2019-08-12T20:16:43+08:00">2019-08-12</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/术业专攻/" itemprop="url" rel="index"><span itemprop="name">术业专攻</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+            <div class="post-description">Unity UI性能分析工具</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <contents>
+
+<h2 id="译文"><a href="#译文" class="headerlink" title="译文"></a>译文</h2><p style="font-family:微软雅黑;font-size:24px;text-align:center;color:#000000"><strong>Unity UI Profiling Tools<br>Unity UI性能分析工具</strong></p>
+
+<p style="font-family:微软雅黑;font-size:24px;text-align:left;color:#000000">版本检查: 2017.3<br>难度: 高级</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">There are several profiling tools useful for analyzing Unity UI’s performance. The key tools are:<br>有几种分析工具可用于分析Unity UI的性能。主要的工具有：</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;Unity Profiler</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;Unity Frame Debugger</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;Xcode’s Instruments or Intel VTune</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;Xcode’s Frame Debugger or Intel GPA</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The external tools provide method-level CPU profiling with millisecond (or better) resolution, as well as detailed draw-call and shader profiling. Instructions for setting up and using the above tools lie beyond the scope of this guide. Note that the XCode Frame Debugger and Instruments are only usable on IL2CPP builds for Apple platforms, and therefore can currently only be used to profile iOS builds.<br>这些外部工具用了毫秒级（或更高）的分辨率来给CPU提供方法级的分析，并且还有很细节的绘制调用及着色器分析。设置和使用这些工具的说明不在本指南范围。注意Xcode Frame Debugger 和 Instruments 仅适用于苹果系统的IL2CPP，因此目前只能用于配置iOS版本。</p>
+
+<p style="font-family:微软雅黑;font-size:30px;text-align:left;color:#000000"><strong>Unity Profiler</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The primary use for the Unity Profiler is to perform comparative profiling: enabling and disabling elements of a UI while the Unity Profiler is running can quickly narrow down the portions of a UI hierarchy that are most responsible for performance issues.<br>Unity Profiler的主要用途是比较分析性能：在Unity Profiler运行时启用和禁用UI元素可以快速缩小影响性能的UI层次结构的部分。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">To analyze this, watch the <i>Canvas.BuildBatch</i> and <i>Canvas.SendWillRenderCanvases</i> lines in the profiler’s output.<br>要分析这一点，请在分析器的输出中观察<i>Canvas.BuildBatch</i>和<i>Canvas.SendWillRenderCanvases</i>。</p>
+
+<p><img alt="sendwillrendercanvases" data-src="/images/2018-07-26/02-sendwillrendercanvases.png"></p>
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000"><i>Canvas.BuildBatch</i> is the native-code calculations that perform the Canvas Batch Building process, as described previously.<br><i>Canvas.BuildBatch</i>是执行Canvas Batch Building过程的本机代码计算，如前所述。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000"><i>Canvas.SendWillRenderCanvases</i> contains the invocation of the C# scripts that are subscribed to the Canvas component’s <i>willRenderCanvases</i> Event. Unity UI’s <i>CanvasUpdateRegistry</i> class receives this event and uses it to run the Rebuild process, described previously. It is expected that any dirty UI components will update their Canvas Renderers at this time.<br><i>Canvas.SendWillRenderCanvases</i>包含了Canvas组件的<i>willRenderCanvases</i>事件的C＃脚本的调用。Unity UI的<i>CanvasUpdateRegistry</i>类接收这个事件并使用它来运行重建过程，如前所述。预计每一个被标记为dirty的UI组件都会在这个时候更新它们的Canvas Renderer。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000"><i>Note:</i> To more easily see differences in UI performance, it is generally advisable to disable all of the trace categories aside from “Rendering”, “Scripts” and “UI”. This can be done by clicking on the colored boxes beside the name of the trace category on the left-hand side of the CPU Usage profiler. The categories can also be re-ordered in the CPU profiler by clicking and dragging the names of the categories upwards or downwards.<br>注意：为了更容易地看到UI性能的差异，通常建议禁用除“渲染”，“脚本”和“UI”之外的所有跟踪类别。这可以通过点击CPU占用率探查器（CPU Usage profiler）左侧的跟踪类别旁边的彩色框来完成。通过单击并向上或向下拖动类别的名称，也可以在CPU分析器中重新排序类别。</p>
+
+<p><img alt="sendwillrendercanvases" data-src="/images/2018-07-26/02-cpu-profiler.png"></p>
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The UI category is new in Unity 2017.1 and up. Unfortunately, parts of the UI update process are not categorized correctly, so be careful when looking at the UI curve because it may not contain all UI related calls. For example, <i>Canvas.SendWillRenderCanvases</i> is categorized as "UI", but <i>Canvas.BuildBatch</i> is categorized as “Others” and “Rendering”.<br>UI类别是Unity 2017.1及更高版本中的新功能。遗憾的是，部分UI更新过程未正确分类，因此在查看UI曲线时要小心，因为它可能不包含所有与UI相关的调用。例如，<i>Canvas.SendWillRenderCanvases</i>被归类为“UI”，但<i>Canvas.BuildBatch</i>被归类为“其他”和“渲染”。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">In 2017.1 and up, there’s also a new <a href="https://docs.unity3d.com/Manual/ProfilerUI.html?_ga=2.255104332.573973553.1532622738-1760002840.1532435422" target="_blank">UI Profiler</a>. By default, this profiler is the last one in the Profiler window. It consists of two timelines and a batch viewer:<br>在2017.1及更高版本中，还有一个新的<a href="https://docs.unity3d.com/Manual/ProfilerUI.html?_ga=2.255104332.573973553.1532622738-1760002840.1532435422" target="_blank">UI Profiler</a>。默认情况下，此探查器是Profiler窗口中的最后一个。它由两个时间轴和一个批处理查看器组成：</p>
+
+<p><img alt="ui-profiler" data-src="/images/2018-07-26/02-ui-profiler.png"></p>
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The first timeline shows the CPU time spent in two categories, respectively computing layout and rendering. Note that it suffers from the same problem described previously and some UI functions may not be accounted for.<br>第一个时间轴显示了两个类别的CPU时间，分别是计算布局和渲染。请注意，它遇到了前面描述的相同问题，并且可能无法考虑某些UI功能。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The second timeline shows the total number of batches, vertices and also displays event markers. In the previous screenshot, you can see a couple of button click events. These markers can help you determine what caused a CPU spike.<br>第二个时间轴显示批次，顶点的总数，还显示事件标记。在上一个屏幕截图中，可以看到几个按钮单击事件。这些标记可以帮助你确定导致CPU峰值的原因。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Finally, the most useful feature of the UI Profiler is the batch viewer at the bottom. On the left, there’s a tree view of all your canvases and underneath each of them, a list of the batches they generated. The columns provide interesting details about each canvas or batch, but there’s one in particular that is crucial to better understand how to optimize your UI and it’s the <i>Batch Breaking Reason</i>.<br>最后，UI Profiler最有用的功能是底部的批处理查看器。在左侧，可以看到所有画布的树形视图，并在每个画布的下方列出了它们生成的批次。这些列提供了有关每个画布或批处理的详细信息，但是有一个特别关键的是要更好地理解如何优化UI以及批处理中断原因。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">This column will show why the selected batch couldn’t be merged with the previous one. Reducing the number of batches is one of the most effective way of improving UI performance, so it’s important to understand what breaks batching.<br>此列将显示无法将所选批次与前一批合并的原因。减少批量数量是提高UI性能的最有效方法之一，因此了解哪些中断批处理非常重要。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">One of the most frequent reason, as shown in the screenshot, is a UI element using a different texture or material. In many cases, this can easily be fixed by using <a href="https://docs.unity3d.com/Manual/SpriteAtlas.html?_ga=2.91331678.573973553.1532622738-1760002840.1532435422" target="_blank">sprite atlases</a>. The last column shows the name of the game objects associated with the batch. You can double click on the name to select the game object in the editor (this is particularly helpful when you have several objects with the same name).<br>如屏幕截图所示，最常见的原因之一是使用不同纹理或材质的UI元素。在许多情况下，这可以通过使用精灵图集轻松修复。最后一列显示与批次关联的游戏对象的名称。你可以双击名称以在编辑器中选中游戏对象（当有多个具有相同名称的对象时，这个尤其有用）。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">As of Unity 2017.3, <strong>the batch viewer only works in the editor</strong>. The batching should usually be the same on device, so this is still really helpful. If you have doubt that batches may be different on device, then you can use the Frame Debugger that will be described next.<br>从Unity 2017.3开始，<strong>批处理查看器</strong>仅在编辑器中使用。批量在设备上通常应该是相同的，所以这是非常有用的。如果你怀疑设备上的批次可能不同，那么你可以使用下面将描述的帧调试器。</p>
+
+<p style="font-family:微软雅黑;font-size:30px;text-align:left;color:#000000"><strong>Unity Frame Debugger<br>Unity帧调试器</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The Unity Frame Debugger is a useful tool for reducing the number of draw calls generated by a Unity UI. This built-in tool can be accessed via the Window menu within the Unity Editor. When enabled, it will display all draw calls generated by Unity, including those generated by Unity UI.<br>Unity Frame Debugger对减少Unity UI产生的draw calls数量很有用。这个内置的工具可以通过Unity 编辑器中Window菜单进入。当启用后，它会显示Unity 产生的所有的draw calls，包括Unity UI生成的draw calls。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Notably, the frame debugger will update itself with the draw calls generated to display the Game View in the Unity Editor, and therefore can be used to try out different UI configurations without even entering Play Mode.<br>值得注意的是，帧调试器将会根据Unity Editor模式下Game视图所产生的draw calls来不断的更新自身，因此可以在不进入游戏模式的情况下来尝试不同的UI配置。
+</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The location of the Unity UI draw calls depends on the Render Mode selected on the Canvas component being drawn:<br>Unity UI draw calls的位置取决于在绘制的Canvas组件上选择的渲染模式：</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;<i>Screen Space – Overlay</i> will appear within Canvas.RenderOverlays group<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>Screen Space – Overlay</i> ，将出现在Canvas.RenderOverlays组中。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;<i>Screen Space – Camera</i> will appear within the Camera.Render group of the selected Render Camera, as a subgroup of Render.TransparentGeometry<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>Screen Space – Camera</i>，将显示在所选渲染相机的Camera.Render组内，作为Render.TransparentGeometry的子组</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;<i>World Space</i> will appear as a subgroup of Render.TransparentGeometry for each World Space camera in which the Canvas is visible<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>World Space</i>，将显示在Render. TransparentGeometry的一个子组出现在任何一个世界空间下可见的Canvas上。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">All UIs can be identified by the “Shader: UI/Default” line (assuming that the UI shader has not been replaced with a custom shader). in the group or draw call’s details. See the highlighted red boxes in the below screenshot.<br>所有的UI都可以通过组中"Shader:UI/Default"(前提是没有更换Shader)或者draw call细节来确定。详情见下图中的红色部分：</p>
+
+<p><img alt="sendwillrendercanvases" data-src="/images/2018-07-26/02-framedebugger.png"></p>
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">By watching this set of lines while tweaking a UI, it is relatively simple to maximize the Canvas’ ability to combine UI elements into batches. The most common design-related cause of broken batches is unintentional overlap.<br>调整UI时通过观察这组线条，最大化的发挥Canvas将UI元素组合成批次的能力是相对简单的。在设计的时候最容易引发broken batches（批次破坏）的原因是无意的重叠UI元素。
+</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">All Unity UI components generate their geometry as a series of quads. However, many UI sprites or UI text glyphs occupy only a fraction of the quads used to represent them, with the rest being empty space. As a result, it is quite common to find that the UI’s designer has unintentionally overlapped multiple different quads whose textures come from different materials and therefore cannot be batched.<br>所有Unity UI组件都将其几何图形生成为一系列四边形。然而，很多UI 精灵（Sprites）或UI 文本（Text）仅占了四边形的一部分来表示它们，剩下的都是空白的空间。因此，很常见的是，UI的设计者无意中重叠了多个不同的四边形，这些四边形的纹理来自不同的材质，因此无法进行批处理。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">As Unity UI operates entirely in the transparent queue, any quads that have unbatchable quads overlaid atop them must be drawn before the unbatchable quads, and therefore cannot be batched with other quads placed atop the unbatchable quads.<br>由于Unity UI完全在透明队列中运行，因此被任何没有批处理的四边形覆盖的四边形都必须要在没有批处理的四边形之前绘制，因此不能和放置在没有批处理四边形上的其他四边形进行批处理。（已然懵逼，跟个绕口令似的~）</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Consider a case of three quads, A, B, and C. Assume all three quads overlap one another, and also assume quads A and C use the same material while quad B uses a separate material. Quad B therefore cannot be batched with A or C.<br>考虑三个四边形（A，B和C）的情况。假设三个四边形彼此重叠，并且还假设四边形A和C使用相同的材​材质，而四边形B使用单独的材质。因此，四边形B不能与A或C一起批量生产。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">If the order in the hierarchy (from top to bottom) is A, B, C then A and C cannot be batched, because B must be drawn atop A and beneath C. However, if B is placed before or after the batchable quads, then the batchable quads can actually be batched – B needs only to be drawn before or after the batched quads and does not interpose them.<br>如果层次结构中的顺序（从上到下）是A，B，C，则A和C不能进行批处理，因为B必须在A之前和C之后绘制。但是，如果B放置在成批次的A和C之前或者之后，那么成批次的A和C就可以进行批处理，B只需要在A和C之前或者之后绘制出来并且不介入它们就可以。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">For further discussion of this issue, see the <a href="http://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input#child-order" target="_blank">Child order</a> section of the <a href="http://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input" target="_blank">Canvas</a> chapter.<br>对于这个问题进一步的讨论，可以看<a href="http://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input" target="_blank">Canvas</a>章节中<a href="http://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input#child-order" target="_blank">Child order</a>部分。</p>
+
+<p style="font-family:微软雅黑;font-size:30px;text-align:left;color:#000000"><strong>Instruments & VTune</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Xcode’s Instruments and Intel’s VTune allow for extremely deep profiling of Unity UI rebuilds and Canvas batch calculations on Apple or Intel CPUs, respectively. The method names are nearly identical to the profiler labels discussed above in the Unity Profiler section:<br>Xcode的Instruments和Intel的VTune允许分别对Apple或Intel CPU上的Unity UI重建和Canvas批量计算进行极为深入的分析。方法名称几乎与Unity Profiler部分中讨论的分析器标签相同：</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;<i>Canvas::SendWillRenderCanvases</i> is the C++ parent that calls the <i>Canvas.SendWillRenderCanvases</i> C# method and governs that line in the Unity Profiler. It will contain the code used to run the Rebuild process, <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fundamentals-unity-ui#rebuild" target="_blank">as described in the previous chapter</a>.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>Canvas::SendWillRenderCanvases</i>是调用<i>Canvas.SendWillRenderCanvases</i> C＃方法并控制Unity Profiler中该行的C ++父类。它将包含用于运行重建过程的代码，<a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fundamentals-unity-ui#rebuild" target="_blank">如上一章所述</a>。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;<i>Canvas::UpdateBatches</i> is identical to <i>Canvas.BuildBatch</i>, but includes additional boilerplate code not covered by the Unity Profiler label. It runs the actual Canvas Batch Building process, described above.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>Canvas::UpdateBatches</i> 等同于<i>Canvas.BuildBatch</i>，但包括Unity Profiler没有涉及到的额外的样板代码。它运行实际的Canvas Batch Building过程，如上所述。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">When used in conjunction with a Unity app built via IL2CPP, these tools can be used to drill down deeper into the transpiled C# code of Canvas::SendWillRenderCanvases. Of primary interest will be the cost of the following methods. <i>(Note: transpiled method names are approximate.)</i><br>当与通过IL2CPP编译的UnityApp结合使用时，这些工具可用于深入研究Canvas :: SendWillRenderCanvases的已转换C＃代码。主要关注的是以下方法的成本。（注意：被编译的方法名称相似。）</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;<i>IndexedSet_Sort</i> and <i>CanvasUpdateRegistry_SortLayoutList</i> are used to sort the list of dirty Layout components before the layouts are recalculated. As described above, this involves calculating the number of parent transforms above each Layout component.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>IndexedSet_Sort</i>和<i>CanvasUpdateRegistry_SortLayoutList</i>用于在重新计算布局之前对标记为dirty的布局组件列表进行排序。如上所述，这涉及计算每个布局组件的父物体的数量。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;<i>ClipperRegistry_Cull</i> calls all registered implementers of the <i>IClipRegion</i> interface. Built-in implementers include <a href="http://docs.unity3d.com/ScriptReference/UI.RectMask2D.html" target="_blank">RectMask2D</a>, which uses the IClippable interface. During <i>ClipperRegistry.Cull</i> calls, <i>RectMask2D</i> components loop over all clippable elements contained within their hierarchy and asks them to update their culling information.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>ClipperRegistry_Cull</i>调用<i>IClipRegion</i>接口的所有已注册实现类。内部实现包括<a href="http://docs.unity3d.com/ScriptReference/UI.RectMask2D.html" target="_blank">RectMask2D</a>，它使用IClippable接口。在ClipperRegistry.Cull调用期间，RectMask2D组件遍历其层次结构中包含的所有可剪切元素，并要求它们更新其剔除信息。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;<i>Graphic_Rebuild</i> will contain the cost of actually calculating the meshes needed to represent Image, Text or other Graphic-derived components. Beneath this will be several other methods like <i>Graphic_UpdateGeometry</i> and, most notably, <i>Text_OnPopulateMesh</i>.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>Graphic_Rebuild</i>将包含实际计算表示图像，文本或其他图形派生组件所需的网格的成本。在其下面将是几个其他方法，如<i>Graphic_UpdateGeometry</i>，最重要的是<i>Text_OnPopulateMesh</i>。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <i>Text_OnPopulateMesh</i> is generally a hotspot when Best Fit is enabled. This is discussed in more detail later in this guide.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <i>Text_OnPopulateMesh</i> ，当Best Fit启动后，通常是一个热点。这将在后面详细讨论。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Mesh modifiers, such as <i>Shadow_ModifyMesh</i> and <i>Outline_ModifyMesh</i>, will also run here. The cost of calculating component drop shadows, outlines and other special effects can be seen via these methods.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  网格修改器，例如Shadow_ModifyMesh和Outline_ModifyMesh，也将在这里运行。通过这些方法可以看出计算组件阴影，轮廓和其他特殊效果的成本。</p>
+
+<p style="font-family:微软雅黑;font-size:30px;text-align:left;color:#000000"><strong>Xcode Frame Debugger & Intel GPA</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Low-level frame debugging tools are essential for profiling the cost of individual portions of the batched UI as well as monitoring the cost of UI overdraw. UI overdraw is discussed in more detail later in this guide.<br>低级框架调试工具对于分析批量UI的各个部分的成本以及监控UI透支的成本至关重要。UI过度绘制将在本指南后面详细讨论。</p>
+
+<p style="font-family:微软雅黑;font-size:20px;text-align:left;color:#000000"><strong>Using the Xcode Frame Debugger<br>使用Xcode帧调试器</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">To test whether a given UI is overstressing the GPU, Xcode’s built-in GPU diagnostics tools can be employed. First, configure the project in question to use Metal or OpenGLES3, then make a build and open the resulting Xcode project. <strong>Some Xcode version and device combinaisons may support OpenGLES 2 frame captures, but there’s no guarantee it will work</strong>.<br>为了测试给定的UI是否过度使用GPU，可以使用Xcode的内置GPU诊断工具。首先，配置项目以使用Metal或OpenGLES3，然后进行编译并打开生成的Xcode项目。<strong>一些Xcode版本和设备组合可能支持OpenGLES 2帧捕获，但不能保证它可以工作</strong>。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000"><i>Note:</i> On some versions of Xcode, it is necessary to select the appropriate Graphics API in the Build Scheme in order to make the graphics profiler work. To do this, go to the Product menu in Xcode, expand the Scheme menu item, and choose Edit Scheme.... Select the Run target and go to the Options tab. Change the GPU Frame Capture option to match the API used by your project. Assuming the Unity project is set up to automatically select a graphics API, then most modern iPads will default to using Metal. If in doubt, start the project and look at the debug logs in Xcode. One of the early lines should indicate which rendering path (Metal, GLES3 or GLES2) is being initialized.<br><i>注意：</i>在某些版本的Xcode中，有必要在编译方案中选择适当的Graphics API，以使图形分析器工作。为此，请转到Xcode中的“产品”菜单，展开“方案”菜单项，然后选择“编辑方案”....选择“运行目标”并转到“选项”选项卡。更改GPU Frame Capture选项以匹配项目使用的API。假设Unity项目设置为自动选择图形API，那么大多数现代iPad将默认使用Metal。如果有疑问，请启动项目并查看Xcode中的调试日志。早期行之一应指示正在初始化哪个渲染路径（Metal，GLES3或GLES2）。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Build and run the project on an iOS device. The GPU profiler can be found by showing the Debug pane in Xcode’s Navigator sidebar, and clicking on the FPS entry.<br>在iOS设备上编译并运行项目。通过在Xcode的Navigator侧栏中显示Debug窗格，然后单击FPS条目，可以找到GPU Profiler。</p>
+
+<p><img alt="sendwillrendercanvases" data-src="/images/2018-07-26/02-xcode-gpu.png"></p>
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The first point of interest in the GPU profiler is the set of three bars in the center of the screen, labeled “Tiler”, “Renderer”, and “Device”. Of these two:<br>GPU分析器最大的好处是在屏幕中央有三个条状图，标记为“Tiler”，“Renderer”和“Device”。这两个：</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;“Tiler” is generally a measure of how stressed the GPU is by processing geometry, which includes time spent in vertex shaders. Generally, a high “Tiler” usage indicates either excessively slow vertex shaders or an excessive number of vertices being drawn.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;“Tiler”通常是通过处理几何图形来衡量GPU的压力，其中包括在顶点着色器中花费的时间。通常，高“Tiler”用法表示要求过慢的顶点着色器或绘制过多的顶点。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;“Renderer” is generally a measure of how stressed the GPU’s pixel pipelines are. Generally, high “Renderer” usage indicates that an application is exceeding the maximum fill-rate of the GPU, or has inefficient fragment shaders.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;“Renderer”通常衡量GPU的像素管道的压力。通常，高“Renderer”用法表示应用程序超过GPU的最大填充率，或者具有低效的片段着色器。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;“Device” is a composite measure of overall GPU usage, which includes both “Tiler” and “Renderer” performance. It can generally be ignored, as it will roughly track the higher of the “Tiler” or “Renderer” measurements.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;“Device”是整体GPU使用情况的综合衡量标准，包括“Tiler”和“Renderer”性能。它通常可以忽略，因为它将粗略地跟踪“Tiler”或“Renderer”测量值中的较高者。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">For more information on Xcode’s GPU profiler, see <a href="https://developer.apple.com/library/archive/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/ToolsOverview/ToolsOverview.html" target="_blank">this documentation article</a>.<br>有关Xcode的GPU分析器的更多信息，请参阅<a href="https://developer.apple.com/library/archive/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/ToolsOverview/ToolsOverview.html" target="_blank">这篇文章</a>。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Xcode’s Frame Debugger can be triggered by clicking on the small ‘Camera’ icon hidden at the bottom of the GPU profiler. It is highlighted by an arrow and a red box in the following screenshot.<br>可以通过单击隐藏在GPU探查器底部的小“相机”图标来触发Xcode的帧调试器。它在以下屏幕截图中以箭头和红色框突出显示。</p>
+
+<p><img alt="sendwillrendercanvases" data-src="/images/2018-07-26/02-gpucapture.png"></p>
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">After a brief pause, the Frame Debugger’s summary view should appear, like so:<br>短暂的暂停后，Frame Debugger总结了会出现的大概内容，如下：</p>
+
+<p><img alt="sendwillrendercanvases" data-src="/images/2018-07-26/02-gpusummary.png"></p>
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">When using the default UI shader, the cost of rendering geometry generated by the Unity UI system will show up under the <i>“UI/Default”</i> shader pass, assuming the default UI shader has not been replaced with a custom shader. It is possible to see this default UI shader in the above screenshot as Render Pipeline <i>“UI/Default.”</i><br>使用默认UI着色器时，Unity UI系统生成的渲染几何图形的成本将显示在<i>“UI/Default”</i>着色器上，假设默认的UI着色器还没有替换为自定义着色器。可以在上面的屏幕截图中看到此默认UI着色器为Render Pipeline <i>“UI/Default.”</i>。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Unity UI only generates quads and so the vertex shader is unlikely to stress the tiler pipeline of the GPU. Any problems that appear in this shader pass are likely due to fill-rate issues.<br>Unity UI仅生成四边形，因此顶点着色器不会使GPU的Tiler管道有压力。此着色器过程中出现的任何问题都可能是由于填充率问题。</p>
+
+<p style="font-family:微软雅黑;font-size:20px;text-align:left;color:#000000"><strong>Analyzing profiler results<br>分析分析器的结果</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">After gathering profiling data, several conclusions might be drawn. If <i>Canvas.BuildBatch</i> or <i>Canvas::UpdateBatches</i> seems to be using an excessive amount of CPU time, then the likely problem is an excessive number of Canvas Renderer components on a single Canvas. See the <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input#splitting-canvases" target="_blank">Splitting Canvases</a> section of the <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input" target="_blank">Canvas</a> chapter.<br>收集分析数据后，可能会得出几个结论。如果<i>Canvas.BuildBatch</i>或<i>Canvas :: UpdateBatches</i>使用了过多的CPU时间，那么可能的问题是单个Canvas上的Canvas Renderer组件数量过多。请参阅<a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input" target="_blank">Canvas</a>章节中的<a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input#splitting-canvases" target="_blank">Splitting Canvases</a>部分。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">If an excessive amount of time is spent drawing the UI on the GPU, and the frame debugger indicates that the fragment shader pipeline is the bottleneck, then the UI is likely exceeding the pixel fill rate which the GPU is capable of. The most likely cause is excessive UI overdraw. See the <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input#fill-rate" target="_blank">Remediating fill-rate issues</a> section of the <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input" target="_blank">Fill-rate, Canvases and input</a> chapter.<br>如果花费过多的时间在GPU上绘制UI，并且帧调试器指示片段着色器管线是瓶颈，则UI可能超过GPU能够的像素填充率。最可能的原因是过多的UI透支。请参阅<a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input" target="_blank">Fill-rate, Canvases and input</a>章节中的<a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input#fill-rate" target="_blank">Remediating fill-rate issues</a>部分。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">If Graphic Rebuilds are using excessive CPU, as seen by a large portion of CPU time going to <i>Canvas.SendWillRenderCanvases</i> or <i>Canvas::SendWillRenderCanvases</i>, then deeper analysis is needed. Some portion of the Graphic Rebuild process is likely responsible.<br>如果图形重建使用过多的CPU，如大部分CPU时间用于<i>Canvas.SendWillRenderCanvases</i>或<i>Canvas::SendWillRenderCanvases</i>，则需要进行更深入的分析。图形重建过程的某些部分可能是负责任的。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">In the case that a large portion of <i>WillRenderCanvas</i> is spent inside <i>IndexedSet_Sort</i> or <i>CanvasUpdateRegistry_SortLayoutList</i>, then time is being spent sorting the list of dirty Layout components. Consider reducing the number of Layout components on the Canvas. See <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/other-ui-optimization-techniques-and-tips#recttransform-layouts" target="_blank">Replacing layouts with RectTransforms</a> and <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input#splitting-canvases" target="_blank">Splitting Canvases</a> sections for possible remediations.<br>在大部分的情况下WillRenderCanvas花费很多在IndexedSet_Sort或CanvasUpdateRegistry_SortLayoutList，则时间被消耗在排序被标记为dirty的布局组件列表上。考虑减少画布上的布局组件数量。请参阅<a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/other-ui-optimization-techniques-and-tips#recttransform-layouts" target="_blank">Replacing layouts with RectTransforms</a>和<a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input#splitting-canvases" target="_blank">Splitting Canvases</a>部分替换布局以获取可能的补救措施。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">If excessive time seems to be spent in <i>Text_OnPopulateMesh</i>, then the culprit is simply the generation of text meshes. See the <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/optimizing-ui-controls#best-fit" target="_blank">Best Fit</a> and <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/other-ui-optimization-techniques-and-tips#disabling-canvases" target="_blank">Disabling Canvases</a> sections for possible remediations, and consider the advice inside <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input#splitting-canvases" target="_blank">Splitting Canvases</a> if much of the text being rebuilt is not actually having its underlying string data changed.<br>如果在<i>Text_OnPopulateMesh</i>中花费了过多的时间，那么罪魁祸首就是生成文本网格。请参阅<a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/optimizing-ui-controls#best-fit" target="_blank">Best Fit</a> 和<a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/other-ui-optimization-techniques-and-tips#disabling-canvases" target="_blank">Disabling Canvases</a>部分以获取可能的补救措施，如果正在重建的大部分文本实际上没有更改其基础字符串数据，请考虑<a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input#splitting-canvases" target="_blank">Splitting Canvases</a>内的建议。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">If time is spent inside <i>Shadow_ModifyMesh</i> or <i>Outline_ModifyMesh</i> (or any other implementation of <i>ModifyMesh</i>), then the problem is excessive time spent calculating mesh modifiers. Consider removing these components and achieving their visual effect via static images.<br>如果时间花在内部的<i>Shadow_ModifyMesh</i>或<i>Outline_ModifyMesh</i>（或任何其他实施<i>ModifyMesh</i>），则问题是过多时间花费在计算网格修改上。考虑删除这些组件并通过静态图像实现其视觉效果。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">If there is no particular hotspot within <i>Canvas.SendWillRenderCanvases</i>, or it appears to be running every frame, then the problem is likely that dynamic elements have been grouped together with static elements and are forcing the entire Canvas to rebuild too frequently. See the <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input#splitting-canvases" target="_blank">Splitting Canvases</a> section.<br>如果<i>Canvas.SendWillRenderCanvases</i>中没有特定的热点，或者它似乎在每一帧都运行，那么问题很可能是动态元素已经与静态元素组合在一起，并且迫使整个Canvas过于频繁地重建。请参阅<a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fill-rate-canvases-and-input#splitting-canvases" target="_blank">Splitting Canvases</a>部分。</p><br>
+
+
+<h2 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h2><ol>
+<li>原文地址: <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/unity-ui-profiling-tools?playlist=30089" target="_blank" rel="noopener">https://unity3d.com/cn/learn/tutorials/topics/best-practices/unity-ui-profiling-tools?playlist=30089</a></li>
+</ol>
+</contents>
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/Unity/" rel="tag"># Unity</a>
+          
+            <a href="/tags/UGUI/" rel="tag"># UGUI</a>
+          
+            <a href="/tags/UGUI优化/" rel="tag"># UGUI优化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/25/2018-07-25.Fundamentals of Unity UI/" rel="next" title="Fundamentals of Unity UI">
+                <i class="fa fa-chevron-left"></i> Fundamentals of Unity UI
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/27/2018-07-27.Fill-rate, Canvases and input/" rel="prev" title="Fill-rate, Canvases and input">
+                Fill-rate, Canvases and input <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="小锦鲤">
+  
+  <p class="site-author-name" itemprop="name">小锦鲤</p>
+  <div class="site-description motion-element" itemprop="description">一个初出茅庐的游戏人~</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+
+
+  <div class="links-of-author motion-element">
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/JinLiGame" title="GitHub &rarr; https://github.com/JinLiGame" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="mailto:553555614@123.com" title="E-Mail &rarr; mailto:553555614@123.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" title="QQ &rarr; http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" title="Wechat &rarr; https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" rel="noopener" target="_blank"><i class="fa fa-fw fa-wechat"></i></a>
+      </span>
+    
+  </div>
+
+
+
+
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/zh-cn/" title="https://hexo.io/zh-cn/" rel="noopener" target="_blank">Hexo</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://www.markdown.cn/" title="http://www.markdown.cn/" rel="noopener" target="_blank">教程-MarkDown</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://theme-next.iissnan.com/theme-settings.html#author-sites" title="http://theme-next.iissnan.com/theme-settings.html#author-sites" rel="noopener" target="_blank">主题配置 - NexT 使用文档</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#译文"><span class="nav-number">1.</span> <span class="nav-text">译文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关链接"><span class="nav-number">2.</span> <span class="nav-text">相关链接</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小锦鲤</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+  
+  <script src="/lib/lazyload/lozad.min.js?v=1.10.0"></script>
+
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=4.0.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+
+  
+  
+
+  
+  
+
+  
+
+
+
+
+
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.2.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+
+</body>
+</html>

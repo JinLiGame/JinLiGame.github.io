@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"b2t":false,"scrollpercent":true},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    search: {
+      root: '/',
+      path: 'search.xml'
+    },
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"bounceRightIn","post_header":"bounceRightIn","post_body":"swoopIn","coll_header":"swoopIn","sidebar":"flipBounceXIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="Unity在使用一张图片时，通常会选择一种压缩格式来减少内存的占用。">
+<meta name="keywords" content="Unity,UGUI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unity图片压缩">
+<meta property="og:url" content="http://yoursite.com/2019/03/10/2019-03-10.Unity Image Compression/index.html">
+<meta property="og:site_name" content="快乐的小锦鲤">
+<meta property="og:description" content="Unity在使用一张图片时，通常会选择一种压缩格式来减少内存的占用。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-12T12:16:43.528Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Unity图片压缩">
+<meta name="twitter:description" content="Unity在使用一张图片时，通常会选择一种压缩格式来减少内存的占用。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="快乐的小锦鲤" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2019/03/10/2019-03-10.Unity Image Compression/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>Unity图片压缩 | 快乐的小锦鲤</title>
+  
+
+
+
+
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?780f48b16f1acab067863e8a03265153";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">快乐的小锦鲤</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">嗨，欢迎来到我的世界！</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          <a href="javascript:;" class="popup-trigger">
+          
+            <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/10/2019-03-10.Unity Image Compression/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小锦鲤">
+      <meta itemprop="description" content="一个初出茅庐的游戏人~">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="快乐的小锦鲤">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Unity图片压缩
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-03-10 15:03:43" itemprop="dateCreated datePublished" datetime="2019-03-10T15:03:43+08:00">2019-03-10</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-12 20:16:43" itemprop="dateModified" datetime="2019-08-12T20:16:43+08:00">2019-08-12</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/个人笔记/" itemprop="url" rel="index"><span itemprop="name">个人笔记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+            <div class="post-description">Unity在使用一张图片时，通常会选择一种压缩格式来减少内存的占用。</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <contents>
+
+<h2 id="面向CPU"><a href="#面向CPU" class="headerlink" title="面向CPU"></a>面向CPU</h2><p>位图(点阵图像/像素图)    有一个个像素所组成的图像,缩放会失真</p>
+<h3 id="简单的纹理格式"><a href="#简单的纹理格式" class="headerlink" title="简单的纹理格式"></a>简单的纹理格式</h3><p>通常情况下256种状态的维度图像，不压缩的情况下，一个像素要8bit【1Byte】</p>
+<ul>
+<li>RGBA32(RGBA8888) 每个像素4字节，RGBA通道各占8位</li>
+<li>RGBA16(RGBA4444) 每个像素2字节，RGBA通道各占4位</li>
+<li>RGB24(RGB888) 每个像素3字节，RGB通道各占8位，无透明通道</li>
+<li>RGB16(RGB565) 每个像素2字节，RGBA通道各占5/6/5位，无透明通道</li>
+<li>RGBA16(RGBA5551) 每个像素2字节，RGB通道各占5位，透明通道占1位，要么完全透明要么完全不透明</li>
+</ul>
+<h3 id="决定纹理资源大小的因素"><a href="#决定纹理资源大小的因素" class="headerlink" title="决定纹理资源大小的因素"></a>决定纹理资源大小的因素</h3><ul>
+<li>分辨率</li>
+<li>格式</li>
+<li>Mipmap</li>
+</ul>
+<h3 id="图片文件"><a href="#图片文件" class="headerlink" title="图片文件"></a>图片文件</h3><ul>
+<li>文件描述信息</li>
+<li>图像数据区</li>
+</ul>
+<h3 id="图片文件格式"><a href="#图片文件格式" class="headerlink" title="图片文件格式"></a>图片文件格式</h3><ul>
+<li>png：无损的压缩图片形格式</li>
+<li>jgp/jpeg：有损的压缩图片形格式  根据自己的压缩算法，将图像压缩在很小的存储空间，图像中重复或者不重要的资料会被丢失</li>
+<li>gif</li>
+<li>psd ps：专用格式，会保存图层、通道、路径等信息，是没有经过压缩的</li>
+</ul>
+<h3 id="图像数据压缩方式"><a href="#图像数据压缩方式" class="headerlink" title="图像数据压缩方式"></a>图像数据压缩方式</h3><p>采用像素图压缩图像数据</p>
+<p>一张纹理所占用的内存：1024pixel*1024pixel*4Byte = 4M </p>
+<h2 id="面向GPU"><a href="#面向GPU" class="headerlink" title="面向GPU"></a>面向GPU</h2><h3 id="面向GPU的压缩算法"><a href="#面向GPU的压缩算法" class="headerlink" title="面向GPU的压缩算法"></a>面向GPU的压缩算法</h3><ol>
+<li>PC<ul>
+<li>DXT</li>
+</ul>
+</li>
+<li>Android<ul>
+<li>ETC/ETC2</li>
+<li>ASTC 4x4</li>
+<li>RGBA crunched ETC2【带有crunched都是有损压缩】<br>(纹理在CPU上被解压缩成ETC2格式，并在运行时加载到GPU上，虽然压缩时间较长，但是十分节省磁盘空间并且运行时解压速度很快)</li>
+</ul>
+</li>
+<li>IOS<ul>
+<li>PVR</li>
+</ul>
+</li>
+</ol>
+<p>当选择压缩算法的时候，如果GPU不支持此压缩格式，那么纹理就会被解压缩成RGB或者RGBA格式的，会增加解压时间并且占用更多内存</p>
+<h3 id="纹理压缩格式"><a href="#纹理压缩格式" class="headerlink" title="纹理压缩格式"></a>纹理压缩格式</h3><ul>
+<li><p>DXT：适用于各种windows设备,是一种有损的压缩方式,基本思想就是把4x4的像素快压缩成一个64或者128位的数据块。</p>
+</li>
+<li><p>DXT1：主要适用于RGB565(不具透明度的贴图)或RGBA5551(仅具一位Alpha的贴图)*RGB565对比RGB888也是一种缺失，因为人眼对绿色最敏感，所以G占6位。</p>
+<p>  工作原理：将整张纹理图按照4x4像素分为一个个的块（每个块保留了2个16位的颜色），对保留的2个颜色进行插值得到另外2个颜色值,在4x4的像素块中，每一个像素颜色都对应这4个颜色之一，每个像素需要2bit。所以每个块用64位 = 4x4像素 x 2bit + 2个颜色 x 16位。这种压缩格式整体效果不错，但是如果对局部做特写的话会发现细节上有很多的丢失，是因为每个块只会保留两个颜色，所以当一个块中出现了两个以上的颜色的时候，那么有的颜色就丢失，这种细节丢失的情况通常发生在比较细的边界中，但是由于DXT1的压缩率是RGB的6倍，所以这种问题可以通过提高分辨率来解决。</p>
+</li>
+<li><p>DXT2/DXT3：在DXT1中的4x4像素块中附加了64位数据(2个8位的Alpha值 + 16个3位的索引值，每个像素索引占3位，表示8中不同透明状态)来表示Alpha透明信息</p>
+<p>  区别：DXT2完成了颜色和Alpha的混合，也就是当Alpha发生改变时，直接改变整体颜色值；DXT3的Alpha信息是相对独立的。</p>
+</li>
+</ul>
+<ul>
+<li><p>DXT4/DXT5：在DXT1中的4x4像素块中附加了64位数据来表示Alpha透明信息，这些透明信息是通过线性插值得来的。</p>
+<p>  区别：DXT4完成了颜色和Alpha的混合，也就是当Alpha发生改变时，直接改变整体颜色值；DXT5的Alpha信息是相对独立的。</p>
+</li>
+</ul>
+<ul>
+<li><p>ETC：是一种有损压缩算法，也是把4x4的像素块压缩成64或128位的数据块。</p>
+</li>
+<li><p>ETC1：不支持透明，对于透明纹理，在Android设备上，可以把RGB和A拆到2张ETC1纹理上，游戏中再合并使用。</p>
+</li>
+<li><p>ETC2：向后兼容ETC1，压缩质量更好而且支持透明通道。</p>
+</li>
+<li><p>ASTC：适用于IOS(A8)的苹果手机及使用PowerVR 6XT、Mali T600、Adreno 400series、Tegra K1 GPU的Android手机。</p>
+</li>
+<li><p>PVRTC：压缩比高，也是有损压缩，要求纹理的高和宽必须都是2的整数次幂，最小为8，适用于所有IOS设备和使用PowerVR GPU的Android设备上。</p>
+</li>
+<li><p>PVRTC -2bpp(bit per pixel)：每个像素2位，质量较差</p>
+</li>
+<li><p>PVRTC -4bpp(bit per pixel)：每个像素4位</p>
+</li>
+</ul>
+<h3 id="图片在Unity如何被使用"><a href="#图片在Unity如何被使用" class="headerlink" title="图片在Unity如何被使用"></a>图片在Unity如何被使用</h3><p>当有一张图片进入到Assets时，Unity需要导入该图片</p>
+<ol>
+<li>根据该图片的用途决定将其转换成什么东西？（Texture Type）</li>
+<li>根据当前系统平台采用合适的(GPU)压缩算法</li>
+</ol>
+<p>转换后的东西，会存在Library目录下，以meta文件中的guid开头，在apk包中找到这个东西</p>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><ol>
+<li>渲染管线</li>
+<li>颜色空间<ul>
+<li>线性</li>
+<li>Gamma</li>
+</ul>
+</li>
+<li>HDR</li>
+<li>在profiler中确定压缩前后的内存占用，RGBA32 - RGBA crunched ETC2 - RGBA crunched DXT5</li>
+</ol>
+</contents>
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/Unity/" rel="tag"># Unity</a>
+          
+            <a href="/tags/UGUI/" rel="tag"># UGUI</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/03/2019-03-03.Unity ECS Introduce/" rel="next" title="Unity ECS简介">
+                <i class="fa fa-chevron-left"></i> Unity ECS简介
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/28/2019-07-28.Singleton/" rel="prev" title="单例模式(Singleton)">
+                单例模式(Singleton) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="小锦鲤">
+  
+  <p class="site-author-name" itemprop="name">小锦鲤</p>
+  <div class="site-description motion-element" itemprop="description">一个初出茅庐的游戏人~</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+
+
+  <div class="links-of-author motion-element">
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/JinLiGame" title="GitHub &rarr; https://github.com/JinLiGame" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="mailto:553555614@123.com" title="E-Mail &rarr; mailto:553555614@123.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" title="QQ &rarr; http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" title="Wechat &rarr; https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" rel="noopener" target="_blank"><i class="fa fa-fw fa-wechat"></i></a>
+      </span>
+    
+  </div>
+
+
+
+
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/zh-cn/" title="https://hexo.io/zh-cn/" rel="noopener" target="_blank">Hexo</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://www.markdown.cn/" title="http://www.markdown.cn/" rel="noopener" target="_blank">教程-MarkDown</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://theme-next.iissnan.com/theme-settings.html#author-sites" title="http://theme-next.iissnan.com/theme-settings.html#author-sites" rel="noopener" target="_blank">主题配置 - NexT 使用文档</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#面向CPU"><span class="nav-number">1.</span> <span class="nav-text">面向CPU</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简单的纹理格式"><span class="nav-number">1.1.</span> <span class="nav-text">简单的纹理格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#决定纹理资源大小的因素"><span class="nav-number">1.2.</span> <span class="nav-text">决定纹理资源大小的因素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图片文件"><span class="nav-number">1.3.</span> <span class="nav-text">图片文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图片文件格式"><span class="nav-number">1.4.</span> <span class="nav-text">图片文件格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图像数据压缩方式"><span class="nav-number">1.5.</span> <span class="nav-text">图像数据压缩方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#面向GPU"><span class="nav-number">2.</span> <span class="nav-text">面向GPU</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#面向GPU的压缩算法"><span class="nav-number">2.1.</span> <span class="nav-text">面向GPU的压缩算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#纹理压缩格式"><span class="nav-number">2.2.</span> <span class="nav-text">纹理压缩格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图片在Unity如何被使用"><span class="nav-number">2.3.</span> <span class="nav-text">图片在Unity如何被使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后续"><span class="nav-number">3.</span> <span class="nav-text">后续</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小锦鲤</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+  
+  <script src="/lib/lazyload/lozad.min.js?v=1.10.0"></script>
+
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=4.0.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+
+  
+  
+
+  
+  
+
+  
+
+
+
+
+
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.2.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+
+</body>
+</html>

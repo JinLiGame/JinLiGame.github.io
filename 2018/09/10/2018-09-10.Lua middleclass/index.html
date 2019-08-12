@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"b2t":false,"scrollpercent":true},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    search: {
+      root: '/',
+      path: 'search.xml'
+    },
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"bounceRightIn","post_header":"bounceRightIn","post_body":"swoopIn","coll_header":"swoopIn","sidebar":"flipBounceXIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="middleclass是Lua模拟实现oop编程的类库，本文详细的分析了middleclass实现oop编程的过程。">
+<meta name="keywords" content="Lua">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lua之middleclass详解">
+<meta property="og:url" content="http://yoursite.com/2018/09/10/2018-09-10.Lua middleclass/index.html">
+<meta property="og:site_name" content="快乐的小锦鲤">
+<meta property="og:description" content="middleclass是Lua模拟实现oop编程的类库，本文详细的分析了middleclass实现oop编程的过程。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-12T12:16:43.510Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lua之middleclass详解">
+<meta name="twitter:description" content="middleclass是Lua模拟实现oop编程的类库，本文详细的分析了middleclass实现oop编程的过程。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="快乐的小锦鲤" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2018/09/10/2018-09-10.Lua middleclass/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>Lua之middleclass详解 | 快乐的小锦鲤</title>
+  
+
+
+
+
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?780f48b16f1acab067863e8a03265153";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">快乐的小锦鲤</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">嗨，欢迎来到我的世界！</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          <a href="javascript:;" class="popup-trigger">
+          
+            <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/10/2018-09-10.Lua middleclass/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小锦鲤">
+      <meta itemprop="description" content="一个初出茅庐的游戏人~">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="快乐的小锦鲤">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Lua之middleclass详解
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-10 13:47:32" itemprop="dateCreated datePublished" datetime="2018-09-10T13:47:32+08:00">2018-09-10</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-12 20:16:43" itemprop="dateModified" datetime="2019-08-12T20:16:43+08:00">2019-08-12</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/个人笔记/" itemprop="url" rel="index"><span itemprop="name">个人笔记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+            <div class="post-description">middleclass是Lua模拟实现oop编程的类库，本文详细的分析了middleclass实现oop编程的过程。</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <contents>
+
+<blockquote>
+<p>A simple OOP library for Lua. It has inheritance, metamethods (operators), class variables and weak mixin support.<br><a href="https://github.com/kikito/middleclass" target="_blank" rel="noopener">https://github.com/kikito/middleclass</a></p>
+</blockquote>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文逐步的分析了middleclass模拟oop编程的过程。但是建议读者在看这篇文章之前对<a href="/2018/09/08/2018-09-08.Lua%20Metatable%20and%20Metamethod/">Lua的元表和元方法</a>有一定的了解。</p>
+<h2 id="类定义"><a href="#类定义" class="headerlink" title="类定义"></a>类定义</h2><h3 id="新建类定义"><a href="#新建类定义" class="headerlink" title="新建类定义"></a>新建类定义</h3><p>创建一个modulde，创建一个空白类定义对象，类定义对象需记录自己的name.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">---middleclass---</span><br><span class="line"><span class="built_in">local</span> middleclass = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _createClass(name)</span><br><span class="line">	<span class="built_in">local</span> aClass = &#123;</span><br><span class="line">		name = name,	-- 类名</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> middleclass.class(name)</span><br><span class="line">	<span class="built_in">return</span> _createClass(name)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> middleclass</span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">---Animal---</span><br><span class="line"><span class="built_in">local</span> Class = require <span class="string">'middleclass'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> Animal = Class.class(<span class="string">'Animal'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(Animal)	-- table: 00B99B68</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> Animal</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加-tostring函数"><a href="#添加-tostring函数" class="headerlink" title="添加__tostring函数"></a>添加__tostring函数</h3><p>目前执行print(Animal)的时候，输出的是 table: 00B99B68 (类型: 指针地址)<br>可以让print的时候输出更友好的内容，比如    class Animal</p>
+<p>解决方案<br>给新建类统一添加__tostring函数<br>print(Animal)时，会隐式调用tostring(Animal)，接着会尝试调用getmetatable(Animal).__tostring(Animal)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">---middleclass---</span><br><span class="line"><span class="built_in">local</span> middleclass = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _tostring(aClass)</span><br><span class="line">	<span class="built_in">return</span> <span class="string">'class '</span>..aClass.name</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _createClass(name)</span><br><span class="line">	<span class="built_in">local</span> aClass = &#123;</span><br><span class="line">		name = name,	-- 类名</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	setmetatable(aClass, &#123;</span><br><span class="line">		__tostring = _tostring, 	--设置aClass的元方法__tostring</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> middleclass.class(name)</span><br><span class="line">	<span class="built_in">return</span> _createClass(name)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> middleclass</span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">---Animal---</span><br><span class="line"><span class="built_in">local</span> Class = require <span class="string">'middleclass'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> Animal = Class.class(<span class="string">'Animal'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(Animal)	-- class Animal</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> Animal</span><br></pre></td></tr></table></figure>
+
+<h3 id="模拟Class关键字"><a href="#模拟Class关键字" class="headerlink" title="模拟Class关键字"></a>模拟Class关键字</h3><p>目前创建一个类定义对象要调用如下写法Class.class(classname)<br>可以改为模拟oop Class关键字的风格Class(classname)</p>
+<p>解决方案<br>给middleclass添加__call函数<br>把一个table当做函数调用时，会去尝试执行该table的metatable中的__call函数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">---middleclass---</span><br><span class="line"><span class="built_in">local</span> middleclass = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _tostring(aClass)</span><br><span class="line">	<span class="built_in">return</span> <span class="string">'class '</span>..aClass.name</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _createClass(name)</span><br><span class="line">	<span class="built_in">local</span> aClass = &#123;</span><br><span class="line">		name = name,	-- 类名</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	setmetatable(aClass, &#123;</span><br><span class="line">		__tostring = _tostring, 	--设置aClass的元方法__tostring</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> middleclass.class(name)</span><br><span class="line">	<span class="built_in">return</span> _createClass(name)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 模拟oop class关键字的风格</span><br><span class="line">setmetatable(middleclass, &#123; __call = <span class="keyword">function</span>(_, ...) <span class="built_in">return</span> middleclass.class(...) end&#125; )</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> middleclass</span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">---Animal---</span><br><span class="line"><span class="built_in">local</span> Class = require <span class="string">'middleclass'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> Animal = Class(<span class="string">'Animal'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(Animal)	-- class Animal</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> Animal</span><br></pre></td></tr></table></figure>
+
+<h2 id="实例化"><a href="#实例化" class="headerlink" title="实例化"></a>实例化</h2><h3 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h3><p>A继承B的效果是什么？我们粗略的理解为，A不经显式声明就可以使用B的函数/变量。<br>middleclass使用了一个粗暴的手段：把父类中的所有属性都拷贝到子类中。middleclass没有把这种手段称为【继承】，而是借用了另外一个术语【导入（Include）】，这时父类被称为【Mixin】。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">---middleclass---</span><br><span class="line"><span class="built_in">local</span> middleclass = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _tostring(aClass)</span><br><span class="line">	<span class="built_in">return</span> <span class="string">'class '</span>..aClass.name</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _createClass(name)</span><br><span class="line">	<span class="built_in">local</span> aClass = &#123;</span><br><span class="line">		name = name,	-- 类名</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	setmetatable(aClass, &#123;</span><br><span class="line">		__tostring = _tostring, 	--设置aClass的元方法__tostring</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 导入mixin</span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _includeMixin(aClass, mixin) </span><br><span class="line">	assert(<span class="built_in">type</span>(mixin)==<span class="string">'table'</span>, <span class="string">'mixin must be a table.'</span>)</span><br><span class="line"></span><br><span class="line">	-- 将mixin的所有值复制到aClass中</span><br><span class="line">	-- 除了included，这个名字默认是保留给mixin的回调</span><br><span class="line">	<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(mixin) <span class="keyword">do</span></span><br><span class="line">		<span class="keyword">if</span> name ~= <span class="string">'included'</span> <span class="keyword">then</span></span><br><span class="line">			aClass[name] = method</span><br><span class="line">		end</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	-- 执行mixin included回调</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">type</span>(mixin.included) == <span class="string">'function'</span> <span class="keyword">then</span></span><br><span class="line">		mixin:included(aClass)</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> middleclass.class(name)</span><br><span class="line">	<span class="built_in">return</span> _createClass(name)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 模拟oop class关键字的风格</span><br><span class="line">setmetatable(middleclass, &#123; __call = <span class="keyword">function</span>(_, ...) <span class="built_in">return</span> middleclass.class(...) end&#125; )</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> middleclass</span><br></pre></td></tr></table></figure>
+
+<h3 id="实例化-1"><a href="#实例化-1" class="headerlink" title="实例化"></a>实例化</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">---middleclass---</span><br><span class="line"><span class="built_in">local</span> middleclass = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _tostring(aClass)</span><br><span class="line">	<span class="built_in">return</span> <span class="string">'class '</span>..aClass.name</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _createClass(name)</span><br><span class="line">	<span class="built_in">local</span> aClass = &#123;</span><br><span class="line">		name = name,	-- 类名</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	setmetatable(aClass, &#123;</span><br><span class="line">		__tostring = _tostring, 	--设置aClass的元方法__tostring</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 导入mixin</span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _includeMixin(aClass, mixin) </span><br><span class="line">	assert(<span class="built_in">type</span>(mixin)==<span class="string">'table'</span>, <span class="string">'mixin must be a table.'</span>)</span><br><span class="line"></span><br><span class="line">	-- 将mixin的所有值复制到aClass中</span><br><span class="line">	-- 除了included，这个名字默认是保留给mixin的回调</span><br><span class="line">	<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(mixin) <span class="keyword">do</span></span><br><span class="line">		<span class="keyword">if</span> name ~= <span class="string">'included'</span> <span class="keyword">then</span></span><br><span class="line">			aClass[name] = method</span><br><span class="line">		end</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	-- 执行mixin included回调</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">type</span>(mixin.included) == <span class="string">'function'</span> <span class="keyword">then</span></span><br><span class="line">		mixin:included(aClass)</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">--创建实例</span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> allocate(aClass)</span><br><span class="line">	assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:allocate' instead of 'Class.allocate'"</span>)</span><br><span class="line">	<span class="built_in">return</span> &#123; class = aClass, initialize = <span class="keyword">function</span> (aClass, ...) end &#125;</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">--创建实例并初始化</span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> new(aClass)</span><br><span class="line">	assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:new' instead of 'Class.new'"</span>)</span><br><span class="line">	<span class="built_in">local</span> instance = aClass:allocate()</span><br><span class="line">	instance:initialize(...)</span><br><span class="line">	<span class="built_in">return</span> instance</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> middleclass.class(name)</span><br><span class="line">	<span class="built_in">return</span> _createClass(name)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 模拟oop class关键字的风格</span><br><span class="line">setmetatable(middleclass, &#123; __call = <span class="keyword">function</span>(_, ...) <span class="built_in">return</span> middleclass.class(...) end&#125; )</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> middleclass</span><br></pre></td></tr></table></figure>
+
+<h3 id="DefaultMixin"><a href="#DefaultMixin" class="headerlink" title="DefaultMixin"></a>DefaultMixin</h3><p>目前middleclass出现了两类函数：工具函数和class专用函数<br>class专用函数，比如，每个新创建的class都应拥有实例化的能力。class专用函数被打包到一个叫DefaultMixin表中，通过include方便的复制给每个新建class</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">---middleclass---</span><br><span class="line"><span class="built_in">local</span> middleclass = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _tostring(aClass)</span><br><span class="line">	<span class="built_in">return</span> <span class="string">'class '</span>..aClass.name</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _createClass(name)</span><br><span class="line">	<span class="built_in">local</span> aClass = &#123;</span><br><span class="line">		name = name,	-- 类名</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	setmetatable(aClass, &#123;</span><br><span class="line">		__tostring = _tostring, 	--设置aClass的元方法__tostring</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 导入mixin</span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _includeMixin(aClass, mixin) </span><br><span class="line">	assert(<span class="built_in">type</span>(mixin)==<span class="string">'table'</span>, <span class="string">'mixin must be a table.'</span>)</span><br><span class="line"></span><br><span class="line">	-- 将mixin的所有值复制到aClass中</span><br><span class="line">	-- 除了included，这个名字默认是保留给mixin的回调</span><br><span class="line">	<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(mixin) <span class="keyword">do</span></span><br><span class="line">		<span class="keyword">if</span> name ~= <span class="string">'included'</span> <span class="keyword">then</span></span><br><span class="line">			aClass[name] = method</span><br><span class="line">		end</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	-- 执行mixin included回调</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">type</span>(mixin.included) == <span class="string">'function'</span> <span class="keyword">then</span></span><br><span class="line">		mixin:included(aClass)</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> DefaultMixin = &#123;</span><br><span class="line">	--初始化</span><br><span class="line">	initialize = <span class="keyword">function</span>(instance, ...) end,</span><br><span class="line"></span><br><span class="line">	--创建实例</span><br><span class="line">	allocate = <span class="keyword">function</span>(aClass)</span><br><span class="line">		assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:allocate' instead of 'Class.allocate'"</span>)</span><br><span class="line">		<span class="built_in">return</span> &#123; class = aClass, initialize = aClass.initialize &#125;</span><br><span class="line">	end,</span><br><span class="line"></span><br><span class="line">	--创建实例并初始化</span><br><span class="line">	new = <span class="keyword">function</span>(aClass, ...)</span><br><span class="line">		assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:new' instead of 'Class.new'"</span>)</span><br><span class="line">		<span class="built_in">local</span> instance = aClass:allocate()</span><br><span class="line">		instance:initialize(...)</span><br><span class="line">		<span class="built_in">return</span> instance</span><br><span class="line">	end,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> middleclass.class(name)</span><br><span class="line">	<span class="built_in">return</span> _includeMixin(_createClass(name), DefaultMixin)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 模拟oop class关键字的风格</span><br><span class="line">setmetatable(middleclass, &#123; __call = <span class="keyword">function</span>(_, ...) <span class="built_in">return</span> middleclass.class(...) end&#125; )</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> middleclass</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">---Animal---</span><br><span class="line"><span class="built_in">local</span> Class = require <span class="string">'middleclass'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> Animal = Class(<span class="string">'Animal'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> Animal:initialize(name)</span><br><span class="line">	<span class="built_in">print</span>(<span class="string">'Animal initialize name:'</span>.. name)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> Animal</span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---<span class="built_in">test</span>---</span><br><span class="line"><span class="built_in">local</span> Animal = require <span class="string">'Animal'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> dog = Animal:new(<span class="string">'dog'</span>)	-- Animal initialize name:dog</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> dog</span><br></pre></td></tr></table></figure>
+
+<h3 id="静态vs成员"><a href="#静态vs成员" class="headerlink" title="静态vs成员"></a>静态vs成员</h3><p>lua本身没有静态与成员函数之分。<br>middleclass则定义的更为细致，更为贴近oop惯例。</p>
+<table><tr><td></td><th>class</th><th>instance</th></tr><tr><th>静态函数</th><td>可调用</td><td>不可调用</td></tr><tr><th>成员函数</th><td>可调用（有什么意义？）</td><td>可调用</td></tr></table>
+
+<ul>
+<li>class可调用成员函数的意义? 必不可少的功能，不然怎么通过super来调用父类的成员函数。为实现上述目的，middleclass对某class上定义的函数进行了分组</li>
+<li>也就是说，函数的声明都是在class级别进行的<ol>
+<li>class.static : 只有class可以调用的函数</li>
+<li>class.__instanceDict : instance所调用的函数</li>
+</ol>
+</li>
+</ul>
+<h3 id="static表"><a href="#static表" class="headerlink" title="static表"></a>static表</h3><p>上面章节的class专用函数，比如实例化函数，middleclass将其当做静态函数处理；在别的语言中，实例化功能可能埋藏在语言实现的底层，以语言关键字的形式出现，而非静态函数。是的，关键就在于此：middleclass用静态函数来模拟new这个关键字。<br>middleclass用class.static来记录class中的静态函数，并将class.static设为class元表中__index的值中。class得以调用class.static中的函数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">---middleclass---</span><br><span class="line"><span class="built_in">local</span> middleclass = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _tostring(aClass)</span><br><span class="line">	<span class="built_in">return</span> <span class="string">'class '</span>..aClass.name</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _createClass(name)</span><br><span class="line">	<span class="built_in">local</span> aClass = &#123;</span><br><span class="line">		name = name,	-- 类名</span><br><span class="line">		static = &#123;&#125;,	-- 静态函数表，包括一些关键字比如new，在middleclass中是用静态函数来模拟</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	setmetatable(aClass, &#123;</span><br><span class="line">		__tostring = _tostring, 	-- 设置aClass的元方法__tostring</span><br><span class="line">		__index = aClass.static,	-- class的索引表设为其static表，如此class对象可以访问其static表中的函数</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 导入mixin</span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _includeMixin(aClass, mixin)</span><br><span class="line">	assert(<span class="built_in">type</span>(mixin)==<span class="string">'table'</span>, <span class="string">'mixin must be a table.'</span>)</span><br><span class="line"></span><br><span class="line">	-- 将mixin的所有值复制到aClass中</span><br><span class="line">	-- 除了included，这个名字默认是保留给mixin的回调</span><br><span class="line">	-- 还要排除static表，因为不能简单的记录static引用，这会覆盖aClass现有的static表</span><br><span class="line">	<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(mixin) <span class="keyword">do</span></span><br><span class="line">		<span class="keyword">if</span> name ~= <span class="string">'included'</span> and name ~= <span class="string">'static'</span> <span class="keyword">then</span></span><br><span class="line">			aClass[name] = method</span><br><span class="line">		end</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	-- 把mixin.static表内容添加到aClass.static中</span><br><span class="line">	<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(mixin.static or &#123;&#125;) <span class="keyword">do</span></span><br><span class="line">		aClass.static[name] = method</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	-- 执行mixin included回调</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">type</span>(mixin.included) == <span class="string">'function'</span> <span class="keyword">then</span></span><br><span class="line">		mixin:included(aClass)</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> DefaultMixin = &#123;</span><br><span class="line">	--初始化</span><br><span class="line">	initialize = <span class="keyword">function</span>(instance, ...) end,</span><br><span class="line"></span><br><span class="line">	static = &#123;</span><br><span class="line">		--创建实例</span><br><span class="line">		allocate = <span class="keyword">function</span>(aClass)</span><br><span class="line">			assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:allocate' instead of 'Class.allocate'"</span>)</span><br><span class="line">			<span class="built_in">return</span> &#123; class = aClass, initialize = aClass.initialize &#125;</span><br><span class="line">		end,</span><br><span class="line"></span><br><span class="line">		--创建实例并初始化</span><br><span class="line">		new = <span class="keyword">function</span>(aClass, ...)</span><br><span class="line">			assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:new' instead of 'Class.new'"</span>)</span><br><span class="line">			<span class="built_in">local</span> instance = aClass:allocate()</span><br><span class="line">			instance:initialize(...)</span><br><span class="line">			<span class="built_in">return</span> instance</span><br><span class="line">		end,</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> middleclass.class(name)</span><br><span class="line">	<span class="built_in">return</span> _includeMixin(_createClass(name), DefaultMixin)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 模拟oop class关键字的风格</span><br><span class="line">setmetatable(middleclass, &#123; __call = <span class="keyword">function</span>(_, ...) <span class="built_in">return</span> middleclass.class(...) end&#125; )</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> middleclass</span><br></pre></td></tr></table></figure>
+
+<h3 id="instanceDict表"><a href="#instanceDict表" class="headerlink" title="__instanceDict表"></a>__instanceDict表</h3><p>middleclass把新定义的函数，MyClass.func()或者MyClass:func()，都通过__newindex元函数记录在class.__instanceDict表中，然后在该class创建实例时，把__instanceDict设为实例的metatable以及元表的__index的值</p>
+<ul>
+<li>在middlecalss眼中，MyClass.func()或者MyClass:func()都是middleclass机制中的成员函数</li>
+<li>在我们的应用层面，MyClass.func()像静态函数一样使用，MyClass:func()像成员函数一样使用</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">---middleclass---</span><br><span class="line"><span class="built_in">local</span> middleclass = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _propagateInstanceMethod(aClass, name, f) </span><br><span class="line">	-- 新定义的函数将被添加为成员函数</span><br><span class="line">	aClass.__instanceDict[name] = f</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _declareInstanceMethod(aClass, name, f) </span><br><span class="line">	_propagateInstanceMethod(aClass, name, f) </span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _tostring(aClass)</span><br><span class="line">	<span class="built_in">return</span> <span class="string">'class '</span>..aClass.name</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _createClass(name)</span><br><span class="line">	<span class="built_in">local</span> dict = &#123;&#125;</span><br><span class="line">	dict.__index = dict</span><br><span class="line"></span><br><span class="line">	<span class="built_in">local</span> aClass = &#123;</span><br><span class="line">		name = name,	-- 类名</span><br><span class="line">		static = &#123;&#125;,	-- 静态函数表，包括一些关键字比如new，在middleclass中是用静态函数来模拟</span><br><span class="line">		__instanceDict = dict,	-- 用作设为实例的metatable以及metatable的__index的值</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	-- aClass.static的__index行为: 从aClass.__instanceDict进行rawget</span><br><span class="line">	-- 其实__instanceDict没有自己的metatable，从而没有__index表，任何对__instanceDict的get都是rawget</span><br><span class="line">	setmetatable(aClass.static, &#123;__index = <span class="keyword">function</span>(_, k)</span><br><span class="line">		<span class="built_in">return</span> rawget(dict, k)</span><br><span class="line">	end&#125;)</span><br><span class="line"></span><br><span class="line">	setmetatable(aClass, &#123;</span><br><span class="line">		__tostring = _tostring, 	-- 设置aClass的元方法__tostring</span><br><span class="line">		__index = aClass.static,	-- class的索引表设为其static表，如此class对象可以访问其static中的函数以及__instanceDict中的raw函数</span><br><span class="line">		__newindex = _declareInstanceMethod,</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 导入mixin</span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _includeMixin(aClass, mixin)</span><br><span class="line">	assert(<span class="built_in">type</span>(mixin)==<span class="string">'table'</span>, <span class="string">'mixin must be a table.'</span>)</span><br><span class="line"></span><br><span class="line">	-- 将mixin的所有值复制到aClass中</span><br><span class="line">	-- 除了included，这个名字默认是保留给mixin的回调</span><br><span class="line">	-- 还要排除static表，因为不能简单的记录static引用，这会覆盖aClass现有的static表</span><br><span class="line">	<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(mixin) <span class="keyword">do</span></span><br><span class="line">		<span class="keyword">if</span> name ~= <span class="string">'included'</span> and name ~= <span class="string">'static'</span> <span class="keyword">then</span></span><br><span class="line">			aClass[name] = method	-- 记住现在这个操作会触发_declareInstanceMethod函数 </span><br><span class="line">		end</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	-- 把mixin.static表内容添加到aClass.static中</span><br><span class="line">	<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(mixin.static or &#123;&#125;) <span class="keyword">do</span></span><br><span class="line">		aClass.static[name] = method</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	-- 执行mixin included回调</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">type</span>(mixin.included) == <span class="string">'function'</span> <span class="keyword">then</span></span><br><span class="line">		mixin:included(aClass)</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> DefaultMixin = &#123;</span><br><span class="line">	-- 预留虚函数: 初始化，可以当做构造函数来用</span><br><span class="line">	initialize = <span class="keyword">function</span>(instance, ...) end,</span><br><span class="line"></span><br><span class="line">	static = &#123;</span><br><span class="line">		-- 创建实例</span><br><span class="line">		allocate = <span class="keyword">function</span>(aClass)</span><br><span class="line">			assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:allocate' instead of 'Class.allocate'"</span>)</span><br><span class="line">			<span class="built_in">return</span> setmetatable(&#123; class = aClass &#125;, aClass.__instanceDict)	-- class的__instanceDict表用作设为实例的metatable以及metatable的__index的值</span><br><span class="line">		end,</span><br><span class="line"></span><br><span class="line">		-- 创建实例并初始化</span><br><span class="line">		new = <span class="keyword">function</span>(aClass, ...)</span><br><span class="line">			assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:new' instead of 'Class.new'"</span>)</span><br><span class="line">			<span class="built_in">local</span> instance = aClass:allocate()</span><br><span class="line">			instance:initialize(...)</span><br><span class="line">			<span class="built_in">return</span> instance</span><br><span class="line">		end,</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> middleclass.class(name)</span><br><span class="line">	<span class="built_in">return</span> _includeMixin(_createClass(name), DefaultMixin)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 模拟oop class关键字的风格</span><br><span class="line">setmetatable(middleclass, &#123; __call = <span class="keyword">function</span>(_, ...) <span class="built_in">return</span> middleclass.class(...) end&#125; )</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> middleclass</span><br></pre></td></tr></table></figure>
+
+<h3 id="一些细节"><a href="#一些细节" class="headerlink" title="一些细节"></a>一些细节</h3><ul>
+<li>可以用 ClassA()的写法来new一个实例</li>
+<li>实例对象的__tostring元函数</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line">---middleclass---</span><br><span class="line"><span class="built_in">local</span> middleclass = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _propagateInstanceMethod(aClass, name, f) </span><br><span class="line">	-- 新定义的函数将被添加为成员函数</span><br><span class="line">	aClass.__instanceDict[name] = f</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _declareInstanceMethod(aClass, name, f) </span><br><span class="line">	_propagateInstanceMethod(aClass, name, f) </span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _tostring(aClass)</span><br><span class="line">	<span class="built_in">return</span> <span class="string">'class '</span>..aClass.name</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _call(aClass, ...)</span><br><span class="line">	<span class="built_in">return</span> aClass:new(...)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _createClass(name)</span><br><span class="line">	<span class="built_in">local</span> dict = &#123;&#125;</span><br><span class="line">	dict.__index = dict</span><br><span class="line"></span><br><span class="line">	<span class="built_in">local</span> aClass = &#123;</span><br><span class="line">		name = name,	-- 类名</span><br><span class="line">		static = &#123;&#125;,	-- 静态函数表，包括一些关键字比如new，在middleclass中是用静态函数来模拟</span><br><span class="line">		__instanceDict = dict,	-- 用作设为实例的metatable以及metatable的__index的值</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	-- aClass.static的__index行为: 从aClass.__instanceDict进行rawget</span><br><span class="line">	-- 其实__instanceDict没有自己的metatable，从而没有__index表，任何对__instanceDict的get都是rawget</span><br><span class="line">	setmetatable(aClass.static, &#123;__index = <span class="keyword">function</span>(_, k)</span><br><span class="line">		<span class="built_in">return</span> rawget(dict, k)</span><br><span class="line">	end&#125;)</span><br><span class="line"></span><br><span class="line">	setmetatable(aClass, &#123;</span><br><span class="line">		__tostring = _tostring, 	-- 设置aClass的元方法__tostring</span><br><span class="line">		__index = aClass.static,	-- class的索引表设为其static表，如此class对象可以访问其static中的函数以及__instanceDict中的raw函数</span><br><span class="line">		__newindex = _declareInstanceMethod,</span><br><span class="line">		__call = _call,	-- 让我们可以用 ClassA()的写法来创建实例</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 导入mixin</span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _includeMixin(aClass, mixin)</span><br><span class="line">	assert(<span class="built_in">type</span>(mixin)==<span class="string">'table'</span>, <span class="string">'mixin must be a table.'</span>)</span><br><span class="line"></span><br><span class="line">	-- 将mixin的所有值复制到aClass中</span><br><span class="line">	-- 除了included，这个名字默认是保留给mixin的回调</span><br><span class="line">	-- 还要排除static表，因为不能简单的记录static引用，这会覆盖aClass现有的static表</span><br><span class="line">	<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(mixin) <span class="keyword">do</span></span><br><span class="line">		<span class="keyword">if</span> name ~= <span class="string">'included'</span> and name ~= <span class="string">'static'</span> <span class="keyword">then</span></span><br><span class="line">			aClass[name] = method	-- 记住现在这个操作会触发_declareInstanceMethod函数 </span><br><span class="line">		end</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	-- 把mixin.static表内容添加到aClass.static中</span><br><span class="line">	<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(mixin.static or &#123;&#125;) <span class="keyword">do</span></span><br><span class="line">		aClass.static[name] = method</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	-- 执行mixin included回调</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">type</span>(mixin.included) == <span class="string">'function'</span> <span class="keyword">then</span></span><br><span class="line">		mixin:included(aClass)</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> DefaultMixin = &#123;</span><br><span class="line">	-- 没有记录在static中的函数将在class导入DefaultMixin的时候</span><br><span class="line">	-- 通过aClass[name] = func这样的语句触发 _declareInstanceMethod</span><br><span class="line">	-- 从而记录到aClass.__instanceDict中</span><br><span class="line">	-- 由于aClass.__instanceDict同时还是实例对象的metatable，所以下面的__tostring也将成为实例对象的元函数</span><br><span class="line">	__tostring = <span class="keyword">function</span>(instance)</span><br><span class="line">		<span class="built_in">return</span> <span class="string">"instance of "</span> .. tostring(instance.class)</span><br><span class="line">	end,</span><br><span class="line"></span><br><span class="line">	-- 预留虚函数: 初始化，可以当做构造函数来用。所有实例共用一个函数对象即可。</span><br><span class="line">	initialize = <span class="keyword">function</span>(instance, ...) end,</span><br><span class="line"></span><br><span class="line">	static = &#123;</span><br><span class="line">		-- 创建实例</span><br><span class="line">		allocate = <span class="keyword">function</span>(aClass)</span><br><span class="line">			assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:allocate' instead of 'Class.allocate'"</span>)</span><br><span class="line">			<span class="built_in">return</span> setmetatable(&#123; class = aClass &#125;, aClass.__instanceDict)	-- class的__instanceDict表用作设为实例的metatable以及metatable的__index的值</span><br><span class="line">		end,</span><br><span class="line"></span><br><span class="line">		-- 创建实例并初始化</span><br><span class="line">		new = <span class="keyword">function</span>(aClass, ...)</span><br><span class="line">			assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:new' instead of 'Class.new'"</span>)</span><br><span class="line">			<span class="built_in">local</span> instance = aClass:allocate()</span><br><span class="line">			instance:initialize(...)</span><br><span class="line">			<span class="built_in">return</span> instance</span><br><span class="line">		end,</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> middleclass.class(name)</span><br><span class="line">	<span class="built_in">return</span> _includeMixin(_createClass(name), DefaultMixin)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 模拟oop class关键字的风格</span><br><span class="line">setmetatable(middleclass, &#123; __call = <span class="keyword">function</span>(_, ...) <span class="built_in">return</span> middleclass.class(...) end&#125; )</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> middleclass</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">---Animal---</span><br><span class="line"><span class="built_in">local</span> Class = require <span class="string">'middleclass'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> Animal = Class(<span class="string">'Animal'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> Animal:initialize(name)</span><br><span class="line">	<span class="built_in">print</span>(<span class="string">'Animal initialize name:'</span>.. name)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> Animal</span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">---<span class="built_in">test</span>---</span><br><span class="line"><span class="built_in">local</span> Animal = require <span class="string">'Animal'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> dog = Animal(<span class="string">'dog'</span>)	-- Animal initialize name:dog</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(dog)	-- instance of class Animal</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> dog</span><br></pre></td></tr></table></figure>
+
+<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><h3 id="实现【继承】关键字"><a href="#实现【继承】关键字" class="headerlink" title="实现【继承】关键字"></a>实现【继承】关键字</h3><p>和new一样，middleclass用静态函数subclass来模拟实现extends关键字</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br></pre></td><td class="code"><pre><span class="line">---middleclass---</span><br><span class="line"><span class="built_in">local</span> middleclass = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _propagateInstanceMethod(aClass, name, f)</span><br><span class="line">	-- 创建子类的时候，父类中__instanceDict的__index会把子类中__instanceDict的__inex覆盖掉，这种情况需要过滤掉</span><br><span class="line">	<span class="keyword">if</span> name == <span class="string">'__index'</span> <span class="keyword">then</span> <span class="built_in">return</span> end</span><br><span class="line"></span><br><span class="line">	-- 新定义的函数将被添加为成员函数</span><br><span class="line">	aClass.__instanceDict[name] = f</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _declareInstanceMethod(aClass, name, f)</span><br><span class="line">	_propagateInstanceMethod(aClass, name, f)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _tostring(aClass)</span><br><span class="line">	<span class="built_in">return</span> <span class="string">'class '</span>..aClass.name</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _call(aClass, ...)</span><br><span class="line">	<span class="built_in">return</span> aClass:new(...)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _createClass(name, super)</span><br><span class="line">	<span class="built_in">local</span> dict = &#123;&#125;</span><br><span class="line">	dict.__index = dict</span><br><span class="line"></span><br><span class="line">	<span class="built_in">local</span> aClass = &#123;</span><br><span class="line">		name = name,	-- 类名</span><br><span class="line">		super = super, 	-- 父类</span><br><span class="line">		static = &#123;&#125;,	-- 静态函数表，包括一些关键字比如new，在middleclass中是用静态函数来模拟</span><br><span class="line">		__instanceDict = dict,	-- 用作设为实例的metatable以及metatable的__index的值</span><br><span class="line">		subclasses = setmetatable(&#123;&#125;, &#123;__mode=<span class="string">'k'</span>&#125;)	-- 子类表(弱键引用)，key是类，value为布尔</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	-- aClass.static的__index行为: 从aClass.__instanceDict进行rawget</span><br><span class="line">	-- 其实__instanceDict没有自己的metatable，从而没有__index表，任何对__instanceDict的get都是rawget</span><br><span class="line">	-- 如果有父类的话，还会尝试去父类(进而沿着继承链上所有类定义)的static/__instanceDict 中查询</span><br><span class="line">	<span class="keyword">if</span> super <span class="keyword">then</span></span><br><span class="line">		setmetatable(aClass.static, &#123;__index = <span class="keyword">function</span>(_, k)</span><br><span class="line">			<span class="built_in">return</span> rawget(dict, k) or super.static[k]</span><br><span class="line">		end&#125;)</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		setmetatable(aClass.static, &#123;__index = <span class="keyword">function</span>(_, k)</span><br><span class="line">			<span class="built_in">return</span> rawget(dict, k)</span><br><span class="line">		end&#125;)</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	setmetatable(aClass, &#123;</span><br><span class="line">		__tostring = _tostring, 	-- 设置aClass的元方法__tostring</span><br><span class="line">		__index = aClass.static,	-- class的索引表设为其static表，如此class对象可以访问其static中的函数以及__instanceDict中的raw函数</span><br><span class="line">		__newindex = _declareInstanceMethod,</span><br><span class="line">		__call = _call,	-- 让我们可以用 ClassA()的写法来创建实例</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 导入mixin</span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _includeMixin(aClass, mixin)</span><br><span class="line">	assert(<span class="built_in">type</span>(mixin)==<span class="string">'table'</span>, <span class="string">'mixin must be a table.'</span>)</span><br><span class="line"></span><br><span class="line">	-- 将mixin的所有值复制到aClass中</span><br><span class="line">	-- 除了included，这个名字默认是保留给mixin的回调</span><br><span class="line">	-- 还要排除static表，因为不能简单的记录static引用，这会覆盖aClass现有的static表</span><br><span class="line">	<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(mixin) <span class="keyword">do</span></span><br><span class="line">		<span class="keyword">if</span> name ~= <span class="string">'included'</span> and name ~= <span class="string">'static'</span> <span class="keyword">then</span></span><br><span class="line">			aClass[name] = method	-- 记住现在这个操作会触发_declareInstanceMethod函数</span><br><span class="line">		end</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	-- 把mixin.static表内容添加到aClass.static中</span><br><span class="line">	<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(mixin.static or &#123;&#125;) <span class="keyword">do</span></span><br><span class="line">		aClass.static[name] = method</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	-- 执行mixin included回调</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">type</span>(mixin.included) == <span class="string">'function'</span> <span class="keyword">then</span></span><br><span class="line">		mixin:included(aClass)</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> DefaultMixin = &#123;</span><br><span class="line">	-- 没有记录在static中的函数将在class导入DefaultMixin的时候</span><br><span class="line">	-- 通过aClass[name] = func这样的语句触发 _declareInstanceMethod</span><br><span class="line">	-- 从而记录到aClass.__instanceDict中</span><br><span class="line">	-- 由于aClass.__instanceDict同时还是实例对象的metatable，所以下面的__tostring也将成为实例对象的元函数</span><br><span class="line">	__tostring = <span class="keyword">function</span>(instance)</span><br><span class="line">		<span class="built_in">return</span> <span class="string">"instance of "</span> .. tostring(instance.class)</span><br><span class="line">	end,</span><br><span class="line"></span><br><span class="line">	-- 预留虚函数: 初始化，可以当做构造函数来用。所有实例共用一个函数对象即可。</span><br><span class="line">	initialize = <span class="keyword">function</span>(instance, ...) end,</span><br><span class="line"></span><br><span class="line">	static = &#123;</span><br><span class="line">		-- 创建实例</span><br><span class="line">		allocate = <span class="keyword">function</span>(aClass)</span><br><span class="line">			assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:allocate' instead of 'Class.allocate'"</span>)</span><br><span class="line">			<span class="built_in">return</span> setmetatable(&#123; class = aClass &#125;, aClass.__instanceDict)	-- class的__instanceDict表用作设为实例的metatable以及metatable的__index的值</span><br><span class="line">		end,</span><br><span class="line"></span><br><span class="line">		-- 创建实例并初始化</span><br><span class="line">		new = <span class="keyword">function</span>(aClass, ...)</span><br><span class="line">			assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:new' instead of 'Class.new'"</span>)</span><br><span class="line">			<span class="built_in">local</span> instance = aClass:allocate()</span><br><span class="line">			instance:initialize(...)</span><br><span class="line">			<span class="built_in">return</span> instance</span><br><span class="line">		end,</span><br><span class="line"></span><br><span class="line">		subclass = <span class="keyword">function</span>(aClass, name)</span><br><span class="line">			assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:subclass' instead of 'Class.subclass'"</span>)</span><br><span class="line">      		assert(<span class="built_in">type</span>(name) == <span class="string">"string"</span>, <span class="string">"You must provide a name(string) for your class"</span>)</span><br><span class="line"></span><br><span class="line">			<span class="built_in">local</span> subclass = _createClass(name, aClass)</span><br><span class="line"></span><br><span class="line">			-- 创建子类只继承父类的成员函数，不应继承父类的静态函数</span><br><span class="line">			<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(aClass.__instanceDict) <span class="keyword">do</span></span><br><span class="line">				_propagateInstanceMethod(subclass, name, method)</span><br><span class="line">			end</span><br><span class="line"></span><br><span class="line">			-- 为子类定义一个缺省的initialize函数，默认调用其父类的initialize函数</span><br><span class="line">			subclass.initialize = <span class="keyword">function</span>(instance, ...)</span><br><span class="line">				aClass.initialize(instance, ...)</span><br><span class="line">			end</span><br><span class="line"></span><br><span class="line">			aClass.subclasses[subclass] = <span class="literal">true</span>	-- 标记父类已拥有该子类</span><br><span class="line">			aClass:subclassed(subclass)			-- 回调：创建子类完毕</span><br><span class="line"></span><br><span class="line">			<span class="built_in">return</span> subclass</span><br><span class="line">		end,</span><br><span class="line"></span><br><span class="line">		-- 缺省实现 创建子类完毕回调</span><br><span class="line">		subclassed = <span class="keyword">function</span>(aClass, other) end,</span><br><span class="line"></span><br><span class="line">		-- 判断是否指定类的子类</span><br><span class="line">		isSubclassOf = <span class="keyword">function</span>(aClass, other)</span><br><span class="line">      		<span class="built_in">return</span> <span class="built_in">type</span>(other) == <span class="string">'table'</span> and</span><br><span class="line">            	   <span class="built_in">type</span>(aClass.super) == <span class="string">'table'</span> and</span><br><span class="line">             	   ( aClass.super == other or aClass.super:isSubclassOf(other) )</span><br><span class="line">    	end,</span><br><span class="line"></span><br><span class="line">    	-- 批量include</span><br><span class="line">    	include = <span class="keyword">function</span>(aClass, ...)</span><br><span class="line">      		assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure you that you are using 'Class:include' instead of 'Class.include'"</span>)</span><br><span class="line">      		<span class="keyword">for</span> _,mixin <span class="keyword">in</span> ipairs(&#123;...&#125;) <span class="keyword">do</span></span><br><span class="line">      			_includeMixin(aClass, mixin)</span><br><span class="line">      		end</span><br><span class="line">      		<span class="built_in">return</span> aClass</span><br><span class="line">    	end</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> middleclass.class(name, super)</span><br><span class="line">	assert(<span class="built_in">type</span>(name) == <span class="string">'string'</span>, <span class="string">"A name (string) is needed for the new class"</span>)</span><br><span class="line">	<span class="built_in">return</span> super and super:subclass(name) or _includeMixin(_createClass(name), DefaultMixin)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 模拟oop class关键字的风格</span><br><span class="line">setmetatable(middleclass, &#123; __call = <span class="keyword">function</span>(_, ...) <span class="built_in">return</span> middleclass.class(...) end&#125; )</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> middleclass</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">---Animal---</span><br><span class="line"><span class="built_in">local</span> Class = require <span class="string">'middleclass'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> Animal = Class(<span class="string">'Animal'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> Animal:initialize(name)</span><br><span class="line">	self.instance_name = name</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> Animal:get_name1()</span><br><span class="line">	<span class="built_in">return</span> self.instance_name</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> Animal:move()</span><br><span class="line">	<span class="built_in">print</span>(<span class="string">'Animal:move'</span>)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> Animal:eat()</span><br><span class="line">	<span class="built_in">print</span>(<span class="string">'Animal:eat!'</span>)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> Animal</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">---Dog---</span><br><span class="line"><span class="built_in">local</span> Class = require <span class="string">'middleclass'</span></span><br><span class="line"><span class="built_in">local</span> Animal = require <span class="string">'Animal'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> Dog = Class(<span class="string">'Dog'</span>, Animal)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> Dog:move()</span><br><span class="line">	<span class="built_in">print</span>(<span class="string">'Dog:move walking!'</span>)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> Dog</span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">---<span class="built_in">test</span>---</span><br><span class="line"><span class="built_in">local</span> Animal = require <span class="string">'Animal'</span></span><br><span class="line"><span class="built_in">local</span> Dog = require <span class="string">'Dog'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(Dog:isSubclassOf(Animal))	-- <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> dog = Dog(<span class="string">'hashiqi'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'dog_name:'</span>..dog:get_name1())		-- dog_name:hashiqi</span><br><span class="line">dog:eat()	-- Animal:eat!</span><br><span class="line">dog:move()	-- Dog:move walking!</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> dog</span><br></pre></td></tr></table></figure>
+
+<h3 id="继承成员函数"><a href="#继承成员函数" class="headerlink" title="继承成员函数"></a>继承成员函数</h3><p>middleclass的做法是把super中的所有成员函数在每个子类中都复制一份</p>
+<ol>
+<li>创建subclass时，会调用_propagateInstanceMethod把当时super中所有成员函数复制到subclass中</li>
+<li>super声明新函数时，会把该新函数在super所有子类中的__instanceDict表中也复制一份<p style="color:red;">实际应用中大部分都是先完整的声明完super，再去创建其subclass。
+否则的话，super声明新函数时，会先通过subclass中的\__declaredMethods判断subclass是否声明过该函数
+若没有声明，将这个函数复制到subclass中的\__instanceDict表中，否则不做处理。</p>
+
+</li>
+</ol>
+<p>__declaredMethods表中记录的是通过声明创建的函数，__instanceDict表中记录了所有的函数：声明得到的，以及从所有父类那里复制得到的</p>
+<p>基于上述做法，每个子类中的__instanceDict都包含了其所有父类的__instanceDict的集合。即子类拥有父类函数。<br>如果子类重新定义了一个同名函数，那么将覆盖掉父类函数。<br>子类可以通过super关键字来调用函数的父类版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br></pre></td><td class="code"><pre><span class="line">---middleclass---</span><br><span class="line"><span class="built_in">local</span> middleclass = &#123;&#125;</span><br><span class="line"></span><br><span class="line">-- 整合用户指定的__index函数</span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _createIndexWrapper(aClass, f)</span><br><span class="line">	<span class="keyword">if</span> f == nil <span class="keyword">then</span></span><br><span class="line">		<span class="built_in">return</span> aClass.__instanceDict</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	    <span class="built_in">return</span> <span class="keyword">function</span>(self, name)</span><br><span class="line">		    <span class="built_in">local</span> value = aClass.__instanceDict[name]</span><br><span class="line"></span><br><span class="line">		    <span class="keyword">if</span> value ~= nil <span class="keyword">then</span></span><br><span class="line">		      	<span class="built_in">return</span> value</span><br><span class="line">		    elseif <span class="built_in">type</span>(f) == <span class="string">"function"</span> <span class="keyword">then</span></span><br><span class="line">		      	<span class="built_in">return</span> (f(self, name))</span><br><span class="line">		    <span class="keyword">else</span></span><br><span class="line">		      	<span class="built_in">return</span> f[name]</span><br><span class="line">		    end</span><br><span class="line">	    end</span><br><span class="line">  	end</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _propagateInstanceMethod(aClass, name, f)</span><br><span class="line">	-- 创建子类的时候，父类中__instanceDict的__index会把子类中__instanceDict的__inex覆盖掉</span><br><span class="line">	-- 当用户尝试声明__index函数时，需要做一些处理：保留class.__instanceDict作为实例的__index表，整合用户指定的__index函数/表</span><br><span class="line">	f = name == <span class="string">"__index"</span> and _createIndexWrapper(aClass, f) or f</span><br><span class="line"></span><br><span class="line">	-- 新定义的函数将被添加为成员函数</span><br><span class="line">	aClass.__instanceDict[name] = f</span><br><span class="line"></span><br><span class="line">	-- 将所有没有声明该函数的（即__declaredMethods表没有该函数）子类的__instanceDict表中记录该函数</span><br><span class="line">	<span class="keyword">for</span> subclass <span class="keyword">in</span> pairs(aClass.subclasses) <span class="keyword">do</span></span><br><span class="line">	    <span class="keyword">if</span> rawget(subclass.__declaredMethods, name) == nil <span class="keyword">then</span></span><br><span class="line">	    	_propagateInstanceMethod(subclass, name, f)</span><br><span class="line">	    end</span><br><span class="line">	end</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _declareInstanceMethod(aClass, name, f)</span><br><span class="line">	aClass.__declaredMethods[name] = f 	-- 记录到__declaredMethods表</span><br><span class="line"></span><br><span class="line">	-- 揭示了middleclass的一个小技巧。当执行 ClassA.func = nil代码时</span><br><span class="line">    -- 会尝试从父类获取同名成员函数来用</span><br><span class="line">	<span class="keyword">if</span> f==nil and aClass.super <span class="keyword">then</span></span><br><span class="line">		f = aClass.super.__instanceDict[name]</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	_propagateInstanceMethod(aClass, name, f)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _tostring(aClass)</span><br><span class="line">	<span class="built_in">return</span> <span class="string">'class '</span>..aClass.name</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _call(aClass, ...)</span><br><span class="line">	<span class="built_in">return</span> aClass:new(...)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _createClass(name, super)</span><br><span class="line">	<span class="built_in">local</span> dict = &#123;&#125;</span><br><span class="line">	dict.__index = dict</span><br><span class="line"></span><br><span class="line">	<span class="built_in">local</span> aClass = &#123;</span><br><span class="line">		name = name,	-- 类名</span><br><span class="line">		super = super, 	-- 父类</span><br><span class="line">		static = &#123;&#125;,	-- 静态函数表，包括一些关键字比如new，在middleclass中是用静态函数来模拟</span><br><span class="line">		__instanceDict = dict,	-- 用作设为实例的metatable以及metatable的__index的值</span><br><span class="line">		subclasses = setmetatable(&#123;&#125;, &#123;__mode=<span class="string">'k'</span>&#125;),	-- 子类表(弱键引用)，key是类，value为布尔</span><br><span class="line">		__declaredMethods = &#123;&#125;,	-- 用来记录在这个类中声明(而不是继承自父类)的函数</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	-- aClass.static的__index行为: 从aClass.__instanceDict进行rawget</span><br><span class="line">	-- 其实__instanceDict没有自己的metatable，从而没有__index表，任何对__instanceDict的get都是rawget</span><br><span class="line">	-- 如果有父类的话，还会尝试去父类(进而沿着继承链上所有类定义)的static/__instanceDict 中查询</span><br><span class="line">	<span class="keyword">if</span> super <span class="keyword">then</span></span><br><span class="line">		setmetatable(aClass.static, &#123;__index = <span class="keyword">function</span>(_, k)</span><br><span class="line">			<span class="built_in">return</span> rawget(dict, k) or super.static[k]</span><br><span class="line">		end&#125;)</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		setmetatable(aClass.static, &#123;__index = <span class="keyword">function</span>(_, k)</span><br><span class="line">			<span class="built_in">return</span> rawget(dict, k)</span><br><span class="line">		end&#125;)</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	setmetatable(aClass, &#123;</span><br><span class="line">		__tostring = _tostring, 	-- 设置aClass的元方法__tostring</span><br><span class="line">		__index = aClass.static,	-- class的索引表设为其static表，如此class对象可以访问其static中的函数以及__instanceDict中的raw函数</span><br><span class="line">		__newindex = _declareInstanceMethod,</span><br><span class="line">		__call = _call,	-- 让我们可以用 ClassA()的写法来创建实例</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 导入mixin</span><br><span class="line"><span class="built_in">local</span> <span class="keyword">function</span> _includeMixin(aClass, mixin)</span><br><span class="line">	assert(<span class="built_in">type</span>(mixin)==<span class="string">'table'</span>, <span class="string">'mixin must be a table.'</span>)</span><br><span class="line"></span><br><span class="line">	-- 将mixin的所有值复制到aClass中</span><br><span class="line">	-- 除了included，这个名字默认是保留给mixin的回调</span><br><span class="line">	-- 还要排除static表，因为不能简单的记录static引用，这会覆盖aClass现有的static表</span><br><span class="line">	<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(mixin) <span class="keyword">do</span></span><br><span class="line">		<span class="keyword">if</span> name ~= <span class="string">'included'</span> and name ~= <span class="string">'static'</span> <span class="keyword">then</span></span><br><span class="line">			aClass[name] = method	-- 记住现在这个操作会触发_declareInstanceMethod函数</span><br><span class="line">		end</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	-- 把mixin.static表内容添加到aClass.static中</span><br><span class="line">	<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(mixin.static or &#123;&#125;) <span class="keyword">do</span></span><br><span class="line">		aClass.static[name] = method</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	-- 执行mixin included回调</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">type</span>(mixin.included) == <span class="string">'function'</span> <span class="keyword">then</span></span><br><span class="line">		mixin:included(aClass)</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	<span class="built_in">return</span> aClass</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> DefaultMixin = &#123;</span><br><span class="line">	-- 没有记录在static中的函数将在class导入DefaultMixin的时候</span><br><span class="line">	-- 通过aClass[name] = func这样的语句触发 _declareInstanceMethod</span><br><span class="line">	-- 从而记录到aClass.__instanceDict中</span><br><span class="line">	-- 由于aClass.__instanceDict同时还是实例对象的metatable，所以下面的__tostring也将成为实例对象的元函数</span><br><span class="line">	__tostring = <span class="keyword">function</span>(instance)</span><br><span class="line">		<span class="built_in">return</span> <span class="string">"instance of "</span> .. tostring(instance.class)</span><br><span class="line">	end,</span><br><span class="line"></span><br><span class="line">	-- 预留虚函数: 初始化，可以当做构造函数来用。所有实例共用一个函数对象即可。</span><br><span class="line">	initialize = <span class="keyword">function</span>(instance, ...) end,</span><br><span class="line"></span><br><span class="line">	isInstanceOf = <span class="keyword">function</span>(instance, aClass)</span><br><span class="line">		<span class="built_in">return</span> <span class="built_in">type</span>(aClass) == <span class="string">'table'</span> and</span><br><span class="line">				<span class="built_in">type</span>(instance) == <span class="string">'table'</span> and</span><br><span class="line">				<span class="built_in">type</span>(instance.class) == <span class="string">'table'</span> and</span><br><span class="line">				(</span><br><span class="line">				instance.class == aClass or </span><br><span class="line">				<span class="built_in">type</span>(instance.class.isSubclassOf) == <span class="string">'function'</span> and instance.class:isSubclassOf(aClass)</span><br><span class="line">				)</span><br><span class="line">	end,</span><br><span class="line"></span><br><span class="line">	static = &#123;</span><br><span class="line">		-- 创建实例</span><br><span class="line">		allocate = <span class="keyword">function</span>(aClass)</span><br><span class="line">			assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:allocate' instead of 'Class.allocate'"</span>)</span><br><span class="line">			<span class="built_in">return</span> setmetatable(&#123; class = aClass &#125;, aClass.__instanceDict)	-- class的__instanceDict表用作设为实例的metatable以及metatable的__index的值</span><br><span class="line">		end,</span><br><span class="line"></span><br><span class="line">		-- 创建实例并初始化</span><br><span class="line">		new = <span class="keyword">function</span>(aClass, ...)</span><br><span class="line">			assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:new' instead of 'Class.new'"</span>)</span><br><span class="line">			<span class="built_in">local</span> instance = aClass:allocate()</span><br><span class="line">			instance:initialize(...)</span><br><span class="line">			<span class="built_in">return</span> instance</span><br><span class="line">		end,</span><br><span class="line"></span><br><span class="line">		subclass = <span class="keyword">function</span>(aClass, name)</span><br><span class="line">			assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure that you are using 'Class:subclass' instead of 'Class.subclass'"</span>)</span><br><span class="line">      		assert(<span class="built_in">type</span>(name) == <span class="string">"string"</span>, <span class="string">"You must provide a name(string) for your class"</span>)</span><br><span class="line"></span><br><span class="line">			<span class="built_in">local</span> subclass = _createClass(name, aClass)</span><br><span class="line"></span><br><span class="line">			-- 创建子类只继承父类的成员函数，不应继承父类的静态函数</span><br><span class="line">			<span class="keyword">for</span> name,method <span class="keyword">in</span> pairs(aClass.__instanceDict) <span class="keyword">do</span></span><br><span class="line">				_propagateInstanceMethod(subclass, name, method)</span><br><span class="line">			end</span><br><span class="line"></span><br><span class="line">			-- 为子类定义一个缺省的initialize函数，默认调用其父类的initialize函数</span><br><span class="line">			subclass.initialize = <span class="keyword">function</span>(instance, ...)</span><br><span class="line">				aClass.initialize(instance, ...)</span><br><span class="line">			end</span><br><span class="line"></span><br><span class="line">			aClass.subclasses[subclass] = <span class="literal">true</span>	-- 标记父类已拥有该子类</span><br><span class="line">			aClass:subclassed(subclass)			-- 回调：创建子类完毕</span><br><span class="line"></span><br><span class="line">			<span class="built_in">return</span> subclass</span><br><span class="line">		end,</span><br><span class="line"></span><br><span class="line">		-- 缺省实现 创建子类完毕回调</span><br><span class="line">		subclassed = <span class="keyword">function</span>(aClass, other) end,</span><br><span class="line"></span><br><span class="line">		-- 判断是否指定类的子类</span><br><span class="line">		isSubclassOf = <span class="keyword">function</span>(aClass, other)</span><br><span class="line">      		<span class="built_in">return</span> <span class="built_in">type</span>(other) == <span class="string">'table'</span> and</span><br><span class="line">            	   <span class="built_in">type</span>(aClass.super) == <span class="string">'table'</span> and</span><br><span class="line">             	   ( aClass.super == other or aClass.super:isSubclassOf(other) )</span><br><span class="line">    	end,</span><br><span class="line"></span><br><span class="line">    	-- 批量include</span><br><span class="line">    	include = <span class="keyword">function</span>(aClass, ...)</span><br><span class="line">      		assert(<span class="built_in">type</span>(aClass) == <span class="string">'table'</span>, <span class="string">"Make sure you that you are using 'Class:include' instead of 'Class.include'"</span>)</span><br><span class="line">      		<span class="keyword">for</span> _,mixin <span class="keyword">in</span> ipairs(&#123;...&#125;) <span class="keyword">do</span></span><br><span class="line">      			_includeMixin(aClass, mixin)</span><br><span class="line">      		end</span><br><span class="line">      		<span class="built_in">return</span> aClass</span><br><span class="line">    	end</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> middleclass.class(name, super)</span><br><span class="line">	assert(<span class="built_in">type</span>(name) == <span class="string">'string'</span>, <span class="string">"A name (string) is needed for the new class"</span>)</span><br><span class="line">	<span class="built_in">return</span> super and super:subclass(name) or _includeMixin(_createClass(name), DefaultMixin)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 模拟oop class关键字的风格</span><br><span class="line">setmetatable(middleclass, &#123; __call = <span class="keyword">function</span>(_, ...) <span class="built_in">return</span> middleclass.class(...) end&#125; )</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> middleclass</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">---Animal---</span><br><span class="line"><span class="built_in">local</span> Class = require <span class="string">'middleclass'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> Animal = Class(<span class="string">'Animal'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> Animal:initialize(name)</span><br><span class="line">	self.instance_name = name</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> Animal:get_name1()</span><br><span class="line">	<span class="built_in">return</span> self.instance_name</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> Animal:move()</span><br><span class="line">	<span class="built_in">print</span>(<span class="string">'Animal:move'</span>)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> Animal:eat()</span><br><span class="line">	<span class="built_in">print</span>(<span class="string">'Animal:eat!'</span>)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> Animal</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">---Dog---</span><br><span class="line"><span class="built_in">local</span> Class = require <span class="string">'middleclass'</span></span><br><span class="line"><span class="built_in">local</span> Animal = require <span class="string">'Animal'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> Dog = Class(<span class="string">'Dog'</span>, Animal)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> Dog:move()</span><br><span class="line">	<span class="built_in">print</span>(<span class="string">'Dog:move walking!'</span>)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> Dog</span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">---<span class="built_in">test</span>---</span><br><span class="line"><span class="built_in">local</span> Animal = require <span class="string">'Animal'</span></span><br><span class="line"><span class="built_in">local</span> Dog = require <span class="string">'Dog'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(Dog:isSubclassOf(Animal))	-- <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">local</span> dog = Dog(<span class="string">'hashiqi'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">'dog_name:'</span>..dog:get_name1())		-- dog_name:hashiqi</span><br><span class="line">dog:eat()	-- Animal:eat!</span><br><span class="line">dog:move()	-- Dog:move walking!</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(dog:isInstanceOf(Dog))	-- <span class="literal">true</span></span><br><span class="line"><span class="built_in">print</span>(dog:isInstanceOf(Animal))	-- <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">return</span> dog</span><br></pre></td></tr></table></figure></contents>
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/Lua/" rel="tag"># Lua</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/08/2018-09-08.Lua Metatable and Metamethod/" rel="next" title="Lua之元表与元方法">
+                <i class="fa fa-chevron-left"></i> Lua之元表与元方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/09/2018-10-09.Why learn Data Structures and Their Algorithms/" rel="prev" title="01 | 为什么要学习数据结构和算法？">
+                01 | 为什么要学习数据结构和算法？ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="小锦鲤">
+  
+  <p class="site-author-name" itemprop="name">小锦鲤</p>
+  <div class="site-description motion-element" itemprop="description">一个初出茅庐的游戏人~</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+
+
+  <div class="links-of-author motion-element">
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/JinLiGame" title="GitHub &rarr; https://github.com/JinLiGame" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="mailto:553555614@123.com" title="E-Mail &rarr; mailto:553555614@123.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" title="QQ &rarr; http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" title="Wechat &rarr; https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" rel="noopener" target="_blank"><i class="fa fa-fw fa-wechat"></i></a>
+      </span>
+    
+  </div>
+
+
+
+
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/zh-cn/" title="https://hexo.io/zh-cn/" rel="noopener" target="_blank">Hexo</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://www.markdown.cn/" title="http://www.markdown.cn/" rel="noopener" target="_blank">教程-MarkDown</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://theme-next.iissnan.com/theme-settings.html#author-sites" title="http://theme-next.iissnan.com/theme-settings.html#author-sites" rel="noopener" target="_blank">主题配置 - NexT 使用文档</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类定义"><span class="nav-number">2.</span> <span class="nav-text">类定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新建类定义"><span class="nav-number">2.1.</span> <span class="nav-text">新建类定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加-tostring函数"><span class="nav-number">2.2.</span> <span class="nav-text">添加__tostring函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模拟Class关键字"><span class="nav-number">2.3.</span> <span class="nav-text">模拟Class关键字</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例化"><span class="nav-number">3.</span> <span class="nav-text">实例化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#导入"><span class="nav-number">3.1.</span> <span class="nav-text">导入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例化-1"><span class="nav-number">3.2.</span> <span class="nav-text">实例化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DefaultMixin"><span class="nav-number">3.3.</span> <span class="nav-text">DefaultMixin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态vs成员"><span class="nav-number">3.4.</span> <span class="nav-text">静态vs成员</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#static表"><span class="nav-number">3.5.</span> <span class="nav-text">static表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#instanceDict表"><span class="nav-number">3.6.</span> <span class="nav-text">__instanceDict表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一些细节"><span class="nav-number">3.7.</span> <span class="nav-text">一些细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#继承"><span class="nav-number">4.</span> <span class="nav-text">继承</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实现【继承】关键字"><span class="nav-number">4.1.</span> <span class="nav-text">实现【继承】关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#继承成员函数"><span class="nav-number">4.2.</span> <span class="nav-text">继承成员函数</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小锦鲤</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+  
+  <script src="/lib/lazyload/lozad.min.js?v=1.10.0"></script>
+
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=4.0.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+
+  
+  
+
+  
+  
+
+  
+
+
+
+
+
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.2.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+
+</body>
+</html>
