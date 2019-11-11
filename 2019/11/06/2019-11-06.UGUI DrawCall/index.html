@@ -104,15 +104,16 @@
 </script>
 
   <meta name="description" content="无论是UGUI这样的UI系统，还是场景、角色等模型，其实都遵循Camera的渲染原理和GPU的工作原理，即引擎会在CPU端将渲染数据传递给GPU进行渲染。">
+<meta name="keywords" content="Unity,UGUI">
 <meta property="og:type" content="article">
-<meta property="og:title" content="他城">
-<meta property="og:url" content="http://yoursite.com/2019/11/12/UGUI DrawCall/index.html">
+<meta property="og:title" content="UGUI DrawCall">
+<meta property="og:url" content="http://yoursite.com/2019/11/06/2019-11-06.UGUI DrawCall/index.html">
 <meta property="og:site_name" content="他城">
 <meta property="og:description" content="无论是UGUI这样的UI系统，还是场景、角色等模型，其实都遵循Camera的渲染原理和GPU的工作原理，即引擎会在CPU端将渲染数据传递给GPU进行渲染。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-11T16:54:01.293Z">
+<meta property="og:updated_time" content="2019-11-11T17:35:17.601Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="他城">
+<meta name="twitter:title" content="UGUI DrawCall">
 <meta name="twitter:description" content="无论是UGUI这样的UI系统，还是场景、角色等模型，其实都遵循Camera的渲染原理和GPU的工作原理，即引擎会在CPU端将渲染数据传递给GPU进行渲染。">
 
 
@@ -123,7 +124,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/11/12/UGUI DrawCall/">
+  <link rel="canonical" href="http://yoursite.com/2019/11/06/2019-11-06.UGUI DrawCall/">
 
 
 
@@ -134,7 +135,7 @@
 </script>
 
   
-  <title> | 他城</title>
+  <title>UGUI DrawCall | 他城</title>
   
 
 
@@ -380,7 +381,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/12/UGUI DrawCall/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/06/2019-11-06.UGUI DrawCall/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="他城浪人">
@@ -397,7 +398,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">
+          <h2 class="post-title" itemprop="name headline">UGUI DrawCall
 
               
             
@@ -423,7 +424,7 @@
                 
               
 
-              <time title="创建时间：2019-11-12 00:56:26 / 修改时间：00:54:01" itemprop="dateCreated datePublished" datetime="2019-11-12T00:56:26+08:00">2019-11-12</time>
+              <time title="创建时间：2019-11-06 01:03:51" itemprop="dateCreated datePublished" datetime="2019-11-06T01:03:51+08:00">2019-11-06</time>
             </span>
           
 
@@ -431,8 +432,33 @@
             
 
             
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-11-12 01:35:17" itemprop="dateModified" datetime="2019-11-12T01:35:17+08:00">2019-11-12</time>
+              </span>
+            
           
 
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/UGUI/" itemprop="url" rel="index"><span itemprop="name">UGUI</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -477,12 +503,12 @@
 <li>CPU和GPU是并行操作的，CPU渲染对象时向命令缓冲区添加命令，当GPU完成上一次的渲染任务后，会从命令缓冲区队列中取出一个命令执行。</li>
 <li>Unity的合并原理（包括UGUI）是将相同的Material（参数也需要一样，如Shader和Texture）的节点进行Mesh的Combine操作。因此UGUI减少DrawCall的方式是尽可能地进行动态合批，而每次合批都会产生很大的代价。比如合并Mesh后对Renderer进行设置执行Renderer.material就会new出一个新的Material，这个Material会包含合并后的Texture信息。</li>
 </ol>
-<h2 id="UGUI-DrawCall"><a href="#UGUI-DrawCall" class="headerlink" title="UGUI DrawCall"></a>UGUI DrawCall</h2><p>用过NGUI的都知道Depth，只不过UGUI的Depth的动态计算出来的。通过Depth的大小基本的确定DrawCall的值。</p>
-<h3 id="UGUI-DrawCall计算原理"><a href="#UGUI-DrawCall计算原理" class="headerlink" title="UGUI DrawCall计算原理"></a>UGUI DrawCall计算原理</h3><h4 id="计算Depth"><a href="#计算Depth" class="headerlink" title="计算Depth"></a>计算Depth</h4><ol>
+<h2 id="UGUI-DrawCall计算原理"><a href="#UGUI-DrawCall计算原理" class="headerlink" title="UGUI DrawCall计算原理"></a>UGUI DrawCall计算原理</h2><p>用过NGUI的都知道Depth，只不过UGUI的Depth的动态计算出来的。通过Depth的大小基本的确定DrawCall的值。</p>
+<h3 id="计算Depth"><a href="#计算Depth" class="headerlink" title="计算Depth"></a>计算Depth</h3><ol>
 <li>按照Hierarchy窗口中节点的顺序，从上到下进行Depth分析（深度优先原则）。</li>
 <li>跳过那些不渲染的节点，比如GameObject.activeSelf=false，Image.enabled = false，Canvas不渲染的Layer等。</li>
-<li>如果处于渲染状态并且没有其他渲染元素与它相交，Depth=0。注意，不是RectTransform的Rect相交，而是渲染元素本身相交，如下图所示：<br><img alt="DrawCall01" data-src="/images/2019-11-06/DrawCall01.jpg"></li>
-<li>如果处于渲染元素并且有其他渲染元素与它相交：</li>
+<li>如果处于渲染状态并且没有其他渲染元素与其相交，Depth=0。注意，不是RectTransform的Rect相交，而是渲染元素本身相交，如下图所示：<br><img alt="DrawCall01" data-src="/images/2019-11-06/DrawCall01.jpg"></li>
+<li>如果处于渲染元素并且有其他渲染元素与其相交：</li>
 </ol>
 <ul>
 <li>找到相交的渲染元素中最大Depth值MaxDepth的渲染元素。</li>
@@ -493,8 +519,61 @@
 <li>这里Depth值是按照Hierarchy顺序计算的，如果渲染元素A盖住了渲染元素B，而B的Depth值还没有计算，这时是无法计算渲染元素A的。（这种情况是不会出现的，因为被盖住的渲染元素B总会有值，等渲染元素B计算完Depth值，才会计算渲染元素A的Depth值）</li>
 </ol>
 <p><strong>注：从上面的规则中可以得出，Depth值与是否相交有关，与是否为子节点无关。</strong></p>
-<h4 id="对Depth进行升序排列"><a href="#对Depth进行升序排列" class="headerlink" title="对Depth进行升序排列"></a>对Depth进行升序排列</h4><p>如下图所示，对Depth值进行升序排列:<br><img alt="DrawCall02" data-src="/images/2019-11-06/DrawCall02.png"><br>计算Depth值并排序：<br>|节点名称|Depth排序前| |节点名称|Depth排序后|<br>|——–|———–|-|——–|———–|<br>|Image1  |0          | |Image1  |0          |<br>|Text1   |0          | |Text1   |0          |<br>|Image2  |0          | |Image2  |0          |<br>|Text2   |1          | |Image3  |0          |<br>|Image3  |0          | |Text2   |1          |<br>|Text3   |1          | |Text3   |1          |</p>
-<h4 id="获得材质球Material的InstanceID后进行升序排列，注意此时排序只针对Depth值相同的情况"><a href="#获得材质球Material的InstanceID后进行升序排列，注意此时排序只针对Depth值相同的情况" class="headerlink" title="获得材质球Material的InstanceID后进行升序排列，注意此时排序只针对Depth值相同的情况"></a>获得材质球Material的InstanceID后进行升序排列，注意此时排序只针对Depth值相同的情况</h4><table>
+<h3 id="对Depth进行升序排列"><a href="#对Depth进行升序排列" class="headerlink" title="对Depth进行升序排列"></a>对Depth进行升序排列</h3><p>如下图所示，对Depth值进行升序排列:<br><img alt="DrawCall02" data-src="/images/2019-11-06/DrawCall02.png"><br>计算Depth值并排序：</p>
+<table>
+<thead>
+<tr>
+<th>节点名称</th>
+<th>Depth排序前</th>
+<th></th>
+<th>节点名称</th>
+<th>Depth排序后</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Image1</td>
+<td>0</td>
+<td></td>
+<td>Image1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Text1</td>
+<td>0</td>
+<td></td>
+<td>Text1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Image2</td>
+<td>0</td>
+<td></td>
+<td>Image2</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Text2</td>
+<td>1</td>
+<td></td>
+<td>Image3</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Image3</td>
+<td>0</td>
+<td></td>
+<td>Text2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Text3</td>
+<td>1</td>
+<td></td>
+<td>Text3</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<h3 id="获得材质球Material的InstanceID后进行升序排列，注意此时排序只针对Depth值相同的情况"><a href="#获得材质球Material的InstanceID后进行升序排列，注意此时排序只针对Depth值相同的情况" class="headerlink" title="获得材质球Material的InstanceID后进行升序排列，注意此时排序只针对Depth值相同的情况"></a>获得材质球Material的InstanceID后进行升序排列，注意此时排序只针对Depth值相同的情况</h3><table>
 <thead>
 <tr>
 <th>节点名称</th>
@@ -546,22 +625,15 @@
 <td>Text3</td>
 <td>-1276</td>
 </tr>
-<tr>
-<td>从排序节点中可以看出所有节点的MatID都一样，这是因为很多情况都使用的Default UI Material。</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
 </tbody></table>
-<h4 id="获得纹理Texture的InstanceID，并进行升序排列"><a href="#获得纹理Texture的InstanceID，并进行升序排列" class="headerlink" title="获得纹理Texture的InstanceID，并进行升序排列"></a>获得纹理Texture的InstanceID，并进行升序排列</h4><ul>
-<li><p>使用Sprite Atlas图集或者TP打的图集，需要游戏运行起来，TextureID就是图集的ID。</p>
-</li>
-<li><p>使用单个图片没有图集，TextureID就是其本身的ID。</p>
-</li>
-<li><p>使用同一个字体的Text，TextureID就是其字体的ID。</p>
-</li>
-<li><p>此时MatID的顺序不会发生改变，但是可以通过TextureID，影响MatID和Depth都相同的节点排序。<br>注：可以使用Image.mainTexture.GetInstanceID()和Text.mainTexture.GetInstanceID()来获取TextureID。</p>
+<p>从排序节点中可以看出所有节点的MatID都一样，这是因为很多情况都使用的Default UI Material。</p>
+<h3 id="获得纹理Texture的InstanceID，并进行升序排列"><a href="#获得纹理Texture的InstanceID，并进行升序排列" class="headerlink" title="获得纹理Texture的InstanceID，并进行升序排列"></a>获得纹理Texture的InstanceID，并进行升序排列</h3><ul>
+<li>使用Sprite Atlas图集或者TP打的图集，需要游戏运行起来，TextureID就是图集的ID。</li>
+<li>使用单个图片没有图集，TextureID就是其本身的ID。</li>
+<li>使用同一个字体的Text，TextureID就是其字体的ID。</li>
+<li>此时MatID的顺序不会发生改变，但是可以通过TextureID，影响MatID和Depth都相同的节点排序。</li>
+</ul>
+<p>注：可以使用Image.mainTexture.GetInstanceID()和Text.mainTexture.GetInstanceID()来获取TextureID。</p>
 <table>
 <thead>
 <tr>
@@ -629,11 +701,10 @@
 <td>522</td>
 </tr>
 </tbody></table>
-</li>
-<li><p>通过排序得出最后的DrawCall，即522/2628/10576/522，4个DrawCall。<br><img alt="DrawCall03" data-src="/images/2019-11-06/DrawCall03.jpg"></p>
-</li>
+<ul>
+<li>通过排序得出最后的DrawCall，即522/2628/10576/522，4个DrawCall。<br><img alt="DrawCall03" data-src="/images/2019-11-06/DrawCall03.jpg"></li>
 </ul>
-<h3 id="分析一个复杂的例子"><a href="#分析一个复杂的例子" class="headerlink" title="分析一个复杂的例子"></a>分析一个复杂的例子</h3><ul>
+<h2 id="分析一个复杂的例子"><a href="#分析一个复杂的例子" class="headerlink" title="分析一个复杂的例子"></a>分析一个复杂的例子</h2><ul>
 <li>UI层级结构。<br><img alt="DrawCall04" data-src="/images/2019-11-06/DrawCall04.jpg"></li>
 <li>基础信息。<table>
 <thead>
@@ -838,19 +909,19 @@
 <li>最后将Depth、MatID、TextureID相同的节点进行合并，很明显没有能够合并的节点，最终得到了5个DrawCall，它们的先后顺序是Image1-&gt;Text1-&gt;Image2-&gt;Image3-&gt;Text2。</li>
 <li>Frame Debug的结果<br><img alt="DrawCall05" data-src="/images/2019-11-06/DrawCall05.jpg"><br><img alt="DrawCall06" data-src="/images/2019-11-06/DrawCall06.jpg"><br><img alt="DrawCall07" data-src="/images/2019-11-06/DrawCall07.jpg"><br><img alt="DrawCall08" data-src="/images/2019-11-06/DrawCall08.jpg"><br><img alt="DrawCall09" data-src="/images/2019-11-06/DrawCall09.jpg"></li>
 </ul>
-<h3 id="Pos-z不等于0的情况"><a href="#Pos-z不等于0的情况" class="headerlink" title="Pos.z不等于0的情况"></a>Pos.z不等于0的情况</h3><p>当Pos.z不等于0时，满足一下条件就可以合批：</p>
+<h2 id="Pos-z不等于0的情况"><a href="#Pos-z不等于0的情况" class="headerlink" title="Pos.z不等于0的情况"></a>Pos.z不等于0的情况</h2><p>当Pos.z不等于0时，满足一下条件就可以合批：</p>
 <ol>
 <li>图集和材质一样</li>
 <li>在Hierarchy中是相邻的，可以是父子节点</li>
 <li>跟Depth值以及是否与别的节点相交没有关系<br><img alt="DrawCall10" data-src="/images/2019-11-06/DrawCall10.jpg"><br><img alt="DrawCall11" data-src="/images/2019-11-06/DrawCall11.jpg"><br><img alt="DrawCall12" data-src="/images/2019-11-06/DrawCall12.jpg"><br><img alt="DrawCall13" data-src="/images/2019-11-06/DrawCall13.jpg"></li>
 </ol>
-<h3 id="优化点"><a href="#优化点" class="headerlink" title="优化点"></a>优化点</h3><ol>
+<h2 id="优化点"><a href="#优化点" class="headerlink" title="优化点"></a>优化点</h2><ol>
 <li>一个Canvas下的元素才会合批，不同Canvas，即使Order in Layer相同也不会合批。</li>
 <li>Tag、Layer不同，是否添加了outline、shadow脚本，都不会影响合批。</li>
 <li>不使用UnityWhite等默认的Unity图片，比如：Mask、Sprite、Background等。</li>
 <li>有时候为了合并层级，比如Text，就需要给Text垫高层级，即将Text下面放一个其他图集中的透明图片，从而使得层级整齐，以达到该Text与其他Text层级相同而能合批的目的。</li>
 </ol>
-<h3 id="Mask-amp-RectMask2D"><a href="#Mask-amp-RectMask2D" class="headerlink" title="Mask &amp; RectMask2D"></a>Mask &amp; RectMask2D</h3><p>二者同是作为裁剪，但是原理和计算DrawCall的方式完全不同。</p>
+<h2 id="Mask-amp-RectMask2D"><a href="#Mask-amp-RectMask2D" class="headerlink" title="Mask &amp; RectMask2D"></a>Mask &amp; RectMask2D</h2><p>二者同是作为裁剪，但是原理和计算DrawCall的方式完全不同。</p>
 <h4 id="Mask"><a href="#Mask" class="headerlink" title="Mask"></a>Mask</h4><ul>
 <li>Mask内的元素都不会跟外界非Mask内的元素合批。</li>
 <li>Mask内的元素可以和其他Mask内的元素合批。</li>
@@ -897,6 +968,17 @@
     
 
     <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/Unity/" rel="tag"># Unity</a>
+          
+            <a href="/tags/UGUI/" rel="tag"># UGUI</a>
+          
+        </div>
       
 
       
@@ -1012,7 +1094,11 @@
         
           
         
-        <span class="site-state-item-count">5</span>
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
@@ -1150,7 +1236,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DrawCall"><span class="nav-number">1.</span> <span class="nav-text">DrawCall</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UGUI-DrawCall"><span class="nav-number">2.</span> <span class="nav-text">UGUI DrawCall</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UGUI-DrawCall计算原理"><span class="nav-number">2.1.</span> <span class="nav-text">UGUI DrawCall计算原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#计算Depth"><span class="nav-number">2.1.1.</span> <span class="nav-text">计算Depth</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对Depth进行升序排列"><span class="nav-number">2.1.2.</span> <span class="nav-text">对Depth进行升序排列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获得材质球Material的InstanceID后进行升序排列，注意此时排序只针对Depth值相同的情况"><span class="nav-number">2.1.3.</span> <span class="nav-text">获得材质球Material的InstanceID后进行升序排列，注意此时排序只针对Depth值相同的情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获得纹理Texture的InstanceID，并进行升序排列"><span class="nav-number">2.1.4.</span> <span class="nav-text">获得纹理Texture的InstanceID，并进行升序排列</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析一个复杂的例子"><span class="nav-number">2.2.</span> <span class="nav-text">分析一个复杂的例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pos-z不等于0的情况"><span class="nav-number">2.3.</span> <span class="nav-text">Pos.z不等于0的情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化点"><span class="nav-number">2.4.</span> <span class="nav-text">优化点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mask-amp-RectMask2D"><span class="nav-number">2.5.</span> <span class="nav-text">Mask &amp; RectMask2D</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Mask"><span class="nav-number">2.5.1.</span> <span class="nav-text">Mask</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RectMask2D"><span class="nav-number">2.5.2.</span> <span class="nav-text">RectMask2D</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Mask与RectMask2D的区别"><span class="nav-number">2.5.3.</span> <span class="nav-text">Mask与RectMask2D的区别</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DrawCall"><span class="nav-number">1.</span> <span class="nav-text">DrawCall</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UGUI-DrawCall计算原理"><span class="nav-number">2.</span> <span class="nav-text">UGUI DrawCall计算原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#计算Depth"><span class="nav-number">2.1.</span> <span class="nav-text">计算Depth</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对Depth进行升序排列"><span class="nav-number">2.2.</span> <span class="nav-text">对Depth进行升序排列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获得材质球Material的InstanceID后进行升序排列，注意此时排序只针对Depth值相同的情况"><span class="nav-number">2.3.</span> <span class="nav-text">获得材质球Material的InstanceID后进行升序排列，注意此时排序只针对Depth值相同的情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获得纹理Texture的InstanceID，并进行升序排列"><span class="nav-number">2.4.</span> <span class="nav-text">获得纹理Texture的InstanceID，并进行升序排列</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析一个复杂的例子"><span class="nav-number">3.</span> <span class="nav-text">分析一个复杂的例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pos-z不等于0的情况"><span class="nav-number">4.</span> <span class="nav-text">Pos.z不等于0的情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化点"><span class="nav-number">5.</span> <span class="nav-text">优化点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mask-amp-RectMask2D"><span class="nav-number">6.</span> <span class="nav-text">Mask &amp; RectMask2D</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Mask"><span class="nav-number">6.0.1.</span> <span class="nav-text">Mask</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RectMask2D"><span class="nav-number">6.0.2.</span> <span class="nav-text">RectMask2D</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Mask与RectMask2D的区别"><span class="nav-number">6.0.3.</span> <span class="nav-text">Mask与RectMask2D的区别</span></a></li></ol></li></ol></div>
             
 
           </div>
