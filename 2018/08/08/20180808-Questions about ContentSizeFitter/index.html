@@ -111,7 +111,7 @@
 <meta property="og:site_name" content="他城">
 <meta property="og:description" content="经常会有这样的UI布局，一个带有布局组件(LayoutGroup)的父物体下，有一个或多个子物体带有自适应组件(ContentSizeFitter),这时布局计算可能会需要几帧的时间来完成，这将是我们所不能忍受的。这篇文章将会逐步的分析这个问题产生的原因以及解决方案。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-12T17:39:12.533Z">
+<meta property="og:updated_time" content="2019-11-12T18:07:18.679Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于ContentSizeFitter组件的警告带来的问题">
 <meta name="twitter:description" content="经常会有这样的UI布局，一个带有布局组件(LayoutGroup)的父物体下，有一个或多个子物体带有自适应组件(ContentSizeFitter),这时布局计算可能会需要几帧的时间来完成，这将是我们所不能忍受的。这篇文章将会逐步的分析这个问题产生的原因以及解决方案。">
@@ -439,7 +439,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-11-13 01:39:12" itemprop="dateModified" datetime="2019-11-13T01:39:12+08:00">2019-11-13</time>
+                <time title="修改时间：2019-11-13 02:07:18" itemprop="dateModified" datetime="2019-11-13T02:07:18+08:00">2019-11-13</time>
               </span>
             
           
@@ -501,14 +501,14 @@
         <contents>
 
 <h2 id="UI布局"><a href="#UI布局" class="headerlink" title="UI布局"></a>UI布局</h2><h3 id="经常需要的UI布局"><a href="#经常需要的UI布局" class="headerlink" title="经常需要的UI布局"></a>经常需要的UI布局</h3><p>我们经常会有这样的UI布局，一个带有布局组件(LayoutGroup)的父物体下，有一个或多个子物体带有自适应组件(ContentSizeFitter)，如图：</p>
-<p><img alt="parent" data-src="/images/2018-08-08/parent.png"> <img alt="child_text" data-src="/images/2018-08-08/child_text.png"></p>
+<p><img alt="parent" data-src="/images/posts/20180808/parent.png"> <img alt="child_text" data-src="/images/posts/20180808/child_text.png"></p>
 <h3 id="ContentSizeFitter组件出现的警告"><a href="#ContentSizeFitter组件出现的警告" class="headerlink" title="ContentSizeFitter组件出现的警告"></a>ContentSizeFitter组件出现的警告</h3><p>大家有没有发现子物体的ContentSizeFitter组件的上的警告，如下图。没错，问题就出现在这里。大致的意思是：父物体上有一个布局组件。布局组件的子物体不应该有ContentSizeFitter组件，因为它应该由布局组件驱动。</p>
-<p><img alt="warning" data-src="/images/2018-08-08/warning.png"></p>
+<p><img alt="warning" data-src="/images/posts/20180808/warning.png"></p>
 <h3 id="警告引发的问题"><a href="#警告引发的问题" class="headerlink" title="警告引发的问题"></a>警告引发的问题</h3><p>刚开始遇到这个警告的时候，我尝试着删除掉子物体的ContentSizeFitter组件，虽然警告不见了，但是子物体就没办法达到自适应的效果，这当然不是我们想要的，所以只能暂时的忽略掉这个警告。最后终于发现了这个警告引发的问题，那就是：当我们需要父物体布局后的长和宽时，此时取到的长和宽竟然不是布局最终的结果，当然我们都知道布局组件会在下一帧计算，可以使用<i>LayoutRebuilder.ForceRebuildLayoutImmediate()</i>这个方法，但是即使使用了这个方法，取到的结果依然不是布局最终的结果。以下是我的测试用例：</p>
 <ul>
 <li>UI结构，toggle选中时为黑色，未选中时为白色，toggle的作用是在选中时将带有ContentSizeFitter组件的child_text的文本设置为一行，未选中时设置为多行。如下图：</li>
 </ul>
-<p><img alt="test_ui" data-src="/images/2018-08-08/test_ui.png"></p>
+<p><img alt="test_ui" data-src="/images/posts/20180808/test_ui.png"></p>
 <ul>
 <li>在设置完child_text的文本后，立即强制布局计算，布局计算结束后打印parent的长和宽，代码如下：</li>
 </ul>
@@ -517,7 +517,7 @@
 <ul>
 <li>以下分别是toggle选中和未选中的测试结果</li>
 </ul>
-<p><img alt="selected_test_result" data-src="/images/2018-08-08/selected_test_result.png"><br><img alt="noselected_test_result" data-src="/images/2018-08-08/noselected_test_result.png"></p>
+<p><img alt="selected_test_result" data-src="/images/posts/20180808/selected_test_result.png"><br><img alt="noselected_test_result" data-src="/images/posts/20180808/noselected_test_result.png"></p>
 <h2 id="分析产生问题的具体原因"><a href="#分析产生问题的具体原因" class="headerlink" title="分析产生问题的具体原因"></a>分析产生问题的具体原因</h2><p>由于子物体带有自适应组件(ContentSizeFitter)，所以子物体也会进行布局计算，然而并不是子物体布局计算后父物体开始进行布局计算，两者很有可能是同时进行布局计算，这就导致在父物体进行布局计算时，子物体的长和宽并不是最终的计算结果，这样父物体的布局计算就会有误差。</p>
 <h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>问题的原因是父物体的布局计算并不是在子物体布局计算之后，那么，我们可以强制的把父物体的布局计算和子物体的布局计算按照顺序进行，即先强制的对子物体进行布局计算，然后强制对父物体进行布局计算。强制对子物体进行布局计算可以使用ContentSizeFitter组件的<i>SetLayoutVertical</i>方法。代码如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">using UnityEngine;</span><br><span class="line">using UnityEngine.UI;</span><br><span class="line"></span><br><span class="line">public class <span class="built_in">test</span> : MonoBehaviour &#123;</span><br><span class="line"></span><br><span class="line">    public Text child_text;</span><br><span class="line">    public RectTransform parent;</span><br><span class="line"></span><br><span class="line">    public void OnValueChanged(bool val) &#123;</span><br><span class="line">        <span class="keyword">if</span> (val == <span class="literal">true</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            child_text.text = <span class="string">"一行的测试文本"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            child_text.text = <span class="string">"多行的测试文本测试文本测试文本测试文本测试文本测试文本"</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //先强制进行子物体的布局计算</span><br><span class="line">        child_text.gameObject.GetComponent&lt;ContentSizeFitter&gt;().SetLayoutVertical();</span><br><span class="line">        //然后强制进行父物体的布局计算</span><br><span class="line">        LayoutRebuilder.ForceRebuildLayoutImmediate(parent);</span><br><span class="line"></span><br><span class="line">        Vector2 size = parent.sizeDelta;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"parent width:"</span>+size.x+<span class="string">", height:"</span>+size.y);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

@@ -111,7 +111,7 @@
 <meta property="og:site_name" content="他城">
 <meta property="og:description" content="我们都知道，数据结构和算法解决的是“快”和“省”的问题，即如何让代码运行的更快，如何让代码更省存储空间。所以，执行效率是算法的一个非常重要的考量指标。那如何来衡量编写的算法代码的执行效率呢？这里就要用到时间、空间复杂度分析。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-12T17:39:14.405Z">
+<meta property="og:updated_time" content="2019-11-12T18:08:16.321Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="03 | 复杂度分析（上）：如何分析、统计算法的执行效率和消耗资源？">
 <meta name="twitter:description" content="我们都知道，数据结构和算法解决的是“快”和“省”的问题，即如何让代码运行的更快，如何让代码更省存储空间。所以，执行效率是算法的一个非常重要的考量指标。那如何来衡量编写的算法代码的执行效率呢？这里就要用到时间、空间复杂度分析。">
@@ -439,7 +439,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-11-13 01:39:14" itemprop="dateModified" datetime="2019-11-13T01:39:14+08:00">2019-11-13</time>
+                <time title="修改时间：2019-11-13 02:08:16" itemprop="dateModified" datetime="2019-11-13T02:08:16+08:00">2019-11-13</time>
               </span>
             
           
@@ -519,7 +519,7 @@
 <p>依旧假设每个语句的执行时间是$ut$。那这段代码的总执行时间$T(n)$是多少呢？</p>
 <p>第 2、3、4 行代码，每行都需要1个$ut$的执行时间，第 5、6 行代码循环执行了$n$遍，需要 $2n*ut$的执行时间，第 7、8 行代码循环执行了$n^2$遍，所以需要 $2n^2 * ut$ 的执行时间。所以，整段代码总的执行时间$T(n) = (2n^2+2n+3)*ut$。</p>
 <p>尽管我们不知道$ut$的具体值，但是通过这两段代码执行时间的推导过程，我们可以得到一个非常重要的规律，那就是，<span style="color:#FF5A05">所有代码的执行时间$T(n)$与每行代码的执行次数$n$成正比</span>。</p>
-<p>我们可以把这个规律总结成一个公式。注意，大$O$就要登场了！<br><img alt="01" data-src="/images/2018-10-11/01.png"></p>
+<p>我们可以把这个规律总结成一个公式。注意，大$O$就要登场了！<br><img alt="01" data-src="/images/posts/20181011/01.png"></p>
 <p>其中，$T(n)$表示代码执行的时间; $n$表示数据规模的大小; $f(n)$表示每行代码执行的次数总和,因为这是一个公式，所以用$f(n)$来表示。公式中的 $O$，表示代码的执行时间$T(n)$与$f(n)$表达式成正比。</p>
 <p>所以，第一个例子中的$T(n) = O(2n+2)$，第二个例子中的$T(n) = O(2n^2+2n+3)$。这就是大$O$时间复杂度表示法。<span style="color:#FF5A05">大$O$时间复杂度实际上并不具体表示代码真正的执行时间，而是表示代码执行时间随数据规模增长的变化趋势，也叫作渐进时间复杂度，简称时间复杂度</span>。</p>
 <p>当$n$很大时，可以把它想象成10000、100000。而公式中的低阶、常量、系数三部分并不左右增长趋势，所以都可以忽略。只需要记录一个最大量级就可以了，如果用大$O$表示法表示刚讲的那两段代码的时间复杂度，就可以记为：$T(n) = O(n)$； $T(n) = O(n^2)$。</p>
@@ -547,7 +547,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">i=1;</span><br><span class="line"><span class="keyword">while</span> (i &lt;= n)  &#123;</span><br><span class="line">	i = i * 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>第三行代码是循环执行次数最多的。所以，我们只要能计算出这行代码被执行了多少次，就能知道整段代码的时间复杂度。</p>
-<p>从代码中可以看出，变量 i 的值从 1 开始取，每循环一次就乘以 2。当大于 n 时，循环结束。实际上，变量 i 的取值就是一个等比数列。如果把它一个一个列出来，就应该是这个样子的：<br><img alt="01" data-src="/images/2018-10-11/02.jpg"></p>
+<p>从代码中可以看出，变量 i 的值从 1 开始取，每循环一次就乘以 2。当大于 n 时，循环结束。实际上，变量 i 的取值就是一个等比数列。如果把它一个一个列出来，就应该是这个样子的：<br><img alt="01" data-src="/images/posts/20181011/02.jpg"></p>
 <p>所以，我们只要知道$x$值是多少，就知道这行代码执行的次数了。通过$2^x=n$求解$x={log_2}n$，所以，这段代码的时间复杂度就是$O({log_2}n)$。</p>
 <p>现在，把代码稍微改下，你再看看，这段代码的时间复杂度是多少？</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">i=1;</span><br><span class="line"><span class="keyword">while</span> (i &lt;= n)  &#123;</span><br><span class="line">	i = i * 3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

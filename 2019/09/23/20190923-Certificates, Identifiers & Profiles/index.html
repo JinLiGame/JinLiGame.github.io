@@ -111,7 +111,7 @@
 <meta property="og:site_name" content="他城">
 <meta property="og:description" content="详细的解读了苹果证书中Certificates, Identifiers &amp; Profiles">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-12T17:39:21.857Z">
+<meta property="og:updated_time" content="2019-11-12T18:09:49.770Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="初识苹果开发者中心 - Certificates, Identifiers &amp; Profiles">
 <meta name="twitter:description" content="详细的解读了苹果证书中Certificates, Identifiers &amp; Profiles">
@@ -439,7 +439,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-11-13 01:39:21" itemprop="dateModified" datetime="2019-11-13T01:39:21+08:00">2019-11-13</time>
+                <time title="修改时间：2019-11-13 02:09:49" itemprop="dateModified" datetime="2019-11-13T02:09:49+08:00">2019-11-13</time>
               </span>
             
           
@@ -506,41 +506,41 @@
 <h3 id="Identifiers"><a href="#Identifiers" class="headerlink" title="Identifiers"></a>Identifiers</h3><p>Identifiers 即“标识符”，约等于身份证，其中AppID是应用的唯一标识符，每一个应用的AppID是不一样的。</p>
 <h3 id="Provisioning-Profiles"><a href="#Provisioning-Profiles" class="headerlink" title="Provisioning Profiles"></a>Provisioning Profiles</h3><p>Provisioning Profiles 即“配置文件”。它的功能很特别，专门用于将 Certificates、Identifiers、Devices结合起来。在Xcode中配置Provisioning Profiles，让 Xcode知道我们的配置文件中包含哪些证书、标识符和设备。</p>
 <h2 id="创建App开发证书"><a href="#创建App开发证书" class="headerlink" title="创建App开发证书"></a>创建App开发证书</h2><ul>
-<li><p>登录<a href="https://developer.apple.com/account" target="_blank" rel="noopener">https://developer.apple.com/account</a> 创建开发者证书<br><img alt="01-main-page" data-src="/images/2019-09-23/01-main-page.jpg"></p>
+<li><p>登录<a href="https://developer.apple.com/account" target="_blank" rel="noopener">https://developer.apple.com/account</a> 创建开发者证书<br><img alt="01-main-page" data-src="/images/posts/20190923/01-main-page.jpg"></p>
 </li>
 <li><p>创建Identifiers</p>
 <ol>
-<li>选择Identifiers<br><img alt="02-Identifiers01" data-src="/images/2019-09-23/02-Identifiers01.png"></li>
-<li>选择类型<br><img alt="02-Identifiers02" data-src="/images/2019-09-23/02-Identifiers02.png"></li>
-<li>填写对应信息之后即可完成创建<br><img alt="02-Identifiers03" data-src="/images/2019-09-23/02-Identifiers03.jpg"></li>
-<li>创建成功后会新增一条<br><img alt="02-Identifiers04" data-src="/images/2019-09-23/02-Identifiers04.jpg"></li>
+<li>选择Identifiers<br><img alt="02-Identifiers01" data-src="/images/posts/20190923/02-Identifiers01.png"></li>
+<li>选择类型<br><img alt="02-Identifiers02" data-src="/images/posts/20190923/02-Identifiers02.png"></li>
+<li>填写对应信息之后即可完成创建<br><img alt="02-Identifiers03" data-src="/images/posts/20190923/02-Identifiers03.jpg"></li>
+<li>创建成功后会新增一条<br><img alt="02-Identifiers04" data-src="/images/posts/20190923/02-Identifiers04.jpg"></li>
 </ol>
 </li>
 <li><p>创建Certificates</p>
 <ol>
-<li>打开钥匙串，并选择钥匙串访问-证书助理-从证书颁发机构请求证书<br><img alt="03-Certificates01" data-src="/images/2019-09-23/03-Certificates01.png"></li>
-<li>填写相关信息，并存到磁盘<br><img alt="03-Certificates02" data-src="/images/2019-09-23/03-Certificates02.png"></li>
-<li>选择Certificates<br><img alt="03-Certificates03" data-src="/images/2019-09-23/03-Certificates03.jpg"></li>
-<li>选择证书类型<br><img alt="03-Certificates04" data-src="/images/2019-09-23/03-Certificates04.png"></li>
-<li>选择第2步中生成的证书文件<br><img alt="03-Certificates05" data-src="/images/2019-09-23/03-Certificates05.jpg"></li>
-<li>证书创建完成<br><img alt="03-Certificates06" data-src="/images/2019-09-23/03-Certificates06.jpg"></li>
+<li>打开钥匙串，并选择钥匙串访问-证书助理-从证书颁发机构请求证书<br><img alt="03-Certificates01" data-src="/images/posts/20190923/03-Certificates01.png"></li>
+<li>填写相关信息，并存到磁盘<br><img alt="03-Certificates02" data-src="/images/posts/20190923/03-Certificates02.png"></li>
+<li>选择Certificates<br><img alt="03-Certificates03" data-src="/images/posts/20190923/03-Certificates03.jpg"></li>
+<li>选择证书类型<br><img alt="03-Certificates04" data-src="/images/posts/20190923/03-Certificates04.png"></li>
+<li>选择第2步中生成的证书文件<br><img alt="03-Certificates05" data-src="/images/posts/20190923/03-Certificates05.jpg"></li>
+<li>证书创建完成<br><img alt="03-Certificates06" data-src="/images/posts/20190923/03-Certificates06.jpg"></li>
 </ol>
 </li>
 <li><p>添加Devices</p>
 <ol>
-<li>选择Devices<br><img alt="04-Devices01" data-src="/images/2019-09-23/04-Devices01.jpg"></li>
-<li>添加设备信息<br><img alt="04-Devices02" data-src="/images/2019-09-23/04-Devices02.jpg"></li>
+<li>选择Devices<br><img alt="04-Devices01" data-src="/images/posts/20190923/04-Devices01.jpg"></li>
+<li>添加设备信息<br><img alt="04-Devices02" data-src="/images/posts/20190923/04-Devices02.jpg"></li>
 </ol>
 </li>
 <li><p>创建Provisioning Profiles</p>
 <ol>
-<li>选择Profiles<br><img alt="05-Profiles01" data-src="/images/2019-09-23/05-Profiles01.jpg"></li>
-<li>选择配置文件类型<br><img alt="05-Profiles02" data-src="/images/2019-09-23/05-Profiles02.jpg"></li>
-<li>选择AppID<br><img alt="05-Profiles03" data-src="/images/2019-09-23/05-Profiles03.jpg"></li>
-<li>选择证书<br><img alt="05-Profiles04" data-src="/images/2019-09-23/05-Profiles04.jpg"></li>
-<li>选择设备<br><img alt="05-Profiles05" data-src="/images/2019-09-23/05-Profiles05.jpg"></li>
-<li>填写配置文件名称<br><img alt="05-Profiles06" data-src="/images/2019-09-23/05-Profiles06.jpg"></li>
-<li>生成证书，并下载<br><img alt="05-Profiles07" data-src="/images/2019-09-23/05-Profiles07.jpg"></li>
+<li>选择Profiles<br><img alt="05-Profiles01" data-src="/images/posts/20190923/05-Profiles01.jpg"></li>
+<li>选择配置文件类型<br><img alt="05-Profiles02" data-src="/images/posts/20190923/05-Profiles02.jpg"></li>
+<li>选择AppID<br><img alt="05-Profiles03" data-src="/images/posts/20190923/05-Profiles03.jpg"></li>
+<li>选择证书<br><img alt="05-Profiles04" data-src="/images/posts/20190923/05-Profiles04.jpg"></li>
+<li>选择设备<br><img alt="05-Profiles05" data-src="/images/posts/20190923/05-Profiles05.jpg"></li>
+<li>填写配置文件名称<br><img alt="05-Profiles06" data-src="/images/posts/20190923/05-Profiles06.jpg"></li>
+<li>生成证书，并下载<br><img alt="05-Profiles07" data-src="/images/posts/20190923/05-Profiles07.jpg"></li>
 <li>将证书放于<code>~/Library/MobileDevice/Provisioning Profiles</code>目录下</li>
 </ol>
 </li>

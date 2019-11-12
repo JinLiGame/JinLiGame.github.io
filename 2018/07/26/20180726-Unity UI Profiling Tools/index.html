@@ -111,7 +111,7 @@
 <meta property="og:site_name" content="他城">
 <meta property="og:description" content="Unity UI性能分析工具">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-12T17:39:11.164Z">
+<meta property="og:updated_time" content="2019-11-12T18:05:29.997Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Unity UI Profiling Tools">
 <meta name="twitter:description" content="Unity UI性能分析工具">
@@ -439,7 +439,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-11-13 01:39:11" itemprop="dateModified" datetime="2019-11-13T01:39:11+08:00">2019-11-13</time>
+                <time title="修改时间：2019-11-13 02:05:29" itemprop="dateModified" datetime="2019-11-13T02:05:29+08:00">2019-11-13</time>
               </span>
             
           
@@ -522,19 +522,19 @@
 
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">To analyze this, watch the <i>Canvas.BuildBatch</i> and <i>Canvas.SendWillRenderCanvases</i> lines in the profiler’s output.<br>要分析这一点，请在分析器的输出中观察<i>Canvas.BuildBatch</i>和<i>Canvas.SendWillRenderCanvases</i>。</p>
 
-<p><img alt="sendwillrendercanvases" data-src="/images/2018-07-26/02-sendwillrendercanvases.png"></p>
+<p><img alt="sendwillrendercanvases" data-src="/images/posts/20180726/02-sendwillrendercanvases.png"></p>
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000"><i>Canvas.BuildBatch</i> is the native-code calculations that perform the Canvas Batch Building process, as described previously.<br><i>Canvas.BuildBatch</i>是执行Canvas Batch Building过程的本机代码计算，如前所述。</p>
 
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000"><i>Canvas.SendWillRenderCanvases</i> contains the invocation of the C# scripts that are subscribed to the Canvas component’s <i>willRenderCanvases</i> Event. Unity UI’s <i>CanvasUpdateRegistry</i> class receives this event and uses it to run the Rebuild process, described previously. It is expected that any dirty UI components will update their Canvas Renderers at this time.<br><i>Canvas.SendWillRenderCanvases</i>包含了Canvas组件的<i>willRenderCanvases</i>事件的C＃脚本的调用。Unity UI的<i>CanvasUpdateRegistry</i>类接收这个事件并使用它来运行重建过程，如前所述。预计每一个被标记为dirty的UI组件都会在这个时候更新它们的Canvas Renderer。</p>
 
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000"><i>Note:</i> To more easily see differences in UI performance, it is generally advisable to disable all of the trace categories aside from “Rendering”, “Scripts” and “UI”. This can be done by clicking on the colored boxes beside the name of the trace category on the left-hand side of the CPU Usage profiler. The categories can also be re-ordered in the CPU profiler by clicking and dragging the names of the categories upwards or downwards.<br>注意：为了更容易地看到UI性能的差异，通常建议禁用除“渲染”，“脚本”和“UI”之外的所有跟踪类别。这可以通过点击CPU占用率探查器（CPU Usage profiler）左侧的跟踪类别旁边的彩色框来完成。通过单击并向上或向下拖动类别的名称，也可以在CPU分析器中重新排序类别。</p>
 
-<p><img alt="sendwillrendercanvases" data-src="/images/2018-07-26/02-cpu-profiler.png"></p>
+<p><img alt="sendwillrendercanvases" data-src="/images/posts/20180726/02-cpu-profiler.png"></p>
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The UI category is new in Unity 2017.1 and up. Unfortunately, parts of the UI update process are not categorized correctly, so be careful when looking at the UI curve because it may not contain all UI related calls. For example, <i>Canvas.SendWillRenderCanvases</i> is categorized as "UI", but <i>Canvas.BuildBatch</i> is categorized as “Others” and “Rendering”.<br>UI类别是Unity 2017.1及更高版本中的新功能。遗憾的是，部分UI更新过程未正确分类，因此在查看UI曲线时要小心，因为它可能不包含所有与UI相关的调用。例如，<i>Canvas.SendWillRenderCanvases</i>被归类为“UI”，但<i>Canvas.BuildBatch</i>被归类为“其他”和“渲染”。</p>
 
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">In 2017.1 and up, there’s also a new <a href="https://docs.unity3d.com/Manual/ProfilerUI.html?_ga=2.255104332.573973553.1532622738-1760002840.1532435422" target="_blank">UI Profiler</a>. By default, this profiler is the last one in the Profiler window. It consists of two timelines and a batch viewer:<br>在2017.1及更高版本中，还有一个新的<a href="https://docs.unity3d.com/Manual/ProfilerUI.html?_ga=2.255104332.573973553.1532622738-1760002840.1532435422" target="_blank">UI Profiler</a>。默认情况下，此探查器是Profiler窗口中的最后一个。它由两个时间轴和一个批处理查看器组成：</p>
 
-<p><img alt="ui-profiler" data-src="/images/2018-07-26/02-ui-profiler.png"></p>
+<p><img alt="ui-profiler" data-src="/images/posts/20180726/02-ui-profiler.png"></p>
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The first timeline shows the CPU time spent in two categories, respectively computing layout and rendering. Note that it suffers from the same problem described previously and some UI functions may not be accounted for.<br>第一个时间轴显示了两个类别的CPU时间，分别是计算布局和渲染。请注意，它遇到了前面描述的相同问题，并且可能无法考虑某些UI功能。</p>
 
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The second timeline shows the total number of batches, vertices and also displays event markers. In the previous screenshot, you can see a couple of button click events. These markers can help you determine what caused a CPU spike.<br>第二个时间轴显示批次，顶点的总数，还显示事件标记。在上一个屏幕截图中，可以看到几个按钮单击事件。这些标记可以帮助你确定导致CPU峰值的原因。</p>
@@ -564,7 +564,7 @@
 
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">All UIs can be identified by the “Shader: UI/Default” line (assuming that the UI shader has not been replaced with a custom shader). in the group or draw call’s details. See the highlighted red boxes in the below screenshot.<br>所有的UI都可以通过组中"Shader:UI/Default"(前提是没有更换Shader)或者draw call细节来确定。详情见下图中的红色部分：</p>
 
-<p><img alt="sendwillrendercanvases" data-src="/images/2018-07-26/02-framedebugger.png"></p>
+<p><img alt="sendwillrendercanvases" data-src="/images/posts/20180726/02-framedebugger.png"></p>
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">By watching this set of lines while tweaking a UI, it is relatively simple to maximize the Canvas’ ability to combine UI elements into batches. The most common design-related cause of broken batches is unintentional overlap.<br>调整UI时通过观察这组线条，最大化的发挥Canvas将UI元素组合成批次的能力是相对简单的。在设计的时候最容易引发broken batches（批次破坏）的原因是无意的重叠UI元素。
 </p>
 
@@ -610,7 +610,7 @@
 
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Build and run the project on an iOS device. The GPU profiler can be found by showing the Debug pane in Xcode’s Navigator sidebar, and clicking on the FPS entry.<br>在iOS设备上编译并运行项目。通过在Xcode的Navigator侧栏中显示Debug窗格，然后单击FPS条目，可以找到GPU Profiler。</p>
 
-<p><img alt="sendwillrendercanvases" data-src="/images/2018-07-26/02-xcode-gpu.png"></p>
+<p><img alt="sendwillrendercanvases" data-src="/images/posts/20180726/02-xcode-gpu.png"></p>
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The first point of interest in the GPU profiler is the set of three bars in the center of the screen, labeled “Tiler”, “Renderer”, and “Device”. Of these two:<br>GPU分析器最大的好处是在屏幕中央有三个条状图，标记为“Tiler”，“Renderer”和“Device”。这两个：</p>
 
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;“Tiler” is generally a measure of how stressed the GPU is by processing geometry, which includes time spent in vertex shaders. Generally, a high “Tiler” usage indicates either excessively slow vertex shaders or an excessive number of vertices being drawn.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;“Tiler”通常是通过处理几何图形来衡量GPU的压力，其中包括在顶点着色器中花费的时间。通常，高“Tiler”用法表示要求过慢的顶点着色器或绘制过多的顶点。</p>
@@ -623,10 +623,10 @@
 
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Xcode’s Frame Debugger can be triggered by clicking on the small ‘Camera’ icon hidden at the bottom of the GPU profiler. It is highlighted by an arrow and a red box in the following screenshot.<br>可以通过单击隐藏在GPU探查器底部的小“相机”图标来触发Xcode的帧调试器。它在以下屏幕截图中以箭头和红色框突出显示。</p>
 
-<p><img alt="sendwillrendercanvases" data-src="/images/2018-07-26/02-gpucapture.png"></p>
+<p><img alt="sendwillrendercanvases" data-src="/images/posts/20180726/02-gpucapture.png"></p>
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">After a brief pause, the Frame Debugger’s summary view should appear, like so:<br>短暂的暂停后，Frame Debugger总结了会出现的大概内容，如下：</p>
 
-<p><img alt="sendwillrendercanvases" data-src="/images/2018-07-26/02-gpusummary.png"></p>
+<p><img alt="sendwillrendercanvases" data-src="/images/posts/20180726/02-gpusummary.png"></p>
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">When using the default UI shader, the cost of rendering geometry generated by the Unity UI system will show up under the <i>“UI/Default”</i> shader pass, assuming the default UI shader has not been replaced with a custom shader. It is possible to see this default UI shader in the above screenshot as Render Pipeline <i>“UI/Default.”</i><br>使用默认UI着色器时，Unity UI系统生成的渲染几何图形的成本将显示在<i>“UI/Default”</i>着色器上，假设默认的UI着色器还没有替换为自定义着色器。可以在上面的屏幕截图中看到此默认UI着色器为Render Pipeline <i>“UI/Default.”</i>。</p>
 
 <p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Unity UI only generates quads and so the vertex shader is unlikely to stress the tiler pipeline of the GPU. Any problems that appear in this shader pass are likely due to fill-rate issues.<br>Unity UI仅生成四边形，因此顶点着色器不会使GPU的Tiler管道有压力。此着色器过程中出现的任何问题都可能是由于填充率问题。</p>

@@ -111,7 +111,7 @@
 <meta property="og:site_name" content="他城">
 <meta property="og:description" content="Entity-Component-System是Unity提供的一种更好的游戏设计方法，简称ECS。ECS是面向数据的设计，和Job System一起工作时，很容易并行高速处理大量物体。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-12T17:39:16.287Z">
+<meta property="og:updated_time" content="2019-11-12T18:09:29.502Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Unity ECS简介">
 <meta name="twitter:description" content="Entity-Component-System是Unity提供的一种更好的游戏设计方法，简称ECS。ECS是面向数据的设计，和Job System一起工作时，很容易并行高速处理大量物体。">
@@ -439,7 +439,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-11-13 01:39:16" itemprop="dateModified" datetime="2019-11-13T01:39:16+08:00">2019-11-13</time>
+                <time title="修改时间：2019-11-13 02:09:29" itemprop="dateModified" datetime="2019-11-13T02:09:29+08:00">2019-11-13</time>
               </span>
             
           
@@ -500,17 +500,17 @@
       
         <contents>
 
-<h2 id="当前的Unity开发模式"><a href="#当前的Unity开发模式" class="headerlink" title="当前的Unity开发模式"></a>当前的Unity开发模式</h2><p>当前的开发方式我们称为”Classic”,是基于Monobehaviours，把代码当成组件的形式关联到gmaeObject上，通常情况下数据和逻辑是紧密的关联在一起的。这种方式可以很快速的进行开发，但对性能会有一定的影响。<br><img alt data-src="/images/2019-03-03/1.PNG"></p>
+<h2 id="当前的Unity开发模式"><a href="#当前的Unity开发模式" class="headerlink" title="当前的Unity开发模式"></a>当前的Unity开发模式</h2><p>当前的开发方式我们称为”Classic”,是基于Monobehaviours，把代码当成组件的形式关联到gmaeObject上，通常情况下数据和逻辑是紧密的关联在一起的。这种方式可以很快速的进行开发，但对性能会有一定的影响。<br><img alt data-src="/images/posts/20190303/1.PNG"></p>
 <h2 id="Unity正在尝试解决什么样的问题？"><a href="#Unity正在尝试解决什么样的问题？" class="headerlink" title="Unity正在尝试解决什么样的问题？"></a>Unity正在尝试解决什么样的问题？</h2><p>基于Unity的GameObject/Monobehaviour机制，可以很简单的为创作游戏编写代码， 但最终往往会让代码陷入难以阅读，维护和优化的境地。</p>
 <ol>
-<li><p>数据分散在内存的各个地方，想要找到这些数据并传送到cpu会消耗很多性能。<br><img alt data-src="/images/2019-03-03/2.png"></p>
+<li><p>数据分散在内存的各个地方，想要找到这些数据并传送到cpu会消耗很多性能。<br><img alt data-src="/images/posts/20190303/2.png"></p>
 </li>
-<li><p>很多时候会把不需要的数据或者变量一起传送给cpu，这里会有很多浪费的。<br><img alt data-src="/images/2019-03-03/3.png"></p>
+<li><p>很多时候会把不需要的数据或者变量一起传送给cpu，这里会有很多浪费的。<br><img alt data-src="/images/posts/20190303/3.png"></p>
 </li>
-<li><p>单线程<br><img alt data-src="/images/2019-03-03/4.jpg"></p>
+<li><p>单线程<br><img alt data-src="/images/posts/20190303/4.jpg"></p>
 </li>
 </ol>
-<h2 id="Entity-Component-System登场"><a href="#Entity-Component-System登场" class="headerlink" title="Entity-Component-System登场"></a>Entity-Component-System登场</h2><p>ECS就是为了解决以上的问题而出现的，使用Entity的方式将数据分离出来，然后在需要的地方提供相应的数据，其中System是为了处理Entity中数据的具体逻辑，还有一个很重要的部分”Filter”进行数据的过滤。简单来讲ECS就是数据与数据处理的一个关系。<br><img alt data-src="/images/2019-03-03/5.PNG"></p>
+<h2 id="Entity-Component-System登场"><a href="#Entity-Component-System登场" class="headerlink" title="Entity-Component-System登场"></a>Entity-Component-System登场</h2><p>ECS就是为了解决以上的问题而出现的，使用Entity的方式将数据分离出来，然后在需要的地方提供相应的数据，其中System是为了处理Entity中数据的具体逻辑，还有一个很重要的部分”Filter”进行数据的过滤。简单来讲ECS就是数据与数据处理的一个关系。<br><img alt data-src="/images/posts/20190303/5.PNG"></p>
 <h2 id="Entity-Component-System的优点"><a href="#Entity-Component-System的优点" class="headerlink" title="Entity-Component-System的优点"></a>Entity-Component-System的优点</h2><ol>
 <li>高性能</li>
 <li>易编写出高度优化的代码</li>
@@ -521,9 +521,9 @@
 <h2 id="Job-System"><a href="#Job-System" class="headerlink" title="Job System"></a>Job System</h2><p>大多数使用多线程代码的人都知道编写线程安全代码很难，线程争抢资源可能会发生，但机会非常少，如果程序员没有想到这个问题，可能会导致潜在的严重错误。除此之外，上下文切换的成本很高，因此学习如何平衡工作负载以尽可能高效地运行是很困难的。新的 Unity C# Jobs System将解决这些问题。</p>
 <h2 id="如何使用ECS"><a href="#如何使用ECS" class="headerlink" title="如何使用ECS"></a>如何使用ECS</h2><ol>
 <li>目前ECS尚处于开发阶段，只有Unity2018.1版本以上才能开启：</li>
-<li>新建一个项目，设置.NET<br> Build Settings - Player Settings ，设置c# runtime：<br> <img alt data-src="/images/2019-03-03/6.jpg"></li>
-<li>导入ECS包<br> Window - Package Manager，选择Entities和Hybird Renderer并安装<br> <img alt data-src="/images/2019-03-03/7.png"></li>
-<li>新建一个场景，并创建一个Cube，去掉Cube上除了Transform的所有组件，并添加ECS组件，如下图：<br> <img alt data-src="/images/2019-03-03/8.png"></li>
+<li>新建一个项目，设置.NET<br> Build Settings - Player Settings ，设置c# runtime：<br> <img alt data-src="/images/posts/20190303/6.jpg"></li>
+<li>导入ECS包<br> Window - Package Manager，选择Entities和Hybird Renderer并安装<br> <img alt data-src="/images/posts/20190303/7.png"></li>
+<li>新建一个场景，并创建一个Cube，去掉Cube上除了Transform的所有组件，并添加ECS组件，如下图：<br> <img alt data-src="/images/posts/20190303/8.png"></li>
 <li>新建HelloRotationSpeedProxy.cs和HelloRotationSpeedSystem.cs脚本</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">using Unity.Entities;</span><br><span class="line">using System;</span><br><span class="line"></span><br><span class="line">namespace HelloCube.Cube</span><br><span class="line">&#123;</span><br><span class="line">    [Serializable]</span><br><span class="line">    public struct HelloRotationSpeed : IComponentData</span><br><span class="line">    &#123;</span><br><span class="line">        public <span class="built_in">float</span> Value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [UnityEngine.DisallowMultipleComponent]</span><br><span class="line">    public class HelloRotationSpeedProxy : ComponentDataProxy&lt;HelloRotationSpeed&gt;</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
