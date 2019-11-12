@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"b2t":false,"scrollpercent":true},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    search: {
+      root: '/',
+      path: 'search.xml'
+    },
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"bounceRightIn","post_header":"bounceRightIn","post_body":"swoopIn","coll_header":"swoopIn","sidebar":"flipBounceXIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="优化UI控件">
+<meta name="keywords" content="Unity,UGUI,翻译">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Optimizing UI Controls">
+<meta property="og:url" content="http://yoursite.com/2018/07/28/20180728-Optimizing UI Controls/index.html">
+<meta property="og:site_name" content="他城">
+<meta property="og:description" content="优化UI控件">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-12T17:39:11.866Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Optimizing UI Controls">
+<meta name="twitter:description" content="优化UI控件">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="他城" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2018/07/28/20180728-Optimizing UI Controls/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>Optimizing UI Controls | 他城</title>
+  
+
+
+
+
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?780f48b16f1acab067863e8a03265153";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">他城</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">嗨，欢迎来到我的世界！</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          <a href="javascript:;" class="popup-trigger">
+          
+            <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/28/20180728-Optimizing UI Controls/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="他城浪人">
+      <meta itemprop="description" content="一个游走于他城的游戏人~">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="他城">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Optimizing UI Controls
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-28 21:03:11" itemprop="dateCreated datePublished" datetime="2018-07-28T21:03:11+08:00">2018-07-28</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-11-13 01:39:11" itemprop="dateModified" datetime="2019-11-13T01:39:11+08:00">2019-11-13</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/UGUI/" itemprop="url" rel="index"><span itemprop="name">UGUI</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+            <div class="post-description">优化UI控件</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <contents>
+
+<h2 id="译文"><a href="#译文" class="headerlink" title="译文"></a>译文</h2><p style="font-family:微软雅黑;font-size:24px;text-align:center;color:#000000"><strong>Optimizing UI Controls<br>优化UI控件</strong></p>
+
+<p style="font-family:微软雅黑;font-size:24px;text-align:left;color:#000000">版本检查: 2017.3<br>难度: 高级</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">This section of the Optimizing Unity UI guide focuses on issues specific to certain types of UI controls. While most UI controls are relatively similar in terms of performance, two stand out as being the causes of many of the performance issues encountered in games close to a shippable state.<br>优化Unity UI指南的这一部分关注特定于某些类型的UI控件的问题。虽然大多数UI控件在性能方面都是相对类似，但下面这两个控件在游戏中导致很多性能问题。</p>
+
+<p style="font-family:微软雅黑;font-size:30px;text-align:left;color:#000000"><strong>UI text<br>UI文本</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Unity’s built-in Text component is a convenient way of displaying rasterized text glyphs within a UI. However, there are a number of behaviors that are not commonly known, yet frequently appear as performance hotspots. When adding text to a UI, always remember that the text glyphs are actually rendered as individual quads, one per character. These quads tend to have a significant amount of empty space surrounding the glyph, depending on its shape, and it is very easy to position text in such a way that it unintentionally breaks the batching of other UI elements.<br>Unity的内置文本组件是在UI中显示光栅化文本字形的一种便捷方式。然而，有许多不为人知的行为，但经常作为性能热点出现。当向UI中添加文本时，请始终记住，文本字形实际上呈现为单个四边形，每个字符一个。这些四边形往往在字形周围有大量的空白空间，这取决于它的形状，而且很容易以这样的方式定位文本，从而无意中破坏了其他UI元素的批处理。</p>
+
+<p style="font-family:微软雅黑;font-size:20px;text-align:left;color:#000000"><strong>Text mesh rebuilds<br>文本网格重建</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">One major issue is the rebuilding of UI text meshes. Whenever a UI Text component is changed, the text component must recalculate the polygons used to display the actual text. This recalculation also occurs if a text component, or any of its parent GameObjects, is simply disabled and re-enabled without changes to the text.<br>一个主要的问题是UI文本网格的重建。每当一个UI文本组件被改变时，文本组件必须重新计算用于显示实际文本的多边形。如果只是禁用并重新启用文本组件或其任何父游戏对象而不更改文本，那么这个重新计算也会发生。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">This behavior is problematic for any UI that displays large numbers of textual labels, with the most common being leaderboards or statistics screens. As the most common way to hide and show a Unity UI is to enable/disable a GameObject containing the UI, UIs with large numbers of text components will often cause undesirable frame-rate hiccups whenever they are displayed.<br>对于任何显示大量文本标签的UI来说，这种行为是有问题的，其中最常见的是排行榜或统计屏幕。最常见的隐藏和显示Unity UI的方法是启用/禁用包含UI的GameObject，带有大量文本组件的UI通常会在显示时导致不希望的卡帧。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">For a potential workaround to this issue, see the <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/other-ui-optimization-techniques-and-tips#disabling-canvases" target="_blank">Disabling Canvases</a> section in the next chapter.<br>对于这个问题的解决方案，请参阅下一章的<a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/other-ui-optimization-techniques-and-tips#disabling-canvases" target="_blank">Disabling Canvases</a>部分。</p>
+
+<p style="font-family:微软雅黑;font-size:20px;text-align:left;color:#000000"><strong>Dynamic fonts and font atlases<br>动态字体和字体图集</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Dynamic fonts are a convenient way to display text when the full displayable character set is either very large, or not known prior to runtime. In Unity’s implementation, these fonts build a glyph atlas at runtime based on the characters encountered within UI Text components.<br>动态字体是一种方便的显示文本的方式，当完整的可显示字符集非常大，或者在运行时之前不知道。在Unity的实现中，这些字体在运行时根据UI Text组件中遇到的字符构建字形图集。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Each distinct Font object loaded will maintain its own texture atlas, even if it is in the same font family as another font. For example, using Arial with bolded text on one control while using Arial Bold on another control will produce identical output but Unity will maintain two distinct texture atlases — one for Arial and one for Arial Bold.<br>加载的每个不同的字体对象都将维护自己的纹理图集，即使它与另一种字体相同。例如，在一个控件上使用Arial字体，在另一个控件上使用Arial粗体，将产生相同的输出，但是Unity将保持两个不同的纹理图集——一个用于Arial，另一个用于Arial粗体。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">From a performance perspective, the most important thing to understand is that Unity UI’s dynamic fonts maintain one glyph in the font’s texture atlas for each distinct combination of size, style & character. That is, if a UI contains two text components, both displaying the letter ‘A’, then:<br>从性能的角度来看，最重要的是要明白Unity UI的动态字体在字体的纹理图中保持了一个字形，因为它的大小、样式和字符都有不同的组合。也就是说，如果一个UI包含两个文本组件，都显示字母“A”，那么：</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;If the two Text components share the same size, the font atlas will have one glyph in it.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果两个Text组件共享相同的大小，则字体图集中将包含一个字形。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;If the two Text components do not share the same size (e.g. one is 16-point, the other 24-point), then the font atlas will contain two copies of the letter ‘A’ at different sizes.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果两个文本组件不共享相同的大小（例如，一个是16点，另一个是24点），则字体图集将包含两个不同大小的字母“A”的副本。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;If one Text component is bold and the other is not, then the font atlas will contain a bold 'A' and a regular 'A'.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果一个Text组件是粗体而另一个不是粗体，那么字体图集将包含粗体'A'和常规'A'。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Whenever a UI Text object with a dynamic font encounters a glyph that has not yet been rasterized into the font’s texture atlas, the font’s texture atlas must be rebuilt. If the new glyph fits into the current atlas, it is added and the atlas re-uploaded to the graphics device. However, if the current atlas is too small, then the system attempts to rebuild the atlas. It does this in two stages.<br>每当一个带有动态字体的UI文本对象遇到一个还没有被光栅化到字体的纹理图集的符号时，字体的纹理图就必须重新构建。如果新的字形符合当前的图集，它就会被添加，并将图集重新上传到图形设备中。但是，如果当前的图集太小，系统就会尝试重建地图集。它分两步进行。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">First, the atlas is rebuilt at the same size, using only the glyphs <i>currently</i> being shown by active UI Text components. This includes UI Text components whose parent Canvases are enabled, but that have disabled Canvas Renderers. If the system succeeds in fitting all currently-in-use glyphs into a new atlas, it rasterizes that atlas and does not continue to the second step.<br>首先，使用当前激活的UI文本组件显示的字形，以相同的大小重建图集。这包括UI Text组件，其父Canvases已启用，但已禁用Canvas Renderers。如果系统成功将所有当前使用的字形拟合到新的图集中，则会对该图集进行光栅化，并且不会继续执行第二步。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Second, if the set of currently-in-use glyphs cannot be fit into an atlas of the same size as the current atlas, a larger atlas is created by doubling the atlas’ shorter dimension. For example, a 512x512 atlas expands into 512x1024 atlas.<br>其次，如果当前使用的一组字形不能与当前图集相匹配，则通过将图集的较短维度加倍来创建更大的图集。例如，512x512图集扩展为512x1024图集。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Due to the above algorithm, a dynamic font’s atlas will only grow in size once created. Given the cost of rebuilding the texture atlases, it is imperative to minimize during rebuilds. This can be done in two ways.<br>由于上面的算法，动态字体的图集只会在创建时增大。考虑到重建纹理图集的成本，在重新构建过程中必须最小化。这可以通过两种方式来实现。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Whenever possible, use non-dynamic fonts and preconfigure support for the desired glyph set. This generally works well for UIs using a well-constrained character set, such as only the Latin/ASCII characters, and with a small range of sizes.<br>尽可能使用非动态字体和预配置对所需的字形集的支持。这通常适用于使用一个约束良好的字符集的UI，例如Latin/ASCII字符，并且具有小范围的大小。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">If an extremely large range of characters must be supported, such as the entire Unicode set, then the font must be set to Dynamic. To avoid predictable performance problems, prime the font’s glyph atlas at startup time with a set of appropriate characters via <a href="https://docs.unity3d.com/ScriptReference/Font.RequestCharactersInTexture.html?_ga=2.91921374.573973553.1532622738-1760002840.1532435422" target="_blank">Font.RequestCharactersInTexture</a>.<br>如果必须支持大量的字符，比如整个Unicode集，那么字体必须被设置为动态的。为了避免可预见的性能问题，请通过<a href="https://docs.unity3d.com/ScriptReference/Font.RequestCharactersInTexture.html?_ga=2.91921374.573973553.1532622738-1760002840.1532435422" target="_blank">Font.RequestCharactersInTexture</a>使用一组适当的字符在启动时填充字体的字形图集。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Note that font atlas rebuilds are triggered individually for each UI Text component that is changed. When populating an extremely large number of Text components, it may be advantageous to collect all unique characters in the Text components’ content and prime the font atlas. This will ensure that the glyph atlas need only be rebuilt once instead of being rebuilt once each time a new glyph is encountered.<br>请注意，每一个被更改的UI文本组件单独触发字体图集重建。当填充大量的文本组件时，收集Text组件内容中的所有唯一字符并填充字体图集可能是有利的。这将确保只需重建一次字形图集，而不是每次遇到新字形时重建一次。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Also note that, when a font atlas rebuild is triggered, <strong>any characters that are not presently contained in an active UI Text component will not be present in the new atlas, even if they were originally added to the atlas as a result of a call to <a href="https://docs.unity3d.com/ScriptReference/Font.RequestCharactersInTexture.html?_ga=2.91921374.573973553.1532622738-1760002840.1532435422" target="_blank">Font.RequestCharactersInTexture</a></strong>. To work around this limitation, subscribe to the Font.textureRebuilt delegate and query <a href="https://docs.unity3d.com/ScriptReference/Font-characterInfo.html?_ga=2.76215633.573973553.1532622738-1760002840.1532435422" target="_blank">Font.characterInfo</a> to ensure that all desired characters remain primed.<br>还要注意的是，当触发字体图集重建时，<strong>激活的Text组件中当前不包含的任何字符都不会出现在新的图集中，即使它们最初由于调用<a href="https://docs.unity3d.com/ScriptReference/Font.RequestCharactersInTexture.html?_ga=2.91921374.573973553.1532622738-1760002840.1532435422" target="_blank">Font.RequestCharactersInTexture</a>而添加到图集中也是如此</strong>。若要解决此限制，请订阅<i>Font.textureRebuilt</i>委托并查询<a href="https://docs.unity3d.com/ScriptReference/Font-characterInfo.html?_ga=2.76215633.573973553.1532622738-1760002840.1532435422" target="_blank">Font.characterInfo</a>以确保所有所需字符保持准备状态。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The <i>Font.textureRebuilt</i> delegate is currently undocumented. It is a <a href="https://docs.unity3d.com/ScriptReference/Events.UnityEvent_1.html?_ga=2.256544975.573973553.1532622738-1760002840.1532435422" target="_blank">single-argument Unity Event</a>. The argument is the font whose texture was rebuilt. Subscribers to this event should follow the following signature:<br><i>Font.textureRebuilt</i>构建的委托目前没有文档。它是一个单参数的Unity事件。这个参数是纹理被重建的字体。该事件的订阅者应遵循以下签名：</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public void TextureRebuiltCallback(Font rebuiltFont) &#123; /* ... */ &#125;</span><br></pre></td></tr></table></figure>
+
+<p style="font-family:微软雅黑;font-size:20px;text-align:left;color:#000000"><strong>Specialized glyph renderers<br>专业的字形渲染器</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">For situations where the glyphs are well-known, with relatively fixed positions between each glyph, it is significantly more advantageous to write a custom component to display sprites displaying those glyphs. An example of this might be a score display.<br>对于那些符号是众所周知的，在每个字形之间有相对固定的位置的情况下，编写一个自定义组件来显示显示这些符号的精灵是非常有利的。一个例子可能是一个分数显示。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">For scores, the displayable characters are drawn from a well-known glyph set (the digits 0-9), do not change across localities, and appear at fixed distances from one another. It is relatively trivial to decompose an integer into its digits and display appropriate digit sprites. This sort of specialized digit-display system can be built in a manner that is both allocationless and considerably faster to calculate, animate and display than the Canvas-driven UI Text component.<br>对于分数来说，可显示的字符是从众所周知的字形集（数字0-9）中绘制的，不会在不同的地方发生变化，并且在固定的距离上出现。将一个整数分解为它的数字并显示适当的数字精灵是相对简单的。这种专门的数字显示系统可以在计算、动画和显示方面比Canvas驱动的UI Text组件更快速地进行计算和显示。</p>
+
+<p style="font-family:微软雅黑;font-size:20px;text-align:left;color:#000000"><strong>Fallback fonts and memory usage<br>后备字体和内存使用情况</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">For applications that must support a large character-set, it is tempting to list a large number of fonts in the “Font Names” field of a font importer. Any fonts listed in the “Font Names” field will be used as fallbacks if a glyph cannot be located within the primary font. The fallback order is determined by the order in which the fonts are listed in the “Font Names” field.<br>对于那些必须支持大型字符集的应用程序，很容易在字体导入器的“Font Names”字段中列出大量的字体。如果一个字形不能位于主字体内，那么在“Font Names”字段中列出的任何字体都将被用作后备。回退顺序是由字体在“Font Names”字段中列出的顺序决定的。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">However, in order to support this behavior, Unity will keep all fonts listed in the “Font Names” field loaded into memory. If a font’s character set is very large, then the amount of memory consumed by fallback fonts can become excessive. This is most often seen when including pictographic fonts, such as Japanese Kanji or Chinese characters.<br>然而，为了支持这种行为，Unity将保留所有在“Font Names”字段中列出的字体。如果字体的字符集非常大，那么后退字体所消耗的内存就会变得过多。这是最常见的，包括象形文字，如日文或汉字。</p>
+
+<p style="font-family:微软雅黑;font-size:20px;text-align:left;color:#000000"><strong>Best Fit and performance<br>最佳的适应性和性能</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000"><strong>In general, the UI Text component's <i>Best Fit</i> setting should never be used.<br>一般情况下，UI文本组件的<i>Best Fit</i>设置不应该被使用。</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">“Best Fit” dynamically adjusts the size of a font to the largest integer point size which can be displayed within a Text component’s bounding box without overflow, clamped to a configurable minimum/maximum point size. However, because Unity renders a distinct glyph into the font atlas for each distinct size of character being displayed, use of Best Fit will rapidly overwhelm the atlas with many different glyph sizes.<br>“Best Fit”动态地将字体大小调整为最大整数点大小，该大小可以在文本组件的边界框中显示而不会溢出，并被限制为可配置的最小/最大点大小。但是，由于Unity为显示的每个不同大小的字符将字形图集呈现为字体图集，因此使用Best Fit会迅速压倒具有许多不同字形大小的图集。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">As of Unity 2017.3, the size detection used by Best Fit is nonoptimal. It generates glyphs in the font atlas for each size increment tested, which further increases the amount of time required to generate font atlases. It also tends to cause atlas overflows, which causes old glyphs to be kicked out of the atlas. Due to the large number of tests required for a Best Fit calculation, this will often evict glyphs in use by other Text components, and force the font atlas to be rebuilt at least once more after the appropriate font size has been calculated. This specific issue has been corrected in Unity 5.4, and Best Fit will not unnecessarily expand the font's texture atlas, but is still considerably slower than statically-sized text.<br>从Unity 2017.3开始，Best Fit使用的尺寸检测不是最佳的。它为每个测试的大小增量生成字体图集中的字形，这进一步增加了生成字体图集所需的时间。它也往往导致图集溢出，导致旧的字形被踢出图集。由于Best Fit计算所需的大量测试，这通常会驱逐其他Text组件使用的字形，并在计算出适当的字体大小后强制重建字体图集至少一次。这个特定问题已在Unity 5.4中得到纠正，Best Fit不会不必要地扩展字体的纹理图集，但仍然比静态大小的文本慢得多。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Frequent font atlas rebuilds will rapidly degrade runtime performance as well as cause memory fragmentation. The greater the quantity of text components set to Best Fit, the worse this problem becomes.<br>频繁的字体图形重建将会快速降低运行时性能，并导致内存碎片化。设置为Best Fit的文本组件数量越大，此问题就越严重。</p>
+
+<p style="font-family:微软雅黑;font-size:30px;text-align:left;color:#000000"><strong>TextMeshPro Text<br>TextMeshPro文本</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">TextMesh Pro (TMP) is a replacement for Unity’s existing text components like Text Mesh and UI Text. TextMesh Pro uses Signed Distance Field (SDF) as its primary text rendering pipeline making it possible to render text cleanly at any point size and resolution. Using a set of custom shaders designed to leverage the power of SDF text rendering, TextMesh Pro makes it possible to dynamically change the visual appearance of the text by simply changing material properties to add visual styles such as dilation, outline, soft shadow, beveling, textures, glow, etc. and to save and recall these visual styles by creating/using material presets.<br>TextMesh Pro（TMP）是Unity现有文本组件（如Text Mesh和UI Text）的替代品。TextMesh Pro使用Signed Distance Field（SDF）作为其主要文本渲染管道，可以在任何点大小和分辨率下干净地呈现文本。使用一组旨在利用SDF文本渲染功能的自定义着色器，TextMesh Pro可以通过简单地更改材质属性来动态更改文本的视觉外观，以添加视觉样式，如扩张，轮廓，柔和阴影，斜角，纹理，发光等，并通过创建/使用材料预设来保存和调用这些视觉样式。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Until the release of 2018.1, TextMesh Pro was included in one’s project as a Asset Store package. As of 2018.1 TextMesh Pro will be available as a <a href="https://docs.unity3d.com/Packages/com.unity.package-manager-ui@1.9/manual/index.html" target="_blank">Package Manager</a> package.<br>在2018.1发布之前，TextMesh Pro作为一个资产存储包被包含在一个项目中。自2018年起，TextMesh Pro将作为<a href="https://docs.unity3d.com/Packages/com.unity.package-manager-ui@1.9/manual/index.html" target="_blank">Package Manager</a>包提供。</p>
+
+<p style="font-family:微软雅黑;font-size:20px;text-align:left;color:#000000"><strong>Text mesh rebuilds<br>文本网格重建</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Much like Unity’s built-in UIText component, making changes to the text displayed by the component will trigger calls to Canvas.SendWillRendererCanvases and Canvas.BuildBatch which can be costly. Minimize changes to the text field of a TextMeshProUGUI component and make sure to parent TextMeshProUGUI components whose text changes often to a parent GameObject that has its own Canvas component to ensure that Canvas rebuild calls remain as efficient as possible.<br>与Unity的内置UIText组件非常相似，对组件显示的文本进行更改将触发对Canvas.SendWillRendererCanvases和Canvas.BuildBatch的调用，这可能代价高昂。尽量减少对TextMeshProUGUI组件的文本字段的更改，并确保其文本经常更改为具有其自己的Canvas组件的父GameObject的父TextMeshProUGUI组件，以确保Canvas重建调用保持尽可能高效。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Do note that for text displayed in world space, we recommend that users use the normal TextMeshPro component instead of using TextMeshProUGUI as using Canvases in Worldspace can be inefficient. Using TextMeshPro directly will be more efficient given it doesn't have incur the canvas system overhead.<br>请注意，对于在世界空间中显示的文本，我们建议用户使用普通的TextMeshPro组件而不是使用TextMeshProUGUI，因为在Worldspace中使用画布是低效的。直接使用TextMeshPro将会更高效，因为它不会引起画布系统的开销。</p>
+
+<p style="font-family:微软雅黑;font-size:20px;text-align:left;color:#000000"><strong>Fonts and memory usage<br>字体和内存使用情况</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Given that there is no dynamic font feature in TMP, one must rely on fallback fonts. Understanding how fallback fonts are loaded and used is crucial to optimizing memory when using TMP.<br>考虑到TMP中没有动态字体特性，您必须依赖于后备字体。在使用TMP时，了解如何加载和使用后备字体是优化内存的关键。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Glyph discovery in TMP is done recursively – that is, when a glyph is missing from a TMP Font Asset, TMP iterates through the list of fallback Font Assets currently assigned or active starting with the first fallback on the list and through their own fallbacks. If the glyph is still not found, TMP will then search any Sprite Asset potentially assigned to the text object along with any fallback assigned to this Sprite Asset. If the desired glyph is still not located, TMP will then search recursively through the list of general fallbacks assigned in the TMP Settings file followed by the default Sprite Asset. If still unable to locate this glyph, it will search the Default Font Asset assigned in the TMP Settings. As a last resort, TMP will use and display the Missing Glyph Replacement character defined in the TMP Settings file.<br>TMP中的字形是递归的——也就是说，当一个TMP字体资产中缺少一个字形时，TMP会遍历当前已分配或处于活动状态的后备字体资产列表，或者从列表上的第一个回退开始，并通过它们自己的后退。如果仍然没有找到字形，TMP会搜索任何可能分配给文本对象的Sprite资产，以及分配给这个Sprite资产的任何回退。如果想要的字形仍然没有找到，递归搜索TMP设置文件中指定的一般回退列表，然后是默认的Sprite资产。如果仍然无法找到这个字形，它将搜索在TMP设置中分配的默认字体资产。作为最后的手段，TMP将使用并显示在TMP设置文件中定义的缺失的字形替换字符。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">TextMesh Pro’s Font Assets are loaded when they are referenced in a scene or project. They are principally referenced by TextMeshPro Text components, by the TMP Settings, and also by Font Assets themselves, as fallback fonts. If Font Assets are referenced in the TMP Settings asset, those Font Assets and all their fallback Font Assets will recursively be loaded when the first scene with a TMP Text component is activated. If the default sprite sheet asset is referenced, that will also be loaded.<br>TextMesh Pro的字体资产是在场景或项目中被引用时加载的。它们主要由TextMeshPro文本组件引用，由TMP设置，以及字体资产本身，作为后备字体。如果在TMP设置资产中引用了字体资产，那么当第一个带有TMP文本组件的场景被激活时，这些字体资产和所有的后备字体资产将被递归地加载。如果引用了默认的精灵表资产，也将被加载。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Additionally, when a Font Asset is referenced by a TextMeshPro component in a given scene and has not been loaded via TMP Settings, then the referenced Font Asset and all of its fallback Fonts Assets will recursively be loaded once the component is activated. It is important to keep this process in mind when working on a project with many fonts, particularly if available memory is an issue.<br>此外，当一个字体资产被一个给定场景中的TextMeshPro组件引用，并且没有通过TMP设置加载时，那么一旦组件被激活，引用的字体资产和所有的后备字体资产将被递归地加载。在使用多种字体的项目时，要记住这一过程是很重要的，特别是如果可用内存是一个问题的话。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">For the above reasons, localizing a project when using TMP becomes a concern as having all localized language Font Assets loaded via the TMP Settings upfront would be detrimental to memory pressure. Should localization be a necessary requirement, we suggest a potential strategy of only assigning these font assets or fallbacks when necessary (as various scenes are loaded) or using Asset Bundles to load Font Assets in a modular way.<br>出于上述原因，在使用TMP时将项目本地化成为一个问题，因为所有通过TMP设置加载的本地化语言字体资产将会对内存压力造成损害。如果本地化是一个必要的需求，我们建议一个潜在的策略，只在必要时分配这些字体资产或后退（因为有不同的场景被加载），或者使用资产束以模块化的方式加载字体资产。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">When the application starts, a bootstrap step should be included to verify the user’s locale and to setup font asset fallbacks for each font asset:<br>应用程序启动时，应包含引导步骤以验证用户的区域设置并为每个字体资产设置字体资源回退：</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;&nbsp;Create an Asset Bundle for base TMP Font Assets (e.g., minimal Latin glyphs for each font)<br>为基本TMP字体资产创建资产包（例如，每种字体的最小Latin）</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;&nbsp;Create an Asset Bundle for needed fallback TMP Font Assets per language (e.g., one Asset Bundle for TMP Font Assets for each font needed for Japanese)<br>每种语言所需的后备TMP字体资产创建资产包（例如，日语所需的每种字体的TMP字体资产的一个资产包）</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.&nbsp;&nbsp;Load your base Asset Bundle in the bootstrap step<br>在引导步骤中加载基础Asset Bundle</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.&nbsp;&nbsp;Based on locale, load the needed Asset Bundle with fallback fonts<br>根据区域设置，使用后备字体加载所需的Asset Bundle</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.&nbsp;&nbsp;For each font in the base Asset Bundle, assign fallback font assets from the localized font Asset Bundle<br>对于基本资产包中的每种字体，从本地化字体Asset Bundle中指定回退字体资源</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.&nbsp;&nbsp;Continue bootstrapping your game<br>继续引导你的游戏</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The Default Sprite Asset reference may also be removed from the TMP settings if no images are used, for additional modest memory savings.<br>如果没有使用图像，也可以从TMP设置中删除默认精灵资产参考，以节省额外的内存。</p>
+
+<p style="font-family:微软雅黑;font-size:20px;text-align:left;color:#000000"><strong>Best Fit and performance<br>最佳的适应性和性能</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Once again, given that TextMesh Pro does not have a dynamic font feature, the issues outlined above in the UGUI UIText section concerning Best Fit do not occur. The only thing to consider when using Best Fit on a TextMesh Pro component is that a binary search is used to to find the correct size. When using text auto-sizing it is best to test for the optimal point size of the longest / largest block of text. Once this optimal size is determined, disable auto-sizing on the given text object and then manually set this optimal point size on the other text objects. This has the benefit of improving performance and avoids having a group of text objects using different point sizes which is considered poor visual / typographic practice.<br>再一次，鉴于TextMesh Pro没有动态字体功能，上面在UGUI UIText部分中概述的有关Best Fit的问题不会发生。在TextMesh Pro组件上使用Best Fit时唯一要考虑的是二进制搜索用于查找正确的大小。使用文本自动调整大小时，最好测试最长/最大文本块的最佳点大小。确定此最佳大小后，禁用给定文本对象的自动调整大小，然后在其他文本对象上手动设置此最佳点大小。这有利于提高性能并避免使用一组使用不同点大小的文本对象，这被认为是糟糕的视觉/印刷练习。</p>
+
+<p style="font-family:微软雅黑;font-size:30px;text-align:left;color:#000000"><strong>Scroll Views<br>滚动视图</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">After fill-rate problems, Unity UI’s Scroll Views are the second most common source of runtime performance issues seen. Scroll Views generally require a significant number of UI elements to represent their content. There are two basic approaches to populating a scroll view:<br>在填充率问题之后，Unity UI的滚动视图是运行时性能问题的第二个最常见的来源。滚动视图通常需要大量的UI元素来表示它们的内容。填充滚动视图有两种基本方法：</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;Fill it with all of the elements necessary to represent all of the scroll view’s content<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;填充所有必要的元素来表示所有滚动视图的内容</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;Pool the elements, repositioning them as needed to represent visible content.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将元素集中起来，根据需要重新定位它们，以表示可见的内容。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Both of these solutions have issues.<br>这两种解决方案都有问题。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The first solution requires an increasing amount of time to instantiate all of the UI elements as the number of items to be represented increases, and also increases the time required to rebuild the Scroll View. If there are only a small number of elements required within a Scroll View, such as in a Scroll View that only needs to display a handful of Text components, then this method is favored for its simplicity.<br>第一个解决方案需要越来越多的时间来实例化所有的UI元素，因为要表示的条目的数量增加了，并且增加了重建滚动视图所需的时间。如果在滚动视图中只需要少量的元素，比如在滚动视图中只需要显示少量文本组件，那么这种方法就会被简单地使用。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The second solution requires significant amounts of code to implement correctly under the current UI and layout system. Two possible methods will be discussed in further detail below. For any significantly complex scrolling UI, some sort of pooling approach is generally needed to avoid performance problems.<br>第二个解决方案需要大量的代码在当前的UI和布局系统下正确地实现。下面将详细讨论两种可能的方法。对于任何非常复杂的滚动UI，通常需要某种池化方法来避免性能问题。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000"><strong>Despite these issues, all approaches can be improved by adding a RectMask2D component to the Scroll View.</strong> This component ensures that Scroll View elements that are outside of the Scroll View’s viewport are not included in the list of drawable elements that must have their geometry generated, sorted and analyzed when rebuilding a Canvas.<br><strong>尽管存在这些问题，但是可以通过在滚动视图中添加RectMask2D组件来改进所有的方法。</strong>该组件确保滚动视图的viewport之外的滚动视图元素不包含在可绘制元素的列表中，这些元素必须在重建画布时进行几何生成、排序和分析。</p>
+
+<p style="font-family:微软雅黑;font-size:20px;text-align:left;color:#000000"><strong>Simple Scroll View element pooling<br>简单的滚动视图元素池</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The simplest way to implement object pooling with a Scroll View while also preserving as much of the native convenience of using Unity’s built-in Scroll View component is to take a hybrid approach:<br>使用Scroll View实现对象池的最简单方法是同时保留使用Unity内置Scroll View组件的原生便利性，采用混合方法：</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">To lay out the elements in the UI, which will allow the layout system to properly calculate the size of the Scroll View’s content and allows scrollbars to function properly, use GameObjects with <a href="https://docs.unity3d.com/Manual/script-LayoutElement.html?_ga=2.20684028.573973553.1532622738-1760002840.1532435422" target="_blank">Layout Element</a> components as “placeholders” for the visible UI elements.<br>要在UI中布置元素，这将允许布局系统正确计算Scroll View内容的大小并允许滚动条正常运行，使用带有<a href="https://docs.unity3d.com/Manual/script-LayoutElement.html?_ga=2.20684028.573973553.1532622738-1760002840.1532435422" target="_blank">Layout Element</a>组件的GameObjects 作为可见UI元素的“占位符”。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Then, instantiate a pool of visible UI elements sufficient to fill the visible portion of the Scroll View's visible area, and parent these to the positioning placeholders. As the Scroll View scrolls, reuse the UI elements to display content that has scrolled into view.<br>然后，实例化一个可见UI元素池，该池足以填充Scroll View可见区域的可见部分，并将这些元素父对象设置为定位占位符。滚动视图滚动时，重复使用UI元素以显示已滚动到视图中的内容。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">This will substantially cut down on the number of UI elements that must be batched, as the cost of batching only increases based on the number of Canvas Renderers within a Canvas, not the number of Rect Transforms.<br>这将大大减少必须批量处理的UI元素的数量，因为批处理的成本仅基于Canvas中的Canvas Renderers的数量而不是Rect Transforms的数量而增加。</p>
+
+<p style="font-family:微软雅黑;font-size:17px;text-align:left;color:#000000"><strong>Problems with the simple approach<br>简单方法的问题</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Currently, whenever any UI element is reparented or has its sibling order changed, that element and all of its sub-elements are marked as “dirty” and force a rebuild of their Canvas.<br>目前，每当任何UI元素都被修改或其兄弟顺序发生变化时，该元素及其所有子元素都被标记为“dirty”，并强制重新构建它们的画布。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The reason for this is that Unity has not separated the callbacks for reparenting a transform and altering its sibling order. Both of these events will fire an <a href="https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnTransformParentChanged.html?_ga=2.247766339.573973553.1532622738-1760002840.1532435422" target="_blank">OnTransformParentChanged</a> callback. In the source of Unity UI’s Graphic class (see Graphic.cs in the source), that callback is implemented and invokes the method <a href="https://docs.unity3d.com/ScriptReference/UI.Graphic.SetAllDirty.html?_ga=2.87856348.573973553.1532622738-1760002840.1532435422" target="_blank">SetAllDirty</a>. By dirtying the <a href="https://docs.unity3d.com/ScriptReference/UI.Graphic.html?_ga=2.87856348.573973553.1532622738-1760002840.1532435422" target="_blank">Graphic</a>, the system ensures that the Graphic will rebuild its layout and vertices before the next frame is rendered.<br>这样做的原因是Unity没有分离回调以重新定义转换和改变其兄弟顺序。这两个事件都将触发<a href="https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnTransformParentChanged.html?_ga=2.247766339.573973553.1532622738-1760002840.1532435422" target="_blank">OnTransformParentChanged</a>回调。在Unity UI的Graphic类的源代码中（参见源代码中的Graphic.cs），实现了该回调并调用方法<a href="https://docs.unity3d.com/ScriptReference/UI.Graphic.SetAllDirty.html?_ga=2.87856348.573973553.1532622738-1760002840.1532435422" target="_blank">SetAllDirty</a>。通过弄脏<a href="https://docs.unity3d.com/ScriptReference/UI.Graphic.html?_ga=2.87856348.573973553.1532622738-1760002840.1532435422" target="_blank">Graphic</a>，系统确保Graphic在渲染下一帧之前重建其布局和顶点。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">It is possible to assign canvases to the root RectTransform of each element within the Scroll View, which will then confine the rebuild to only the reparented elements and not the entire contents of the Scroll View. However, this tends to increase the number of draw calls needed to render the Scroll View. Further, if the individual elements within the Scroll View are complex and consist of more than a dozen Graphic components, and particularly if there is a significant number of Layout components on each element, then the cost of rebuilding them is often high enough to noticeably reduce the frame rate on lower-end devices.<br>可以将画布分配到滚动视图中每个元素的根部RectTransform，然后将重建限制为仅修复的元素，而不是滚动视图的全部内容。然而，这往往会增加渲染滚动视图所需的draw calls数。此外，如果Scroll View中的各个元素很复杂并且由十几个Graphic组件组成，特别是如果每​​个元素上有大量的Layout组件，那么重建它们的成本通常很高，可以显著降低低端设备的帧速率。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">If a Scroll View UI element does not have a variable size, then this full recalculation of layout and vertices is unnecessary. However, avoiding this behavior requires the implementation an object pooling solution based on position changes instead of parent or sibling-order changes.<br>如果滚动视图UI元素没有可变大小，那么就没有必要对布局和顶点进行完全重新计算。如果滚动视图UI元素没有可变大小，那么就没有必要对布局和顶点进行完全重新计算。</p>
+
+<p style="font-family:微软雅黑;font-size:20px;text-align:left;color:#000000"><strong>Position-based Scroll View pools<br>基于位置的滚动视图池</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">In order to avoid the problems described above, it is possible to create a Scroll View that pools its objects by simply moving the RectTransforms of its contained UI elements. This avoids the need to rebuild the contents of the moved RectTransforms if their dimensions are not altered, significantly improving the performance of the Scroll View.<br>为了避免上述问题，可以创建一个Scroll View，通过简单地移动其包含的UI元素的RectTransforms来汇集其对象。如果不改变其尺寸，则可以避免重建移动的RectTransforms的内容，从而显着提高滚动视图的性能。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">To accomplish this, it is generally best to either write a custom subclass of Scroll View or to write a custom Layout Group component. The latter is generally the simpler solution, and can be accomplished by implementing a subclass of Unity UI’s <a href="https://docs.unity3d.com/ScriptReference/UI.LayoutGroup.html?_ga=2.83989597.573973553.1532622738-1760002840.1532435422" target="_blank">LayoutGroup</a> abstract base class.<br>为了实现这一点，通常最好是编写一个自定义的滚动视图的子类，或者编写一个自定义布局组组件。后者通常是更简单的解决方案，可以通过实现Unity UI的<a href="https://docs.unity3d.com/ScriptReference/UI.LayoutGroup.html?_ga=2.83989597.573973553.1532622738-1760002840.1532435422" target="_blank">LayoutGroup</a>抽象基类的子类来实现。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The custom Layout Group can analyze the underlying source data to examine how many data elements must be displayed and can resize the Scroll View’s Content RectTransform appropriately. It can then subscribe to <a href="https://docs.unity3d.com/ScriptReference/UI.ScrollRect-onValueChanged.html?_ga=2.91435102.573973553.1532622738-1760002840.1532435422" target="_blank">Scroll View change events</a> and use these to reposition its visible elements accordingly.<br>自定义布局组可以分析底层源数据，以检查必须显示多少数据元素，并可以适当调整Scroll View的内容RectTransform的大小。然后，它可以订阅<a href="https://docs.unity3d.com/ScriptReference/UI.ScrollRect-onValueChanged.html?_ga=2.91435102.573973553.1532622738-1760002840.1532435422" target="_blank">Scroll View change events</a>，并使用它们相应地重新定位其可见元素。</p><br>
+
+
+
+<h2 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h2><ol>
+<li>原文地址: <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/optimizing-ui-controls" target="_blank" rel="noopener">https://unity3d.com/cn/learn/tutorials/topics/best-practices/optimizing-ui-controls</a></li>
+</ol>
+</contents>
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/Unity/" rel="tag"># Unity</a>
+          
+            <a href="/tags/UGUI/" rel="tag"># UGUI</a>
+          
+            <a href="/tags/翻译/" rel="tag"># 翻译</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/27/20180727-Fill-rate, Canvases and input/" rel="next" title="Fill-rate, Canvases and input">
+                <i class="fa fa-chevron-left"></i> Fill-rate, Canvases and input
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/29/20180729-Other UI Optimization Techniques and Tips/" rel="prev" title="Other UI Optimization Techniques and Tips">
+                Other UI Optimization Techniques and Tips <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="他城浪人">
+  
+  <p class="site-author-name" itemprop="name">他城浪人</p>
+  <div class="site-description motion-element" itemprop="description">一个游走于他城的游戏人~</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+
+
+  <div class="links-of-author motion-element">
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/JinLiGame" title="GitHub &rarr; https://github.com/JinLiGame" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="mailto:553555614@123.com" title="E-Mail &rarr; mailto:553555614@123.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" title="QQ &rarr; http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" title="Wechat &rarr; https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" rel="noopener" target="_blank"><i class="fa fa-fw fa-wechat"></i></a>
+      </span>
+    
+  </div>
+
+
+
+
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/zh-cn/" title="https://hexo.io/zh-cn/" rel="noopener" target="_blank">Hexo</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://www.markdown.cn/" title="http://www.markdown.cn/" rel="noopener" target="_blank">教程-MarkDown</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://theme-next.iissnan.com/theme-settings.html#author-sites" title="http://theme-next.iissnan.com/theme-settings.html#author-sites" rel="noopener" target="_blank">主题配置 - NexT 使用文档</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#译文"><span class="nav-number">1.</span> <span class="nav-text">译文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关链接"><span class="nav-number">2.</span> <span class="nav-text">相关链接</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">他城浪人</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+  
+  <script src="/lib/lazyload/lozad.min.js?v=1.10.0"></script>
+
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=4.0.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+
+  
+  
+
+  
+  
+
+  
+
+
+
+
+
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.2.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+
+</body>
+</html>

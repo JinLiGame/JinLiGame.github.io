@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"b2t":false,"scrollpercent":true},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    search: {
+      root: '/',
+      path: 'search.xml'
+    },
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"bounceRightIn","post_header":"bounceRightIn","post_body":"swoopIn","coll_header":"swoopIn","sidebar":"flipBounceXIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="经常会有这样的UI布局，一个带有布局组件(LayoutGroup)的父物体下，有一个或多个子物体带有自适应组件(ContentSizeFitter),这时布局计算可能会需要几帧的时间来完成，这将是我们所不能忍受的。这篇文章将会逐步的分析这个问题产生的原因以及解决方案。">
+<meta name="keywords" content="Unity,UGUI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于ContentSizeFitter组件的警告带来的问题">
+<meta property="og:url" content="http://yoursite.com/2018/08/08/20180808-Questions about ContentSizeFitter/index.html">
+<meta property="og:site_name" content="他城">
+<meta property="og:description" content="经常会有这样的UI布局，一个带有布局组件(LayoutGroup)的父物体下，有一个或多个子物体带有自适应组件(ContentSizeFitter),这时布局计算可能会需要几帧的时间来完成，这将是我们所不能忍受的。这篇文章将会逐步的分析这个问题产生的原因以及解决方案。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-12T17:39:12.533Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于ContentSizeFitter组件的警告带来的问题">
+<meta name="twitter:description" content="经常会有这样的UI布局，一个带有布局组件(LayoutGroup)的父物体下，有一个或多个子物体带有自适应组件(ContentSizeFitter),这时布局计算可能会需要几帧的时间来完成，这将是我们所不能忍受的。这篇文章将会逐步的分析这个问题产生的原因以及解决方案。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="他城" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2018/08/08/20180808-Questions about ContentSizeFitter/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>关于ContentSizeFitter组件的警告带来的问题 | 他城</title>
+  
+
+
+
+
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?780f48b16f1acab067863e8a03265153";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">他城</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">嗨，欢迎来到我的世界！</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          <a href="javascript:;" class="popup-trigger">
+          
+            <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/08/20180808-Questions about ContentSizeFitter/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="他城浪人">
+      <meta itemprop="description" content="一个游走于他城的游戏人~">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="他城">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">关于ContentSizeFitter组件的警告带来的问题
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-08 22:49:39" itemprop="dateCreated datePublished" datetime="2018-08-08T22:49:39+08:00">2018-08-08</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-11-13 01:39:12" itemprop="dateModified" datetime="2019-11-13T01:39:12+08:00">2019-11-13</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/UGUI/" itemprop="url" rel="index"><span itemprop="name">UGUI</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+            <div class="post-description">经常会有这样的UI布局，一个带有布局组件(LayoutGroup)的父物体下，有一个或多个子物体带有自适应组件(ContentSizeFitter),这时布局计算可能会需要几帧的时间来完成，这将是我们所不能忍受的。这篇文章将会逐步的分析这个问题产生的原因以及解决方案。</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <contents>
+
+<h2 id="UI布局"><a href="#UI布局" class="headerlink" title="UI布局"></a>UI布局</h2><h3 id="经常需要的UI布局"><a href="#经常需要的UI布局" class="headerlink" title="经常需要的UI布局"></a>经常需要的UI布局</h3><p>我们经常会有这样的UI布局，一个带有布局组件(LayoutGroup)的父物体下，有一个或多个子物体带有自适应组件(ContentSizeFitter)，如图：</p>
+<p><img alt="parent" data-src="/images/2018-08-08/parent.png"> <img alt="child_text" data-src="/images/2018-08-08/child_text.png"></p>
+<h3 id="ContentSizeFitter组件出现的警告"><a href="#ContentSizeFitter组件出现的警告" class="headerlink" title="ContentSizeFitter组件出现的警告"></a>ContentSizeFitter组件出现的警告</h3><p>大家有没有发现子物体的ContentSizeFitter组件的上的警告，如下图。没错，问题就出现在这里。大致的意思是：父物体上有一个布局组件。布局组件的子物体不应该有ContentSizeFitter组件，因为它应该由布局组件驱动。</p>
+<p><img alt="warning" data-src="/images/2018-08-08/warning.png"></p>
+<h3 id="警告引发的问题"><a href="#警告引发的问题" class="headerlink" title="警告引发的问题"></a>警告引发的问题</h3><p>刚开始遇到这个警告的时候，我尝试着删除掉子物体的ContentSizeFitter组件，虽然警告不见了，但是子物体就没办法达到自适应的效果，这当然不是我们想要的，所以只能暂时的忽略掉这个警告。最后终于发现了这个警告引发的问题，那就是：当我们需要父物体布局后的长和宽时，此时取到的长和宽竟然不是布局最终的结果，当然我们都知道布局组件会在下一帧计算，可以使用<i>LayoutRebuilder.ForceRebuildLayoutImmediate()</i>这个方法，但是即使使用了这个方法，取到的结果依然不是布局最终的结果。以下是我的测试用例：</p>
+<ul>
+<li>UI结构，toggle选中时为黑色，未选中时为白色，toggle的作用是在选中时将带有ContentSizeFitter组件的child_text的文本设置为一行，未选中时设置为多行。如下图：</li>
+</ul>
+<p><img alt="test_ui" data-src="/images/2018-08-08/test_ui.png"></p>
+<ul>
+<li>在设置完child_text的文本后，立即强制布局计算，布局计算结束后打印parent的长和宽，代码如下：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">using UnityEngine;</span><br><span class="line">using UnityEngine.UI;</span><br><span class="line"></span><br><span class="line">public class <span class="built_in">test</span> : MonoBehaviour &#123;</span><br><span class="line"></span><br><span class="line">    public Text child_text;</span><br><span class="line">    public RectTransform parent;</span><br><span class="line"></span><br><span class="line">    public void OnValueChanged(bool val) &#123;</span><br><span class="line">        <span class="keyword">if</span> (val == <span class="literal">true</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            child_text.text = <span class="string">"一行的测试文本"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            child_text.text = <span class="string">"多行的测试文本测试文本测试文本测试文本测试文本测试文本"</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        LayoutRebuilder.ForceRebuildLayoutImmediate(parent);</span><br><span class="line"></span><br><span class="line">        Vector2 size = parent.sizeDelta;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"parent width:"</span>+size.x+<span class="string">", height:"</span>+size.y);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>以下分别是toggle选中和未选中的测试结果</li>
+</ul>
+<p><img alt="selected_test_result" data-src="/images/2018-08-08/selected_test_result.png"><br><img alt="noselected_test_result" data-src="/images/2018-08-08/noselected_test_result.png"></p>
+<h2 id="分析产生问题的具体原因"><a href="#分析产生问题的具体原因" class="headerlink" title="分析产生问题的具体原因"></a>分析产生问题的具体原因</h2><p>由于子物体带有自适应组件(ContentSizeFitter)，所以子物体也会进行布局计算，然而并不是子物体布局计算后父物体开始进行布局计算，两者很有可能是同时进行布局计算，这就导致在父物体进行布局计算时，子物体的长和宽并不是最终的计算结果，这样父物体的布局计算就会有误差。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>问题的原因是父物体的布局计算并不是在子物体布局计算之后，那么，我们可以强制的把父物体的布局计算和子物体的布局计算按照顺序进行，即先强制的对子物体进行布局计算，然后强制对父物体进行布局计算。强制对子物体进行布局计算可以使用ContentSizeFitter组件的<i>SetLayoutVertical</i>方法。代码如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">using UnityEngine;</span><br><span class="line">using UnityEngine.UI;</span><br><span class="line"></span><br><span class="line">public class <span class="built_in">test</span> : MonoBehaviour &#123;</span><br><span class="line"></span><br><span class="line">    public Text child_text;</span><br><span class="line">    public RectTransform parent;</span><br><span class="line"></span><br><span class="line">    public void OnValueChanged(bool val) &#123;</span><br><span class="line">        <span class="keyword">if</span> (val == <span class="literal">true</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            child_text.text = <span class="string">"一行的测试文本"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            child_text.text = <span class="string">"多行的测试文本测试文本测试文本测试文本测试文本测试文本"</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //先强制进行子物体的布局计算</span><br><span class="line">        child_text.gameObject.GetComponent&lt;ContentSizeFitter&gt;().SetLayoutVertical();</span><br><span class="line">        //然后强制进行父物体的布局计算</span><br><span class="line">        LayoutRebuilder.ForceRebuildLayoutImmediate(parent);</span><br><span class="line"></span><br><span class="line">        Vector2 size = parent.sizeDelta;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"parent width:"</span>+size.x+<span class="string">", height:"</span>+size.y);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过测试，结果和我们想象中的一致。</p>
+<h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><p>一些复杂的UI可能是布局组件的多重嵌套，这样就必须一层一层的按顺序强制计算每一个带有ContentSizeFitter组件的子物体，乍一想，似乎有点不靠谱的感觉。至于这个问题暂时还没有想到一个好的解决方案。</p>
+</contents>
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/Unity/" rel="tag"># Unity</a>
+          
+            <a href="/tags/UGUI/" rel="tag"># UGUI</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/29/20180729-Other UI Optimization Techniques and Tips/" rel="next" title="Other UI Optimization Techniques and Tips">
+                <i class="fa fa-chevron-left"></i> Other UI Optimization Techniques and Tips
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/01/20180901-Lua Install/" rel="prev" title="Lua之安装编译环境">
+                Lua之安装编译环境 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="他城浪人">
+  
+  <p class="site-author-name" itemprop="name">他城浪人</p>
+  <div class="site-description motion-element" itemprop="description">一个游走于他城的游戏人~</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+
+
+  <div class="links-of-author motion-element">
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/JinLiGame" title="GitHub &rarr; https://github.com/JinLiGame" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="mailto:553555614@123.com" title="E-Mail &rarr; mailto:553555614@123.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" title="QQ &rarr; http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" title="Wechat &rarr; https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" rel="noopener" target="_blank"><i class="fa fa-fw fa-wechat"></i></a>
+      </span>
+    
+  </div>
+
+
+
+
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/zh-cn/" title="https://hexo.io/zh-cn/" rel="noopener" target="_blank">Hexo</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://www.markdown.cn/" title="http://www.markdown.cn/" rel="noopener" target="_blank">教程-MarkDown</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://theme-next.iissnan.com/theme-settings.html#author-sites" title="http://theme-next.iissnan.com/theme-settings.html#author-sites" rel="noopener" target="_blank">主题配置 - NexT 使用文档</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#UI布局"><span class="nav-number">1.</span> <span class="nav-text">UI布局</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#经常需要的UI布局"><span class="nav-number">1.1.</span> <span class="nav-text">经常需要的UI布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ContentSizeFitter组件出现的警告"><span class="nav-number">1.2.</span> <span class="nav-text">ContentSizeFitter组件出现的警告</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#警告引发的问题"><span class="nav-number">1.3.</span> <span class="nav-text">警告引发的问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析产生问题的具体原因"><span class="nav-number">2.</span> <span class="nav-text">分析产生问题的具体原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方案"><span class="nav-number">3.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他问题"><span class="nav-number">4.</span> <span class="nav-text">其他问题</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">他城浪人</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+  
+  <script src="/lib/lazyload/lozad.min.js?v=1.10.0"></script>
+
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=4.0.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+
+  
+  
+
+  
+  
+
+  
+
+
+
+
+
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.2.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"b2t":false,"scrollpercent":true},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    search: {
+      root: '/',
+      path: 'search.xml'
+    },
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"bounceRightIn","post_header":"bounceRightIn","post_body":"swoopIn","coll_header":"swoopIn","sidebar":"flipBounceXIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="其他UI的优化技巧和提示">
+<meta name="keywords" content="Unity,UGUI,翻译">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Other UI Optimization Techniques and Tips">
+<meta property="og:url" content="http://yoursite.com/2018/07/29/20180729-Other UI Optimization Techniques and Tips/index.html">
+<meta property="og:site_name" content="他城">
+<meta property="og:description" content="其他UI的优化技巧和提示">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-12T17:39:12.190Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Other UI Optimization Techniques and Tips">
+<meta name="twitter:description" content="其他UI的优化技巧和提示">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="他城" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2018/07/29/20180729-Other UI Optimization Techniques and Tips/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>Other UI Optimization Techniques and Tips | 他城</title>
+  
+
+
+
+
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?780f48b16f1acab067863e8a03265153";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">他城</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">嗨，欢迎来到我的世界！</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          <a href="javascript:;" class="popup-trigger">
+          
+            <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/29/20180729-Other UI Optimization Techniques and Tips/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="他城浪人">
+      <meta itemprop="description" content="一个游走于他城的游戏人~">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="他城">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Other UI Optimization Techniques and Tips
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-29 21:03:11" itemprop="dateCreated datePublished" datetime="2018-07-29T21:03:11+08:00">2018-07-29</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-11-13 01:39:12" itemprop="dateModified" datetime="2019-11-13T01:39:12+08:00">2019-11-13</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/UGUI/" itemprop="url" rel="index"><span itemprop="name">UGUI</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+            <div class="post-description">其他UI的优化技巧和提示</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <contents>
+
+<h2 id="译文"><a href="#译文" class="headerlink" title="译文"></a>译文</h2><p style="font-family:微软雅黑;font-size:24px;text-align:center;color:#000000"><strong>Other UI Optimization Techniques and Tips<br>其他UI的优化技巧和提示</strong></p>
+
+<p style="font-family:微软雅黑;font-size:24px;text-align:left;color:#000000">版本检查: 2017.3<br>难度: 高级</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Sometimes there is just no clean way to optimize a UI. This section contains a handful of suggestions that may help improve UI performance, but some are “unclean” structurally, may be difficult to maintain, or may have ugly side effects. Others may be workarounds for behavior in the UI intended to simplify initial development, but also make it relatively simple to create performance problems.<br>有时候，没有简洁的方法来优化UI。本节包含一些可能有助于提高UI性能的建议，但有些建议在结构上“不干净”，可能难以维护，或者可能具有糟糕的副作用。其他的可能是简化初始开发的UI中的行为的方法，但也使创建性能问题变得相对简单。</p>
+
+<p style="font-family:微软雅黑;font-size:30px;text-align:left;color:#000000"><strong>RectTransform-based Layouts<br>基于RectTransform的布局</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Layout components are relatively expensive, as they must recompute the sizes and positions of their child elements each time they are marked dirty. (See the <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fundamentals-unity-ui#rebuild" target="_blank">Graphic rebuild</a> section of the <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fundamentals-unity-ui" target="_blank">Fundamentals</a> chapter for details.) If there is a relatively small and fixed number of elements within a given Layout, and the Layout has a relatively simple structure, it may be possible to replace the Layout with a RectTransform-based layout.<br>布局组件相对来说比较昂贵，因为它们必须在每次标记为dirty时重新计算它们的子元素的大小和位置。（详情请参阅<a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fundamentals-unity-ui" target="_blank">Fundamentals</a>章节的<a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/fundamentals-unity-ui#rebuild" target="_blank">Graphic rebuild</a>部分。）如果给定布局中有相对较小且固定数量的元素，并且布局有一个相对简单的结构，那么可以使用RectTransform的布局来替换布局。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">By assigning the anchors of a RectTransform, the RectTransform’s position and size can be made to scale based on its parent. For example, a simple two-column layout can be achieved with two RectTransforms:<br>通过分配RectTransform的锚点，RectTransform的位置和大小可以根据其父级进行缩放。例如，使用两个RectTransforms可以实现简单的两列布局：</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;The left column’s anchors should be X: (0, 0.5) and Y: (0, 1)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;左列的锚点应为X：（0,0.5）和Y：（0,1）</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;The right column’s anchors should be X: (0.5, 1) and Y: (0, 1)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;右列的锚点应为X：（0.5,1）和Y：（0,1）</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The computations of the size and position of the RectTransform will be driven in native code by the Transform system itself. This is generally more performant than relying on the Layout system. It is also possible to write MonoBehaviours that set up a RectTransform-based Layout. However, this is a relatively complex task and lies beyond the scope of this guide.<br>RectTransform的大小和位置的计算将由Transform系统本身在本机代码中驱动。这通常比依赖布局系统更高效。也可以编写MonoBehaviours来设置基于RectTransform的布局。但是，这是一项相对复杂的任务，超出了本指南的范围。</p>
+
+<p style="font-family:微软雅黑;font-size:30px;text-align:left;color:#000000"><strong>Disabling Canvases<br>禁用画布</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">When showing or hiding discrete portions of a UI, it is common to enable or disable the GameObject at the root of the UI. This ensures that no component in the disabled UI receives input or Unity callbacks.<br>在显示或隐藏UI的离散部分时，通常在UI的根部启用或禁用GameObject。这确保了禁用UI中的任何组件都不会接收输入或Unity回调。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">However, this also causes the Canvas to discard its VBO data. Re-enabling the Canvas will require the Canvas (and any Sub-canvases) to run the rebuild and rebatch processes. If this happens frequently, the increased CPU usage can cause the application’s frame rate to stutter.<br>但是，这也会导致Canvas丢弃了VBO数据。重新启用Canvas将需要Canvas（以及任何Sub-canvases）来运行重建和重新分配过程。如果经常发生这种情况，CPU使用率的增加可能会导致应用程序的帧速率降低。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">One possible, but hacky, workaround is to place the UI to be shown/hidden onto its own Canvas or Sub-canvas and then to merely enable/disable the Canvas component on this object.<br>一种可能但又很糟糕的解决方法是将UI显示/隐藏到其自己的Canvas或Sub-canvas上，然后仅启用/禁用此对象上的Canvas组件。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">This will cause the UI’s meshes to not be drawn, but they will remain resident in memory and their original batching will be preserved. Further, no <a href="https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnEnable.html?_ga=2.252369229.573973553.1532622738-1760002840.1532435422" target="_blank">OnEnable</a> or <a href="https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnDisable.html?_ga=2.252369229.573973553.1532622738-1760002840.1532435422" target="_blank">OnDisable</a> callbacks will be invoked in the UI’s hierarchy.<br>这将导致UI的网格不被绘制，但是它们将保留在内存中，并且它们的原始批处理将被保留。此外，在UI的层次结构中不会调用<a href="https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnEnable.html?_ga=2.252369229.573973553.1532622738-1760002840.1532435422" target="_blank">OnEnable</a>或<a href="https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnDisable.html?_ga=2.252369229.573973553.1532622738-1760002840.1532435422" target="_blank">OnDisable</a>回调。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">Note, however, that this will not disable any MonoBehaviours within the hidden UI, and so these MonoBehaviours will still receive Unity lifecycle callbacks, such as Update.<br>但请注意，这不会禁用隐藏UI中的任何MonoBehaviours，因此这些MonoBehaviours仍将接收Unity生命周期回调，例如Update。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">To avoid this issue, MonoBehaviours on UIs that will be disabled in this manner should not directly implement Unity’s lifecycle callbacks, but should instead receive their callbacks from a “Callback Manager” MonoBehaviour on the UI’s root GameObject. This “Callback Manager” can be informed whenever the UI is shown/hidden, and can ensure that lifecycle events are propagated or not propagated as necessary. Further explanation of this “Callback Manager” pattern is beyond the scope of this guide.<br>为了避免这个问题，将以这种方式禁用的UI上的MonoBehaviours不应该直接实现Unity的生命周期回调，而应该从UI的根GameObject上的“回调管理器”MonoBehaviour接收回调。无论何时显示/隐藏UI，都可以通知此“回调管理器”，并且可以确保生命周期事件在必要时传播或不传播。有关此“回调管理器”模式的进一步说明超出了本指南的范围。</p>
+
+<p style="font-family:微软雅黑;font-size:30px;text-align:left;color:#000000"><strong>Assigning Event Cameras<br>分配事件相机</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">If using Unity’s built-in Input Managers alongside Canvases set to render in the World Space or Screen Space – Camera modes, it is important to always set the Event Camera or Render Camera property, respectively. From script, this is always exposed as the <a href="https://docs.unity3d.com/ScriptReference/Canvas-worldCamera.html?_ga=2.55325679.573973553.1532622738-1760002840.1532435422" target="_blank">worldCamera</a> property.<br>如果将Unity的内置输入管理器与Canvases一起设置为在World Space或Screen Space - Camera模式下渲染，则始终分别设置Event Camera或Render Camera属性非常重要。从脚本开始，它始终显示为<a href="https://docs.unity3d.com/ScriptReference/Canvas-worldCamera.html?_ga=2.55325679.573973553.1532622738-1760002840.1532435422" target="_blank">worldCamera</a>属性。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">If this property is not set, then Unity UI will search for the main camera by looking for Camera components attached to GameObjects with the Main Camera tag. This lookup will occur at least once per World Space or Camera Space Canvas. As <a href="https://docs.unity3d.com/ScriptReference/GameObject.FindWithTag.html?_ga=2.51133549.573973553.1532622738-1760002840.1532435422" target="_blank">GameObject.FindWithTag</a> is known to be slow, it is strongly recommended that all World Space and Camera Space Canvases have their Camera properties assigned at design-time or initialization time.<br>如果没有设置此属性，则Unity UI将通过查找使用Main Camera标记附加到GameObjects的Camera组件来搜索主摄像机。每个World Space或Camera Space Canvas至少会发生一次此查找。由于已知<a href="https://docs.unity3d.com/ScriptReference/GameObject.FindWithTag.html?_ga=2.51133549.573973553.1532622738-1760002840.1532435422" target="_blank">GameObject.FindWithTag</a>较慢，因此强烈建议所有World Space和Camera Space画布在设计时或初始化时分配其Camera属性。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">This issue does not occur for Overlay Canvases.<br>Overlay Canvases不会出现此问题。</p>
+
+<p style="font-family:微软雅黑;font-size:30px;text-align:left;color:#000000"><strong>UI Source Code Customization<br>UI源代码自定义</strong></p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The UI system has been designed to support a large number of use cases. This flexibility is great, but it also means that some optimizations can’t easily be done without breaking other features. If you end up in a situation where you could gain some CPU cycles by changing the C# UI source code, it is possible to recompile the UI DLL and overwrite the one shipped with Unity. This procedure is documented in the readme file in the <a href="https://bitbucket.org/Unity-Technologies/ui/" target="_blank">Bitbucket repository</a>. Make sure to get the source code corresponding to your Unity version.<br>UI系统被设计用来支持大量的用例。这种灵活性很好，但也意味着一些优化在不破坏其他特性的情况下是不容易完成的。如果你在这样的情况下，通过更改C＃UI源代码可以获得一些CPU周期，那么就可以重新编译UI DLL，并覆盖Unity附带的DLL。此过程记录在<a href="https://bitbucket.org/Unity-Technologies/ui/" target="_blank">Bitbucket存储库</a>的自述文件中。确保获得与Unity版本对应的源代码。</p>
+
+<p style="font-family:微软雅黑;font-size:16px;text-align:left;color:#000000">The UI system has been designed to support a large number of use cases. This flexibility is great, but it also means that some optimizations can’t easily be done without breaking other features. If you end up in a situation where you could gain some CPU cycles by changing the C# UI source code, it is possible to recompile the UI DLL and overwrite the one shipped with Unity. This procedure is documented in the readme file in the Bitbucket repository. Make sure to get the source code corresponding to your Unity version.<br>这应该只是作为最后的手段，因为有一些重要的缺点。首先，你必须找到一种方法将这个新DLL分发给开发人员和构建计算机。然后，每次升级Unity时，都必须将更改与新的UI源代码合并。确保在进入该方向之前，不能只扩展现有类或编写自己的组件版本。</p><br>
+
+<h2 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h2><ol>
+<li>原文地址: <a href="https://unity3d.com/cn/learn/tutorials/topics/best-practices/other-ui-optimization-techniques-and-tips" target="_blank" rel="noopener">https://unity3d.com/cn/learn/tutorials/topics/best-practices/other-ui-optimization-techniques-and-tips</a></li>
+</ol>
+</contents>
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/Unity/" rel="tag"># Unity</a>
+          
+            <a href="/tags/UGUI/" rel="tag"># UGUI</a>
+          
+            <a href="/tags/翻译/" rel="tag"># 翻译</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/28/20180728-Optimizing UI Controls/" rel="next" title="Optimizing UI Controls">
+                <i class="fa fa-chevron-left"></i> Optimizing UI Controls
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/08/20180808-Questions about ContentSizeFitter/" rel="prev" title="关于ContentSizeFitter组件的警告带来的问题">
+                关于ContentSizeFitter组件的警告带来的问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="他城浪人">
+  
+  <p class="site-author-name" itemprop="name">他城浪人</p>
+  <div class="site-description motion-element" itemprop="description">一个游走于他城的游戏人~</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+
+
+  <div class="links-of-author motion-element">
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/JinLiGame" title="GitHub &rarr; https://github.com/JinLiGame" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="mailto:553555614@123.com" title="E-Mail &rarr; mailto:553555614@123.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" title="QQ &rarr; http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" title="Wechat &rarr; https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" rel="noopener" target="_blank"><i class="fa fa-fw fa-wechat"></i></a>
+      </span>
+    
+  </div>
+
+
+
+
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/zh-cn/" title="https://hexo.io/zh-cn/" rel="noopener" target="_blank">Hexo</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://www.markdown.cn/" title="http://www.markdown.cn/" rel="noopener" target="_blank">教程-MarkDown</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://theme-next.iissnan.com/theme-settings.html#author-sites" title="http://theme-next.iissnan.com/theme-settings.html#author-sites" rel="noopener" target="_blank">主题配置 - NexT 使用文档</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#译文"><span class="nav-number">1.</span> <span class="nav-text">译文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关链接"><span class="nav-number">2.</span> <span class="nav-text">相关链接</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">他城浪人</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+  
+  <script src="/lib/lazyload/lozad.min.js?v=1.10.0"></script>
+
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=4.0.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+
+  
+  
+
+  
+  
+
+  
+
+
+
+
+
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.2.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+
+</body>
+</html>
