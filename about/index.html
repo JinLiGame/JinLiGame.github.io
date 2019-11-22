@@ -110,7 +110,7 @@
 <meta property="og:site_name" content="他城">
 <meta property="og:description" content="与我一起聆听这首 “Remember Me”，感受内心深处的触动 ~   联系方式 手机：17610868283 Email：553555614@qq.com QQ：553555614 微信：553555614   个人信息 肖井礼/男/1995  辽宁工程技术大学/本科/软件工程/2013年9月~2017年7月  工作年限：3年  技术博客：https://jinligame.github.io">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-21T18:50:43.193Z">
+<meta property="og:updated_time" content="2019-11-22T19:34:10.876Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于我">
 <meta name="twitter:description" content="与我一起聆听这首 “Remember Me”，感受内心深处的触动 ~   联系方式 手机：17610868283 Email：553555614@qq.com QQ：553555614 微信：553555614   个人信息 肖井礼/男/1995  辽宁工程技术大学/本科/软件工程/2013年9月~2017年7月  工作年限：3年  技术博客：https://jinligame.github.io">
@@ -437,9 +437,7 @@
 <li><p>Github：<a href="https://github.com/JinLiGame" target="_blank" rel="noopener">https://github.com/JinLiGame</a></p>
 </li>
 <li><p>期望职位：Unity3D开发工程师</p>
-</li>
-<li><p>期望薪资：税前月薪18k~20k，特别喜欢的公司可例外</p>
-</li>
+<!--期望薪资：税前月薪18k~20k，特别喜欢的公司可例外--></li>
 <li><p>期望城市：北京</p>
 </li>
 </ul>
@@ -447,6 +445,8 @@
 <h2 id="工作经历"><a href="#工作经历" class="headerlink" title="工作经历"></a>工作经历</h2><h3 id="北京天熙互娱科技有限公司-A-工作室-2018年3月-至今"><a href="#北京天熙互娱科技有限公司-A-工作室-2018年3月-至今" class="headerlink" title="北京天熙互娱科技有限公司/A+工作室/2018年3月~至今"></a>北京天熙互娱科技有限公司/A+工作室/2018年3月~至今</h3><h4 id="项目-阿卡迪亚（休闲挂机类）"><a href="#项目-阿卡迪亚（休闲挂机类）" class="headerlink" title="项目 - 阿卡迪亚（休闲挂机类）"></a>项目 - 阿卡迪亚（休闲挂机类）</h4><p><strong>我的职责：</strong></p>
 <ul>
 <li>使用UGUI和C#进行系统开发</li>
+<li>使用接口化编程方式开发</li>
+<li>负责部分系统的服务器逻辑维护与开发</li>
 <li>使用循环列表来实现大数据的滚动列表</li>
 <li>使用二次封装的动画和特效系统实现UI界面的效果</li>
 <li>接入Efun IOS SDK，并打包IOS</li>
@@ -454,11 +454,11 @@
 <p><strong>遇见的问题及解决方案：</strong></p>
 <ul>
 <li>在滚动列表中的特效会出现穿透的问题，解决方案：<ol>
-<li>通过shader将在显示区域的特效进行剪裁</li>
-<li>将特效渲染到RawImage上</li>
+<li>通过shader将在显示区域外的特效进行剪裁</li>
+<li>通过相机将特效渲染到RawImage上</li>
+<li>将特效渲染到MaskableGraphic上（未尝试）</li>
 </ol>
 </li>
-<li>其他</li>
 </ul>
 <p><strong>我的收获：</strong></p>
 <ul>
