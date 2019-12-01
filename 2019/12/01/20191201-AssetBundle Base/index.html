@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"b2t":false,"scrollpercent":true},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: true,
+    pangu: true,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    search: {
+      root: '/',
+      path: 'search.xml'
+    },
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"bounceRightIn","post_header":"bounceRightIn","post_body":"swoopIn","coll_header":"swoopIn","sidebar":"flipBounceXIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="本文介绍了热更新中AssetBundle的基本使用方法。">
+<meta name="keywords" content="Unity,热更,AssetBundle">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AssetBundle 基础">
+<meta property="og:url" content="http://yoursite.com/2019/12/01/20191201-AssetBundle Base/index.html">
+<meta property="og:site_name" content="他城">
+<meta property="og:description" content="本文介绍了热更新中AssetBundle的基本使用方法。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-12-01T16:45:23.095Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AssetBundle 基础">
+<meta name="twitter:description" content="本文介绍了热更新中AssetBundle的基本使用方法。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="他城" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2019/12/01/20191201-AssetBundle Base/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>AssetBundle 基础 | 他城</title>
+  
+
+
+
+
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?780f48b16f1acab067863e8a03265153";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">他城</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">嗨，欢迎来到我的世界！</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          <a href="javascript:;" class="popup-trigger">
+          
+            <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/01/20191201-AssetBundle Base/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="他城浪人">
+      <meta itemprop="description" content="一个游走于他城的游戏人~">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="他城">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">AssetBundle 基础
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-01 15:04:11" itemprop="dateCreated datePublished" datetime="2019-12-01T15:04:11+08:00">2019-12-01</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-12-02 00:45:23" itemprop="dateModified" datetime="2019-12-02T00:45:23+08:00">2019-12-02</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+            <div class="post-description">本文介绍了热更新中AssetBundle的基本使用方法。</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>本文工程地址：<a href="https://github.com/JinLiGame/Unity3DHotchpotch/tree/master/AssetBundleBaseExample" target="_blank" rel="noopener">https://github.com/JinLiGame/Unity3DHotchpotch/tree/master/AssetBundleBaseExample</a></p>
+</blockquote>
+<h2 id="什么是AssetBundle"><a href="#什么是AssetBundle" class="headerlink" title="什么是AssetBundle"></a>什么是AssetBundle</h2><ul>
+<li>AssetBundle是一个类似于ZIP的资源压缩包，资源包括Models、Textures、Prefabs、Audio clips等，每个不同的平台打包出来的AssetBundle不同。</li>
+<li>AssetBundle彼此之间可以互相依赖引用。</li>
+<li>AssetBundle可放在服务器供客户端下载使用，已减少初始化安装包大小。</li>
+</ul>
+<h2 id="如何打包AssetBundle"><a href="#如何打包AssetBundle" class="headerlink" title="如何打包AssetBundle"></a>如何打包AssetBundle</h2><ol>
+<li>选择需要打包的资源，在Inspector视图底部，找到AssetBundle选项，默认是None，如图：<br><img alt="AssetBundle01" data-src="/images/posts/20191201/AssetBundle01.png"><br>注：包名不区分大小写，可以使用路径+包名的形式；后缀可选可不选。Unity会自动把相同标签的资源打包成一个AssetBundle。</li>
+<li>创建Editor文件夹，新建CreateAssetBundles脚本<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">using System.IO;</span><br><span class="line">using UnityEditor;</span><br><span class="line">using UnityEngine;</span><br><span class="line"></span><br><span class="line">public class CreateAssetBundles</span><br><span class="line">&#123;</span><br><span class="line">    [MenuItem(&quot;Tools/BuildAssetBundles/All&quot;)]</span><br><span class="line">    static void CreateAllPlatformAssetBundles()</span><br><span class="line">    &#123;</span><br><span class="line">        CreateStandaloneWindows64AssetBundles();</span><br><span class="line">        CreateAndroidAssetBundles();</span><br><span class="line">        CreateIOSAssetBundles();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [MenuItem(&quot;Tools/BuildAssetBundles/StandaloneWindows64&quot;)]</span><br><span class="line">    static void CreateStandaloneWindows64AssetBundles()</span><br><span class="line">    &#123;</span><br><span class="line">        string assetBundleDirectory = &quot;AssetBundles/StandaloneWindows64&quot;;</span><br><span class="line">        ExecuteBuild(assetBundleDirectory, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows64);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [MenuItem(&quot;Tools/BuildAssetBundles/Android&quot;)]</span><br><span class="line">    static void CreateAndroidAssetBundles()</span><br><span class="line">    &#123;</span><br><span class="line">        string assetBundleDirectory = &quot;AssetBundles/Android&quot;;</span><br><span class="line">        ExecuteBuild(assetBundleDirectory, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.Android);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [MenuItem(&quot;Tools/BuildAssetBundles/IOS&quot;)]</span><br><span class="line">    static void CreateIOSAssetBundles()</span><br><span class="line">    &#123;</span><br><span class="line">        string assetBundleDirectory = &quot;AssetBundles/IOS&quot;;</span><br><span class="line">        ExecuteBuild(assetBundleDirectory, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.iOS);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static void ExecuteBuild(string outputPath, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform)</span><br><span class="line">    &#123;</span><br><span class="line">        if (string.IsNullOrEmpty(outputPath))</span><br><span class="line">        &#123;</span><br><span class="line">            Debug.LogError($&quot;Build &#123;targetPlatform.ToString()&#125; Platform AssetBundles Failed, due to outputPath is NULL or Empty.!&quot;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        try</span><br><span class="line">        &#123;</span><br><span class="line">            if (Directory.Exists(outputPath))</span><br><span class="line">            &#123;</span><br><span class="line">                bool isClear = EditorUtility.DisplayDialog(&quot;File delete confirmation&quot;, &quot;Do you want to delete all files in the directory &quot; + outputPath, &quot;Yes&quot;, &quot;No&quot;);</span><br><span class="line">                if (isClear)</span><br><span class="line">                    Directory.Delete(outputPath, true);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (!Directory.Exists(outputPath))</span><br><span class="line">            &#123;</span><br><span class="line">                Directory.CreateDirectory(outputPath);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            BuildPipeline.BuildAssetBundles(outputPath, assetBundleOptions, targetPlatform);</span><br><span class="line"></span><br><span class="line">            Debug.Log($&quot;Build &#123;targetPlatform.ToString()&#125; Platform AssetBundles Success!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (System.Exception e)</span><br><span class="line">        &#123;</span><br><span class="line">            Debug.LogException(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>在<code>BuildPipeline.BuildAssetBundles</code>这个API中，参数<code>outputPath</code>是打包后AssetBundle的存放路径，参数<code>assetBundleOptions</code>是压缩方式，参数<code>targetPlatform</code>是打包的平台。以下是几种压缩方式的区别：</p>
+<ul>
+<li><p><code>BuildAssetBundleOptions.None</code> 使用LZMA算法压缩，压缩的包更小，但是加载时间更长。使用之前需要整体解压。一旦被解压，这个包会使用LZ4重新压缩。使用资源的时候不需要整体解压。在下载的时候可以使LZMA算法，一旦它被下载了之后，它会使用LZ4算法保存到本地上。</p>
+</li>
+<li><p><code>BuildAssetBundleOptions.UncompressedAssetBundle</code> 不压缩，包大，加载快。</p>
+</li>
+<li><p><code>BuildAssetBundleOptions.ChunkBasedCompression</code> 使用LZ4压缩，压缩率没有LZMA高，但是可以加载指定资源而不用解压全部。</p>
+</li>
+</ul>
+<p>注意使用LZ4压缩，可以获得跟不压缩相媲美的加载速度，而且比不压缩文件要小。</p>
+<p>然后在菜单栏可以看到以下选项，即可点击打包对应平台的AssetBundle：</p>
+<p><img alt="AssetBundle02" data-src="/images/posts/20191201/AssetBundle02.jpg"></p>
+<ol start="3">
+<li><p>上传AssetBundle到服务器</p>
+<p>使用<a href="http://www.netbox.cn/" target="_blank" rel="noopener">NetBox2</a>搭建一个简单的本地服务器，双击AssetBundleBaseExample\Server\NetBox2.exe即可启动本地服务器，可以通过在浏览器中输入<a href="http://localhost/访问index.html，将AssetBundle拷贝到服务器目录下。" target="_blank" rel="noopener">http://localhost/访问index.html，将AssetBundle拷贝到服务器目录下。</a></p>
+</li>
+<li><p>加载AssetBundle包和AssetBundle包里的资源</p>
+<ul>
+<li><p><code>AssetBundle.LoadFromFile</code> 从本地文件中同步加载AssetBundle</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">void LoadFromFileExample()</span><br><span class="line">&#123;</span><br><span class="line">    string path = &quot;AssetBundles/StandaloneWindows64/prefabs/capsule.ab&quot;;</span><br><span class="line">     </span><br><span class="line">    AssetBundle ab = AssetBundle.LoadFromFile(path);</span><br><span class="line">    if (ab == null) return;</span><br><span class="line">     </span><br><span class="line">    GameObject prefab = ab.LoadAsset&lt;GameObject&gt;(&quot;Capsule&quot;);</span><br><span class="line">    if (prefab == null) return;</span><br><span class="line">     </span><br><span class="line">    Instantiate(prefab);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>AssetBundle.LoadFromFileAsync</code> 从本地文件中异步加载AssetBundle</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">  IEnumerator LoadFromFileExampleAsync()</span><br><span class="line">  &#123;</span><br><span class="line">      string path = &quot;AssetBundles/StandaloneWindows64/prefabs/capsule.ab&quot;;</span><br><span class="line">     </span><br><span class="line">      AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(path);</span><br><span class="line">      yield return request;</span><br><span class="line">     </span><br><span class="line">      AssetBundle ab = request.assetBundle;</span><br><span class="line">      if (ab == null) yield break;</span><br><span class="line">     </span><br><span class="line">//此处省略...</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>AssetBundle.LoadFromMemory</code> 从内存中同步加载AssetBundle</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">  void LoadFromMemoryExample()</span><br><span class="line">  &#123;</span><br><span class="line">      string path = &quot;AssetBundles/StandaloneWindows64/prefabs/capsule.ab&quot;;</span><br><span class="line">      //将文件的内容读入一个字节数组</span><br><span class="line">      byte[] bytes = File.ReadAllBytes(path);</span><br><span class="line">     </span><br><span class="line">      AssetBundle ab = AssetBundle.LoadFromMemory(bytes);</span><br><span class="line">      if (ab == null) return;</span><br><span class="line">     </span><br><span class="line">//此处省略...</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>AssetBundle.LoadFromMemoryAsync</code> 从内存中异步加载AssetBundle</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">  IEnumerator LoadFromMemoryExampleAsync()</span><br><span class="line">  &#123;</span><br><span class="line">      string path = &quot;AssetBundles/StandaloneWindows64/prefabs/capsule.ab&quot;;</span><br><span class="line">      //将文件的内容读入一个字节数组</span><br><span class="line">      byte[] bytes = File.ReadAllBytes(path);</span><br><span class="line">     </span><br><span class="line">      AssetBundleCreateRequest request = AssetBundle.LoadFromMemoryAsync(bytes);</span><br><span class="line">      yield return request;</span><br><span class="line">     </span><br><span class="line">      AssetBundle ab = request.assetBundle;</span><br><span class="line">      if (ab == null) yield break;</span><br><span class="line">     </span><br><span class="line">//此处省略...</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>WWW.LoadFromCacheOrDownload</code> 使用WWW加载AssetBundle, 已过时，使用UnityWebRequest代替</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">  IEnumerator LoadFromWWWExample()</span><br><span class="line">  &#123;</span><br><span class="line">      //在缓存池准备好后再开始加载</span><br><span class="line">      while (!Caching.ready)</span><br><span class="line">          yield return null;</span><br><span class="line">     </span><br><span class="line">      //本地路径</span><br><span class="line">      //string uri = @&quot;file:///E:\Github\Unity3DHotchpotch\AssetBundleBaseExample\AssetBundles\StandaloneWindows64\prefabs\capsule.ab&quot;;</span><br><span class="line">      //服务器路径</span><br><span class="line">      string uri = @&quot;http://localhost/AssetBundles\StandaloneWindows64\prefabs\capsule.ab&quot;;</span><br><span class="line">     </span><br><span class="line">      WWW www = WWW.LoadFromCacheOrDownload(uri, 1);</span><br><span class="line">      yield return www;</span><br><span class="line">     </span><br><span class="line">      if (!string.IsNullOrEmpty(www.error))</span><br><span class="line">      &#123;</span><br><span class="line">          Debug.LogError(www.error);</span><br><span class="line">          yield break;</span><br><span class="line">      &#125;</span><br><span class="line">     </span><br><span class="line">      AssetBundle ab = www.assetBundle;</span><br><span class="line">      if (ab == null) yield break;</span><br><span class="line">     </span><br><span class="line">//此处省略...</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>UnityWebRequestAssetBundle.GetAssetBundle</code> 使用UnityWebRequest加载AssetBundle</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">  IEnumerator LoadFromUnityWebRequest()</span><br><span class="line">  &#123;</span><br><span class="line">      //本地路径</span><br><span class="line">      //string uri = @&quot;file:///E:\Github\Unity3DHotchpotch\AssetBundleBaseExample\AssetBundles\StandaloneWindows64\prefabs\capsule.ab&quot;;</span><br><span class="line">      //服务器路径</span><br><span class="line">      string uri = @&quot;http://localhost/AssetBundles\StandaloneWindows64\prefabs\capsule.ab&quot;;</span><br><span class="line">     </span><br><span class="line">      UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(uri);</span><br><span class="line">      yield return request.SendWebRequest();</span><br><span class="line">     </span><br><span class="line">      AssetBundle ab = DownloadHandlerAssetBundle.GetContent(request);</span><br><span class="line">      if (ab == null) yield break;</span><br><span class="line">     </span><br><span class="line">//此处省略...</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>AssetBundle卸载</p>
+<ul>
+<li><code>AssetBundle.Unload(true)</code> 卸载所有资源，即使有资源被使用着 。切换场景时会自动调用该方法。</li>
+<li><code>AssetBundle.Unload(false)</code> 卸载所有没用被使用的资源 。</li>
+</ul>
+</li>
+</ol>
+<h2 id="AssetBundle分组策略"><a href="#AssetBundle分组策略" class="headerlink" title="AssetBundle分组策略"></a>AssetBundle分组策略</h2><ul>
+<li>前面为AssetBundle设置的标签其实就是分组，相同标签的为一个组，Unity官方提供了3种供参考的分组策略： <ol>
+<li>逻辑实体分组： <ul>
+<li>一个UI界面或者所有UI界面一个包（这个界面里面的贴图和布局信息一个包）</li>
+<li>一个角色或者所有角色一个包（这个角色里面的模型和动画一个包）</li>
+<li>所有的场景所共享的部分一个包（包括贴图和模型）</li>
+</ul>
+</li>
+<li>类型分组： 比如所有Models一个包、所有Audio clips一个包等。 </li>
+<li>使用分组： 把在某一时间内使用的所有资源打成一个包。可以按照关卡分，一个关卡所需要的所有资源包括角色、贴图、声音等打成一个包。也可以按照场景分，一个场景所需要的资源一个包。</li>
+</ol>
+</li>
+<li>原则<ol>
+<li>经常更新的资源与不经常更新的资源拆分离为两个包 </li>
+<li>把需要同时加载的资源放在同一个包 </li>
+<li>把其他包共享的资源放在一个单独的包里面 </li>
+<li>把一些需要同时加载的小资源打包成一个包 </li>
+<li>如果对于同一个资源有两个版本，可以考虑通过后缀来区分 </li>
+</ol>
+</li>
+</ul>
+<h2 id="依赖打包和加载"><a href="#依赖打包和加载" class="headerlink" title="依赖打包和加载"></a>依赖打包和加载</h2><h3 id="依赖的定义"><a href="#依赖的定义" class="headerlink" title="依赖的定义"></a>依赖的定义</h3><p>一个AssetBundle包中的资源必须需要另一个AssetBundle包中的资源加载完成后才能正确显示，即前一个包依赖后一个包。如下图所示：</p>
+<p><img alt="AssetBundle03" data-src="/images/posts/20191201/AssetBundle03.jpg"></p>
+<h2 id="依赖打包"><a href="#依赖打包" class="headerlink" title="依赖打包"></a>依赖打包</h2><p>如果两个AssetBundle包A和B都依赖同一个资源，那么这个资源会同时打到这两个包中（会存在两个），这样就会使得包的总大小比较大；此时就需要将共同依赖的资源打到一个单独的包C中，A和B包就不会将这个资源打进去，而A和B这两个包都会依赖C包。</p>
+<p><img alt="AssetBundle04" data-src="/images/posts/20191201/AssetBundle04.jpg"></p>
+<h3 id="The-Manifest-File"><a href="#The-Manifest-File" class="headerlink" title="The Manifest File"></a>The Manifest File</h3><ul>
+<li><p>打包生成AssetBundle的时候，会生成一个与AssetBundle同名的后缀为.manifest文件，这个文件可以用txt打开，记录了AssetBundle的信息： </p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ManifestFileVersion:</span> <span class="number">0</span></span><br><span class="line"><span class="attr">CRC:</span> <span class="number">1246928136</span></span><br><span class="line"><span class="attr">Hashes:</span></span><br><span class="line"><span class="attr">  AssetFileHash:</span></span><br><span class="line"><span class="attr">    serializedVersion:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">    Hash:</span> <span class="number">68</span><span class="string">ff0b366d24d6e751291e6ecb5bbd02</span></span><br><span class="line"><span class="attr">  TypeTreeHash:</span></span><br><span class="line"><span class="attr">    serializedVersion:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">    Hash:</span> <span class="string">b3ba791bb7d378b5189369ad535d14a7</span></span><br><span class="line"><span class="attr">HashAppended:</span> <span class="number">0</span></span><br><span class="line"><span class="attr">ClassTypes:</span></span><br><span class="line"><span class="attr">- Class:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  Script:</span> <span class="string">&#123;instanceID:</span> <span class="number">0</span><span class="string">&#125;</span></span><br><span class="line"><span class="attr">- Class:</span> <span class="number">4</span></span><br><span class="line"><span class="attr">  Script:</span> <span class="string">&#123;instanceID:</span> <span class="number">0</span><span class="string">&#125;</span></span><br><span class="line"><span class="attr">- Class:</span> <span class="number">21</span></span><br><span class="line"><span class="attr">  Script:</span> <span class="string">&#123;instanceID:</span> <span class="number">0</span><span class="string">&#125;</span></span><br><span class="line"><span class="attr">- Class:</span> <span class="number">23</span></span><br><span class="line"><span class="attr">  Script:</span> <span class="string">&#123;instanceID:</span> <span class="number">0</span><span class="string">&#125;</span></span><br><span class="line"><span class="attr">- Class:</span> <span class="number">33</span></span><br><span class="line"><span class="attr">  Script:</span> <span class="string">&#123;instanceID:</span> <span class="number">0</span><span class="string">&#125;</span></span><br><span class="line"><span class="attr">- Class:</span> <span class="number">43</span></span><br><span class="line"><span class="attr">  Script:</span> <span class="string">&#123;instanceID:</span> <span class="number">0</span><span class="string">&#125;</span></span><br><span class="line"><span class="attr">- Class:</span> <span class="number">136</span></span><br><span class="line"><span class="attr">  Script:</span> <span class="string">&#123;instanceID:</span> <span class="number">0</span><span class="string">&#125;</span></span><br><span class="line"><span class="attr">Assets:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">Assets/Prefabs/Capsule.prefab</span></span><br><span class="line"><span class="attr">Dependencies:</span></span><br><span class="line"><span class="attr">- E:</span><span class="string">/Github/Unity3DHotchpotch/AssetBundleBaseExample/AssetBundles/StandaloneWindows64/common.res</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在打包AssetBundle的时候，还会生成一个与存放AssetBundle目录同名的.manifest文件，它记录了目录下所有AssetBundle信息： </p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ManifestFileVersion:</span> <span class="number">0</span></span><br><span class="line"><span class="attr">CRC:</span> <span class="number">985824211</span></span><br><span class="line"><span class="attr">AssetBundleManifest:</span></span><br><span class="line"><span class="attr">  AssetBundleInfos:</span></span><br><span class="line"><span class="attr">    Info_0:</span></span><br><span class="line"><span class="attr">      Name:</span> <span class="string">prefabs/capsule.ab</span></span><br><span class="line"><span class="attr">      Dependencies:</span></span><br><span class="line"><span class="attr">        Dependency_0:</span> <span class="string">common.res</span></span><br><span class="line"><span class="attr">    Info_1:</span></span><br><span class="line"><span class="attr">      Name:</span> <span class="string">prefabs/cylinder.ab</span></span><br><span class="line"><span class="attr">      Dependencies:</span></span><br><span class="line"><span class="attr">        Dependency_0:</span> <span class="string">common.res</span></span><br><span class="line"><span class="attr">    Info_2:</span></span><br><span class="line"><span class="attr">      Name:</span> <span class="string">common.res</span></span><br><span class="line"><span class="attr">      Dependencies:</span> <span class="string">&#123;&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>manifest文件会记录AssetBundle包的依赖关系（Dependencies属性），通过加载manifest文件可以处理资源的依赖。</p>
+</li>
+</ul>
+<h3 id="依赖加载"><a href="#依赖加载" class="headerlink" title="依赖加载"></a>依赖加载</h3><p> 首先，加载与存放AssetBundle的文件夹同名称的那个AssetBundle，然后加载它的AssetBundleManifest对象： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AssetBundle rootAB = AssetBundle.LoadFromFile(&quot;AssetBundles/StandaloneWindows64/StandaloneWindows64&quot;);</span><br><span class="line">        //&quot;AssetBundleManifest&quot;为固定写法</span><br><span class="line">        AssetBundleManifest manifest = rootAB.LoadAsset&lt;AssetBundleManifest&gt;(&quot;AssetBundleManifest&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>然后获取你想加载的AssetBundle所依赖的AssetBundle：<code>manifest.GetAllDependencies(ab.name)</code>,加载所有依赖就再加载你想要使用的AssetBundle：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void LoadDependenciesAB(AssetBundle ab)</span><br><span class="line">&#123;</span><br><span class="line">    AssetBundle rootAB = AssetBundle.LoadFromFile(&quot;AssetBundles/StandaloneWindows64/StandaloneWindows64&quot;);</span><br><span class="line">    //&quot;AssetBundleManifest&quot;为固定写法</span><br><span class="line">    AssetBundleManifest manifest = rootAB.LoadAsset&lt;AssetBundleManifest&gt;(&quot;AssetBundleManifest&quot;);</span><br><span class="line"></span><br><span class="line">    string[] dependencie = manifest.GetAllDependencies(ab.name);</span><br><span class="line">    foreach (var item in dependencie)</span><br><span class="line">    &#123;</span><br><span class="line">        Debug.Log(item);</span><br><span class="line">        AssetBundle.LoadFromFile(Path.Combine(&quot;AssetBundles/StandaloneWindows64/&quot;, item));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="文件校验"><a href="#文件校验" class="headerlink" title="文件校验"></a>文件校验</h2><p><strong>CRC MD5 SHA1</strong></p>
+<p>相同点：CRC、MD5、SHA1都是通过对数据进行计算，来生成一个校验值，该校验值用来校验数据的完整性。</p>
+<p>不同点：</p>
+<ol>
+<li><p>算法不同。CRC采用多项式除法，MD5和SHA1使用的是替换、轮转等方法；</p>
+</li>
+<li><p>校验值的长度不同。CRC校验位的长度跟其多项式有关系，一般为16位或32位；MD5是16个字节（128位）；SHA1是20个字节（160位）；</p>
+</li>
+<li><p>校验值的称呼不同。CRC一般叫做CRC值；MD5和SHA1一般叫做哈希值（Hash）或散列值；</p>
+</li>
+<li><p>安全性不同。这里的安全性是指检错的能力，即数据的错误能通过校验位检测出来。CRC的安全性跟多项式有很大关系，相对于MD5和SHA1要弱很多；MD5的安全性很高，不过大概在04年的时候被山东大学的王小云破解了；SHA1的安全性最高。</p>
+</li>
+<li><p>效率不同，CRC的计算效率很高；MD5和SHA1比较慢。</p>
+</li>
+<li><p>用途不同。CRC一般用作通信数据的校验；MD5和SHA1用于安全（Security）领域，比如文件校验、数字签名等。</p>
+</li>
+</ol>
+<h2 id="浏览AssetBundle工具"><a href="#浏览AssetBundle工具" class="headerlink" title="浏览AssetBundle工具"></a>浏览AssetBundle工具</h2><p><a href="https://github.com/Unity-Technologies/AssetBundles-Browser" target="_blank" rel="noopener">AssetBundles-Browser</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.jianshu.com/p/7e7b34b24296" target="_blank" rel="noopener">Unity热更新之AssetBundle基础</a></p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/Unity/" rel="tag"># Unity</a>
+          
+            <a href="/tags/热更/" rel="tag"># 热更</a>
+          
+            <a href="/tags/AssetBundle/" rel="tag"># AssetBundle</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/19/20191129-Summary of knowledge/" rel="next" title="知识点总结">
+                <i class="fa fa-chevron-left"></i> 知识点总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="他城浪人">
+  
+  <p class="site-author-name" itemprop="name">他城浪人</p>
+  <div class="site-description motion-element" itemprop="description">一个游走于他城的游戏人~</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+
+
+  <div class="links-of-author motion-element">
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/JinLiGame" title="GitHub &rarr; https://github.com/JinLiGame" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="mailto:553555614@123.com" title="E-Mail &rarr; mailto:553555614@123.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" title="QQ &rarr; http://wpa.qq.com/msgrd?v=3&uin=553555614&site=qq&menu=yes" rel="noopener" target="_blank"><i class="fa fa-fw fa-qq"></i></a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" title="Wechat &rarr; https://raw.githubusercontent.com/JinLiGame/JinLiGame.github.io/master/images/wechat.png" rel="noopener" target="_blank"><i class="fa fa-fw fa-wechat"></i></a>
+      </span>
+    
+  </div>
+
+
+
+
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/zh-cn/" title="https://hexo.io/zh-cn/" rel="noopener" target="_blank">Hexo</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://www.markdown.cn/" title="http://www.markdown.cn/" rel="noopener" target="_blank">教程-MarkDown</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="http://theme-next.iissnan.com/theme-settings.html#author-sites" title="http://theme-next.iissnan.com/theme-settings.html#author-sites" rel="noopener" target="_blank">主题配置 - NexT 使用文档</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是AssetBundle"><span class="nav-number">1.</span> <span class="nav-text">什么是AssetBundle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何打包AssetBundle"><span class="nav-number">2.</span> <span class="nav-text">如何打包AssetBundle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AssetBundle分组策略"><span class="nav-number">3.</span> <span class="nav-text">AssetBundle分组策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖打包和加载"><span class="nav-number">4.</span> <span class="nav-text">依赖打包和加载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#依赖的定义"><span class="nav-number">4.1.</span> <span class="nav-text">依赖的定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖打包"><span class="nav-number">5.</span> <span class="nav-text">依赖打包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Manifest-File"><span class="nav-number">5.1.</span> <span class="nav-text">The Manifest File</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#依赖加载"><span class="nav-number">5.2.</span> <span class="nav-text">依赖加载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件校验"><span class="nav-number">6.</span> <span class="nav-text">文件校验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浏览AssetBundle工具"><span class="nav-number">7.</span> <span class="nav-text">浏览AssetBundle工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">他城浪人</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+  
+  <script src="/lib/lazyload/lozad.min.js?v=1.10.0"></script>
+
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=4.0.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+
+  
+  
+
+  
+  
+
+  
+
+
+
+
+
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.2.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+
+</body>
+</html>
